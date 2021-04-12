@@ -275,4 +275,8 @@ public class Jogador{
         else if(this instanceof Laterais)return (j instanceof Defesas || j instanceof Medios) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
         else return false;
     }
+
+    public int calculaRatingTotal(){
+        return 0;
+    }
 }
