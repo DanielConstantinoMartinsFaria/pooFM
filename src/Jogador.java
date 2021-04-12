@@ -1,10 +1,8 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class Jogador{
     private String nome;
     private String nacionalidade;
-    private String clubeAtual;
     private double velocidade;
     private double resistencia;
     private double destreza;
@@ -19,7 +17,6 @@ public class Jogador{
     public Jogador(){
         this.nome="NULL";
         this.nacionalidade="NULL";
-        this.clubeAtual="NULL";
         this.velocidade=0.0;
         this.resistencia=0.0;
         this.destreza=0.0;
@@ -33,7 +30,6 @@ public class Jogador{
     public Jogador(String nome,String nacionalidade,String clubeAtual,double velocidade,double resistencia,double destreza,double impulsao,double cabeca,double remate,double passe,ArrayList<String> equipas){
         this.setNome(nome);
         this.setNacionalidade(nacionalidade);
-        this.setClubeAtual(clubeAtual);
         this.setVelocidade(velocidade);
         this.setResistencia(resistencia);
         this.setDestreza(destreza);
@@ -47,7 +43,6 @@ public class Jogador{
     public Jogador(Jogador j){
         this.setNome(j.getNome());
         this.setNacionalidade(j.getNacionalidade());
-        this.setClubeAtual(j.getClubeAtual());
         this.setVelocidade(j.getVelocidade());
         this.setResistencia(j.getResistencia());
         this.setDestreza(j.getDestreza());
@@ -75,8 +70,7 @@ public class Jogador{
                 (novo.getRemate()==this.getRemate()) &&
                 (novo.getVelocidade()==this.getVelocidade()) &&
                 (novo.getNome().equals(this.getNome())) &&
-                (novo.getNacionalidade()).equals(this.getNacionalidade()) &&
-                (novo.getClubeAtual().equals(this.getClubeAtual()));
+                (novo.getNacionalidade().equals(this.getNacionalidade()));
     }
 
     //Sub-Classes
@@ -257,12 +251,12 @@ public class Jogador{
         this.nome = nome;
     }
 
-    public String getClubeAtual() {
-        return this.clubeAtual;
+    public ArrayList<String> getEquipas(){
+        return new ArrayList<>(this.equipas);
     }
 
-    public void setClubeAtual(String clubeAtual) {
-        this.clubeAtual = clubeAtual;
+    public void setEquipas(ArrayList<String> equipas){
+        this.equipas=equipas;
     }
 
     public void addEquipa(String equipa){
@@ -273,11 +267,12 @@ public class Jogador{
         this.equipas.removeIf(l -> l.equals(equipa));
     }
 
-    public ArrayList<String> getEquipas(){
-        return new ArrayList<>(this.equipas);
-    }
-
-    public void setEquipas(ArrayList<String> equipas){
-        this.equipas=equipas;
+    public boolean quimica(Jogador j){
+        if(this instanceof GuardaRedes)return j instanceof Defesas && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
+        else if(this instanceof Defesas)return (j instanceof Defesas || j instanceof GuardaRedes || j instanceof Laterais || j instanceof Medios) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
+        else if(this instanceof Medios) return (j instanceof Defesas || j instanceof Medios || j instanceof Avancados || j instanceof Laterais) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
+        else if(this instanceof Avancados)return (j instanceof Medios || j instanceof Avancados) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
+        else if(this instanceof Laterais)return (j instanceof Defesas || j instanceof Medios) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
+        else return false;
     }
 }
