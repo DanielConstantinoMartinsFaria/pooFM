@@ -102,5 +102,12 @@ public class Equipa {
         if(this.rmvJogador(j))eq.addJogador(j);
     }
 
+    public void substituicao(Jogador in, Jogador out){
+        rmvJogador(out);
+        rmvJogador(in);
+        suplentes.add(out);
+        titulares.add(in);
+    }
+
 
 }
