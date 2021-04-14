@@ -73,6 +73,24 @@ public class Jogador{
                 (novo.getNacionalidade().equals(this.getNacionalidade()));
     }
 
+    public String toString(){
+        StringBuilder sb= new StringBuilder();
+        sb.append("Nome:").append(this.getNome());
+        sb.append("->Nacionalidade:").append(this.getNacionalidade());
+        sb.append("\nStats:\nTot:|").append(this.calculaRatingTotal()).append("| Vel:|");
+        sb.append(this.getVelocidade()).append("| Res:|");
+        sb.append(this.getResistencia()).append("| Des:|");
+        sb.append(this.getDestreza()).append("|\n Imp:|");
+        sb.append(this.getImpulsao()).append("| Cab:|");
+        sb.append(this.getCabeca()).append("| Rem:|");
+        sb.append(this.getRemate()).append("| Pas:|");
+        sb.append(this.getPasse()).append("|\nHistorial:");
+        for(String s:this.equipas)sb.append(s).append("-");
+        sb.deleteCharAt(sb.length()-1);
+        sb.append("\n");
+        return sb.toString();
+    }
+
     //Sub-Classes
 
     public class GuardaRedes extends Jogador{

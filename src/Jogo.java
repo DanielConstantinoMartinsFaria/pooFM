@@ -9,7 +9,7 @@ public class Jogo{
 
     public Jogo(){
         this.ATeam = new Equipa();
-        this.BTeam = new Equipa;
+        this.BTeam = new Equipa();
         this.resultado = 0;
     }
 
