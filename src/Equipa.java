@@ -56,8 +56,14 @@ public class Equipa {
         StringBuilder sb= new StringBuilder();
         sb.append("Nome:").append(this.getNome());
         sb.append("\nLiga:").append(this.getLiga()).append("\nTitulares:\n");
-        for(Jogador j:this.titulares){
-            sb.append(j.toString()).append("---------------------------\n");
+        for(Jogador j1:this.titulares){
+            sb.append(j1.toString()).append("---------------------------\n");
+        }
+        for(Jogador j2:this.suplentes){
+            sb.append(j2.toString()).append("---------------------------\n");
+        }
+        for(Jogador j3:this.reservas){
+            sb.append(j3.toString()).append("---------------------------\n");
         }
         return sb.toString();
     }
