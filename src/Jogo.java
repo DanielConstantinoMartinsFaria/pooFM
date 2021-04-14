@@ -64,6 +64,8 @@ public class Jogo{
     public int resultadoFinal(){
         int rateA=ATeam.calculaRatingTotal();
         int rateB=BTeam.calculaRatingTotal();
+        if(rateA>rateB+50)return 0;
+        else if(rateB>rateA+50)return 1;
         double chanceA;
         double chanceE;
         if(rateA>rateB){
