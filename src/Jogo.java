@@ -5,6 +5,8 @@ import java.util.Random;
 public class Jogo{
     private Equipa ATeam;
     private Equipa BTeam;
+    private int golosA;
+    private int golosB;
     //private int resultado; //0-> A ganha ; 1-> B ganha ; 2-> Empate
 
     public Jogo(){
@@ -59,8 +61,26 @@ public class Jogo{
         this.BTeam = BTeam;
     }
 
+    public int getGolosA() {
+        return golosA;
+    }
+
+    public void setGolosA(int golosA) {
+        this.golosA = golosA;
+    }
+
+    public int getGolosB() {
+        return golosB;
+    }
+
+    public void setGolosB(int golosB) {
+        this.golosB = golosB;
+    }
+
+    //
+
     //Tive a fazer aproximações e cheguei esta funções para calcular um possivel resultado final, podemos discutir
-    //isto todos os juntos se tiverem outras ideias
+    //isto todos juntos se tiverem outras ideias
     public int resultadoFinal(){
         int rateA=ATeam.calculaRatingTotal();
         int rateB=BTeam.calculaRatingTotal();
@@ -76,16 +96,52 @@ public class Jogo{
             chanceA=(40.0-(this.BTeam.calculaRatingTotal()-this.ATeam.calculaRatingTotal())*0.8)/100.0;
             chanceE=(20.0-(this.BTeam.calculaRatingTotal()-this.ATeam.calculaRatingTotal())*0.4)/100.0;
         }
-        double result=Math.random();
+        Random r = new Random();
+        double result = r.nextDouble();
+
         if(result<chanceA){
+            calculaGolos(0,r);
             return 0;
         }
         else if(result<chanceA+chanceE){
+            calculaGolos(2,r);
             return 2;
         }
         else{
+            calculaGolos(1,r);
             return 1;
         }
+    }
+
+    private void calculaGolos(int res,Random r){
+        int gA=-1;
+        int gB=-1;
+        int diffA=((int)(2.5+(this.ATeam.ataque()-this.BTeam.defesa())/20));
+        int diffB=((int)(2.5+(this.BTeam.ataque()-this.ATeam.defesa())/20));
+        if(diffA<0)diffA=0;
+        if(diffB<0)diffB=0;
+        if(res==0){
+            while(gA<=gB&&gA<=0&&gB<0){
+                gA=diffA+(int)Math.round(r.nextGaussian()*diffA/4);
+                gB=diffB+(int)Math.round(r.nextGaussian()*diffB/4);
+            }
+        }
+        if(res==1){
+            while(gB<=gA&&gA<=0&&gB<0){
+                gA=diffA+(int)Math.round(r.nextGaussian()*diffA/4);
+                gB=diffB+(int)Math.round(r.nextGaussian()*diffB/4);
+            }
+        }
+        if(res==2){
+            while(gB<=gA&&gA<=0&&gB<0){
+                gA=diffA+(int)Math.round(r.nextGaussian()*diffA/4);
+                gB=diffB+(int)Math.round(r.nextGaussian()*diffB/4);
+            }
+            gA=Math.round(gA+gB)/2;
+            gB=gA;
+        }
+        this.golosA=gA;
+        this.golosB=gB;
     }
 }
 
