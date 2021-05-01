@@ -1,6 +1,8 @@
+package FootballManager;
+
 import java.util.ArrayList;
 
-public class Jogador{
+public abstract class Jogador{
     private String nome;
     private String nacionalidade;
     private double velocidade;
@@ -27,7 +29,7 @@ public class Jogador{
         this.equipas= new ArrayList<>();
     }
 
-    public Jogador(String nome,String nacionalidade,String clubeAtual,double velocidade,double resistencia,double destreza,double impulsao,double cabeca,double remate,double passe,ArrayList<String> equipas){
+    public Jogador(String nome,String nacionalidade,double velocidade,double resistencia,double destreza,double impulsao,double cabeca,double remate,double passe,ArrayList<String> equipas){
         this.setNome(nome);
         this.setNacionalidade(nacionalidade);
         this.setVelocidade(velocidade);
@@ -53,9 +55,7 @@ public class Jogador{
         this.setEquipas(j.getEquipas());
     }
 
-    public Jogador clone(){
-        return new Jogador(this);
-    }
+    public abstract Jogador clone();
 
     public boolean equals(Object jogador){
         if(jogador==null)return false;
@@ -181,16 +181,7 @@ public class Jogador{
         this.equipas.removeIf(l -> l.equals(equipa));
     }
 
-    public boolean quimica(Jogador j){
-        if(this instanceof GuardaRedes)return j instanceof Defesas && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
-        else if(this instanceof Defesas)return (j instanceof Defesas || j instanceof GuardaRedes || j instanceof Laterais || j instanceof Medios) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
-        else if(this instanceof Medios) return (j instanceof Defesas || j instanceof Medios || j instanceof Avancados || j instanceof Laterais) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
-        else if(this instanceof Avancados)return (j instanceof Medios || j instanceof Avancados) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
-        else if(this instanceof Laterais)return (j instanceof Defesas || j instanceof Medios) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
-        else return false;
-    }
+    public abstract boolean quimica(Jogador j);
 
-    public int calculaRatingTotal(){
-        return 0;
-    }
+    public abstract int calculaRatingTotal();
 }

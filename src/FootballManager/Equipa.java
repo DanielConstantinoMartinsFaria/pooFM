@@ -1,4 +1,5 @@
-import javax.swing.*;
+package FootballManager;
+
 import java.util.ArrayList;
 
 public class Equipa {

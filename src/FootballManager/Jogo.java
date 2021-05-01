@@ -1,5 +1,5 @@
-import javax.swing.*;
-import java.util.ArrayList;
+package FootballManager;
+
 import java.util.Random;
 
 public class Jogo{
