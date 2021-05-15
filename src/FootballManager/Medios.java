@@ -3,21 +3,15 @@ package FootballManager;
 import java.util.ArrayList;
 
 public class Medios extends Jogador{
+    private double controlo;
+
     public Medios(){
-        this.setNome("");
-        this.setNacionalidade("");
-        this.setVelocidade(0.0);
-        this.setResistencia(0.0);
-        this.setDestreza(0.0);
-        this.setImpulsao(0.0);
-        this.setCabeca(0.0);
-        this.setRemate(0.0);
-        this.setPasse(0.0);
-        this.setEquipas(new ArrayList<>());
+        super();
     }
 
-    public Medios(String nome,String nacionalidade,double velocidade,double resistencia,double destreza, double impulsao,double cabeca,double remate,double passe,ArrayList<String>equipas){
+    public Medios(String nome,String nacionalidade,double velocidade,double resistencia,double destreza, double impulsao,double cabeca,double remate,double passe,double controlo,ArrayList<String>equipas){
         super(nome,nacionalidade,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
+        this.controlo=controlo;
     }
 
     public Medios(Medios medio){
@@ -28,14 +22,23 @@ public class Medios extends Jogador{
         return new Medios(this);
     }
 
+    public double getControlo(){
+        return controlo;
+    }
+
+    public void setRecuperacao(double controlo){
+        this.controlo=controlo;
+    }
+
     public int calculaRatingTotal(){
-        double valor = this.getVelocidade() *0.22;
-        valor += this.getResistencia() *0.17;
-        valor += this.getDestreza() *0.16;
-        valor += this.getImpulsao() *0.03;
-        valor += this.getCabeca() *0.03;
-        valor += this.getRemate() *0.13;
-        valor += this.getPasse() *0.26;
+        double valor = this.getVelocidade() *0.19;
+        valor += this.getResistencia() *0.15;
+        valor += this.getDestreza() *0.13;
+        valor += this.getImpulsao() *0.02;
+        valor += this.getCabeca() *0.02;
+        valor += this.getRemate() *0.12;
+        valor += this.getPasse() *0.22;
+        valor += this.getControlo() *0.15;
         return (int)Math.round(valor);
     }
 

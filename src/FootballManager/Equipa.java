@@ -163,9 +163,9 @@ public class Equipa {
         double total=gk+def+med*0.5+lat*0.67;
         for(Jogador j:this.titulares){
             if(j instanceof GuardaRedes)valor+= j.calculaRatingTotal();
-            else if(j instanceof Defesas)valor+= j.calculaRatingTotal()*(def+2)/4;
-            else if(j instanceof Laterais)valor+= j.calculaRatingTotal()*0.67*(2-Math.abs(lat-2))/2;
-            else if(j instanceof Medios)valor+= j.calculaRatingTotal()*0.55;
+            else if(j instanceof Defesas)valor+= j.calculaRatingTotal();
+            else if(j instanceof Laterais)valor+= j.calculaRatingTotal()*0.55;
+            else if(j instanceof Medios)valor+= j.calculaRatingTotal()*0.45;
         }
         valor/=total;
         if(valor>100)return 100;
@@ -180,9 +180,9 @@ public class Equipa {
         double lat=this.numLaterais();
         double total=atk+med*0.5+lat*0.33;
         for(Jogador j:this.titulares){
-            if(j instanceof Avancados)valor+= j.calculaRatingTotal()*(atk+2)/4;
+            if(j instanceof Avancados)valor+= j.calculaRatingTotal();
             else if(j instanceof Medios)valor+= j.calculaRatingTotal()*0.55;
-            else if(j instanceof Laterais)valor+= j.calculaRatingTotal()*0.33*(2-Math.abs(lat-2))/2;
+            else if(j instanceof Laterais)valor+= j.calculaRatingTotal()*0.45;
         }
         valor/=total;
         if(valor>100)return 100;

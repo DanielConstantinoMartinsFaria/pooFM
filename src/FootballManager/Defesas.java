@@ -3,21 +3,16 @@ package FootballManager;
 import java.util.ArrayList;
 
 public class Defesas extends Jogador{
+    private double corpo;
+
     public Defesas(){
-        this.setNome("");
-        this.setNacionalidade("");
-        this.setVelocidade(0.0);
-        this.setResistencia(0.0);
-        this.setDestreza(0.0);
-        this.setImpulsao(0.0);
-        this.setCabeca(0.0);
-        this.setRemate(0.0);
-        this.setPasse(0.0);
-        this.setEquipas(new ArrayList<>());
+        super();
+        this.corpo=0.0;
     }
 
-    public Defesas(String nome,String nacionalidade,double velocidade,double resistencia,double destreza, double impulsao,double cabeca,double remate,double passe,ArrayList<String>equipas){
+    public Defesas(String nome,String nacionalidade,double velocidade,double resistencia,double destreza, double impulsao,double cabeca,double remate,double passe,double corpo,ArrayList<String>equipas){
         super(nome,nacionalidade,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
+        this.corpo=corpo;
     }
 
     public Defesas(Defesas defesa){
@@ -28,14 +23,23 @@ public class Defesas extends Jogador{
         return new Defesas(this);
     }
 
+    public double getCorpo() {
+        return corpo;
+    }
+
+    public void setCorpo(double corpo){
+        this.corpo=corpo;
+    }
+
     public int calculaRatingTotal(){
-        double valor = this.getVelocidade() *0.20;
-        valor += this.getResistencia() *0.25;
-        valor += this.getDestreza() *0.10;
-        valor += this.getImpulsao() *0.05;
-        valor += this.getCabeca() * 0.15;
-        valor += this.getRemate() *0.05;
-        valor += this.getPasse() *0.20;
+        double valor = this.getVelocidade() *0.10;
+        valor += this.getResistencia() *0.10;
+        valor += this.getDestreza() *0.02;
+        valor += this.getImpulsao() *0.25;
+        valor += this.getCabeca() * 0.01;
+        valor += this.getRemate() *0.02;
+        valor += this.getPasse() *0.06;
+        valor += this.getCorpo() *0.45;
         return (int)Math.round(valor);
     }
 
