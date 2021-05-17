@@ -2,14 +2,14 @@ package FootballManager;
 import java.util.ArrayList;
 
 public class GuardaRedes extends Jogador{
-    private double elasticidade;
+    private int elasticidade;
 
     public GuardaRedes(){
         super();
     }
 
-    public GuardaRedes(String nome,String nacionalidade,double velocidade,double resistencia,double destreza,double impulsao,double cabeca,double remate,double passe,double elasticidade,ArrayList<String> equipas) {
-        super(nome,nacionalidade,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
+    public GuardaRedes(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,int elasticidade,ArrayList<String> equipas) {
+        super(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
         this.elasticidade=elasticidade;
     }
 
@@ -22,11 +22,11 @@ public class GuardaRedes extends Jogador{
         return new GuardaRedes(this);
     }
 
-    public void setElasticidade(double elasticidade){
+    public void setElasticidade(int elasticidade){
         this.elasticidade=elasticidade;
     }
 
-    public double getElasticidade(){
+    public int getElasticidade(){
         return this.elasticidade;
     }
 
@@ -40,9 +40,5 @@ public class GuardaRedes extends Jogador{
         valor += this.getPasse() *0.04;
         valor += this.getElasticidade() *0.33 ;
         return (int)Math.round(valor);
-    }
-
-    public boolean quimica(Jogador j){
-        return (j instanceof Defesas) && (this.getNacionalidade().equals(j.getNacionalidade())) && (!this.equals(j));
     }
 }

@@ -3,14 +3,14 @@ package FootballManager;
 import java.util.ArrayList;
 
 public class Laterais extends Jogador{
-    private double cruzamento;
+    private int cruzamento;
 
     public Laterais(){
         super();
     }
 
-    public Laterais(String nome,String nacionalidade,double velocidade,double resistencia,double destreza, double impulsao,double cabeca,double remate,double passe,double cruzamento,ArrayList<String>equipas){
-        super(nome,nacionalidade,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
+    public Laterais(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,int cruzamento,ArrayList<String>equipas){
+        super(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
         this.cruzamento=cruzamento;
     }
 
@@ -22,11 +22,11 @@ public class Laterais extends Jogador{
         return new Laterais(this);
     }
 
-    public double getCruzamento(){
+    public int getCruzamento(){
         return cruzamento;
     }
 
-    public void setCruzamento(double cruzamento){
+    public void setCruzamento(int cruzamento){
         this.cruzamento=cruzamento;
     }
 
@@ -36,13 +36,9 @@ public class Laterais extends Jogador{
         valor += this.getDestreza() *0.13;
         valor += this.getImpulsao() *0.02;
         valor += this.getCabeca() *0.02;
-        valor += this.getRemate() *0.08;
+        valor += this.getRemate() *0.04;
         valor += this.getPasse() *0.12;
-        valor += this.getCruzamento() *0.20;
+        valor += this.getCruzamento() *0.24;
         return (int)Math.round(valor);
-    }
-
-    public boolean quimica(Jogador j){
-        return (j instanceof Avancados || j instanceof Medios || j instanceof Defesas) && this.getNacionalidade().equals(j.getNacionalidade()) && !this.equals(j);
     }
 }

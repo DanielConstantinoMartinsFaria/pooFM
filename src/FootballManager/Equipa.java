@@ -3,24 +3,20 @@ package FootballManager;
 import java.util.ArrayList;
 
 public class Equipa {
-    private String liga;
     private String nome;
     private ArrayList<Jogador> titulares;
     private ArrayList<Jogador> suplentes;
     private ArrayList<Jogador> reservas;
-
     //Construtores
 
     public Equipa(){
-        this.liga="NULL";
-        this.nome="NULL";
+        this.nome="";
         this.titulares = new ArrayList<>();
         this.suplentes = new ArrayList<>();
         this.reservas = new ArrayList<>();
     }
 
-    public Equipa(String liga,String nome,ArrayList<Jogador>titulares,ArrayList<Jogador>suplentes,ArrayList<Jogador>reservas){
-        this.setLiga(liga);
+    public Equipa(String nome,ArrayList<Jogador>titulares,ArrayList<Jogador>suplentes,ArrayList<Jogador>reservas){
         this.setNome(nome);
         this.setTitulares(titulares);
         this.setSuplentes(suplentes);
@@ -29,7 +25,6 @@ public class Equipa {
 
     public Equipa(Equipa eq){
         this.nome=eq.getNome();
-        this.liga=eq.getLiga();
         this.titulares=eq.getTitulares();
         this.suplentes=eq.getSuplentes();
         this.reservas=eq.getReservas();
@@ -42,8 +37,7 @@ public class Equipa {
         if(eq==this)return true;
         if(this.getClass()!=eq.getClass())return false;
         Equipa nova = (Equipa) eq;
-        return this.getLiga().equals(nova.getLiga()) &&
-                this.getNome().equals(nova.getNome()) &&
+        return this.getNome().equals(nova.getNome()) &&
                 this.getTitulares().equals(nova.getTitulares()) &&
                 this.getSuplentes().equals(nova.getSuplentes()) &&
                 this.getReservas().equals(nova.getTitulares());
@@ -55,29 +49,27 @@ public class Equipa {
 
     public String toString(){
         StringBuilder sb= new StringBuilder();
-        sb.append("Nome:").append(this.getNome());
-        sb.append("\nLiga:").append(this.getLiga()).append("\nTitulares:\n");
-        for(Jogador j1:this.titulares){
-            sb.append(j1.toString()).append("---------------------------\n");
+        sb.append("Equipa:").append(this.getNome()).append("\n");
+        String prefix="";
+        for(Jogador j:this.titulares){
+            sb.append(prefix);
+            prefix="\n";
+            sb.append(j.toString());
         }
-        for(Jogador j2:this.suplentes){
-            sb.append(j2.toString()).append("---------------------------\n");
+        for(Jogador j:this.suplentes){
+            sb.append(prefix);
+            prefix="\n";
+            sb.append(j.toString());
         }
-        for(Jogador j3:this.reservas){
-            sb.append(j3.toString()).append("---------------------------\n");
+        for(Jogador j:this.reservas){
+            sb.append(prefix);
+            prefix="\n";
+            sb.append(j.toString());
         }
         return sb.toString();
     }
 
     //Gets e Sets
-
-    public String getLiga() {
-        return liga;
-    }
-
-    public void setLiga(String liga) {
-        this.liga = liga;
-    }
 
     public String getNome() {
         return nome;
@@ -112,16 +104,6 @@ public class Equipa {
     }
 
     //
-
-    public int quimica(){
-        int chemistry=0;
-        for(Jogador j1:this.titulares){
-            for(Jogador j2:this.titulares){
-                if(j1.quimica(j2))chemistry+=1;
-            }
-        }
-        return chemistry;
-    }
 
     public int numDefesas(){
         int res=0;

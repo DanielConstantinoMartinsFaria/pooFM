@@ -7,7 +7,6 @@ public class Jogo{
     private Equipa BTeam;
     private int golosA;
     private int golosB;
-    //private int resultado; //0-> A ganha ; 1-> B ganha ; 2-> Empate
 
     public Jogo(){
         this.ATeam = new Equipa();
@@ -34,8 +33,18 @@ public class Jogo{
 
     public String toString(){
         StringBuilder sb= new StringBuilder();
-        sb.append(this.getATeam().getNome()).append(" VS ").append(this.getBTeam().getNome()).append("\n");
-        sb.append(this.getATeam().toString()).append(getBTeam().toString());
+        sb.append("Jogo:").append(this.getATeam().getNome()).append(",").append(this.getBTeam().getNome()).append(",");
+        String prefix="";
+        for(Jogador j:ATeam.getTitulares()){
+            sb.append(prefix);
+            prefix=",";
+            sb.append(j.getNumero());
+        }
+        for(Jogador j:BTeam.getTitulares()){
+            sb.append(prefix);
+            prefix=",";
+            sb.append(j.getNumero());
+        }
         return sb.toString();
     }
 
