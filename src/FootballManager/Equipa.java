@@ -172,7 +172,7 @@ public class Equipa {
     }
 
     public int calculaRatingTotal(){
-        return (int)((this.ataque()+this.defesa())/2.0);
+        return (int)((this.ataque()*0.45+this.defesa()*0.55)/2.0);
     }
 
     public void addJogador(Jogador j){

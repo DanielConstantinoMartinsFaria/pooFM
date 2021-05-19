@@ -91,7 +91,6 @@ public abstract class Jogador{
         if(this instanceof Laterais) sb.append(",").append(((Laterais) this).getCruzamento());
         else if(this instanceof GuardaRedes) sb.append(",").append(((GuardaRedes) this).getElasticidade());
         else if(this instanceof Medios) sb.append(",").append(((Medios) this).getRecuperacao());
-        sb.append("\n");
         return sb.toString();
     }
 
@@ -166,7 +165,7 @@ public abstract class Jogador{
     }
 
     public void setEquipas(ArrayList<String> equipas){
-        this.equipas=equipas;
+        this.equipas= (ArrayList<String>) equipas.clone();
     }
 
     public int getNumero() {

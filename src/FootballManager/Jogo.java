@@ -34,6 +34,7 @@ public class Jogo{
     public String toString(){
         StringBuilder sb= new StringBuilder();
         sb.append("Jogo:").append(this.getATeam().getNome()).append(",").append(this.getBTeam().getNome()).append(",");
+        sb.append(this.getGolosA()).append(",").append(this.getGolosB()).append(",");
         String prefix="";
         for(Jogador j:ATeam.getTitulares()){
             sb.append(prefix);
@@ -93,8 +94,6 @@ public class Jogo{
     public int resultadoFinal(){
         int rateA=ATeam.calculaRatingTotal();
         int rateB=BTeam.calculaRatingTotal();
-        if(rateA>rateB+50)return 0;
-        else if(rateB>rateA+50)return 1;
         double chanceA;
         double chanceE;
         if(rateA>rateB){
@@ -109,15 +108,15 @@ public class Jogo{
         double result = r.nextDouble();
 
         if(result<chanceA){
-            calculaGolos(0,r);
+            calculaGolos(0,new Random());
             return 0;
         }
-        else if(result<chanceA+chanceE){
-            calculaGolos(2,r);
+        else if(result<(chanceA+chanceE)){
+            calculaGolos(2,new Random());
             return 2;
         }
         else{
-            calculaGolos(1,r);
+            calculaGolos(1,new Random());
             return 1;
         }
     }
@@ -125,27 +124,27 @@ public class Jogo{
     private void calculaGolos(int res,Random r){
         int gA=-1;
         int gB=-1;
-        int diffA=((int)(2.5+(this.ATeam.ataque()-this.BTeam.defesa())/20));
-        int diffB=((int)(2.5+(this.BTeam.ataque()-this.ATeam.defesa())/20));
+        int diffA=((int)(1.5+(this.ATeam.ataque()-this.BTeam.defesa()*1.2)/20));
+        int diffB=((int)(1.5+(this.BTeam.ataque()-this.ATeam.defesa()*1.2)/20));
         if(diffA<0)diffA=0;
         if(diffB<0)diffB=0;
         if(res==0){
-            while(gA<=gB&&gA<=0&&gB<0){
-                gA=diffA+(int)Math.round(r.nextGaussian()*diffA/4);
-                gB=diffB+(int)Math.round(r.nextGaussian()*diffB/4);
-            }
+            do{
+                gA=diffA+(int)Math.round(r.nextGaussian()*diffA);
+                gB=diffB+(int)Math.round(r.nextGaussian()*diffB);
+            }while(gA<=gB||gA<=0||gB<0);
         }
         if(res==1){
-            while(gB<=gA&&gA<=0&&gB<0){
-                gA=diffA+(int)Math.round(r.nextGaussian()*diffA/4);
-                gB=diffB+(int)Math.round(r.nextGaussian()*diffB/4);
-            }
+            do{
+                gA=diffA+(int)Math.round(r.nextGaussian()*diffA);
+                gB=diffB+(int)Math.round(r.nextGaussian()*diffB);
+            }while(gB<=gA||gA<=0||gB<0);
         }
         if(res==2){
-            while(gB<=gA&&gA<=0&&gB<0){
-                gA=diffA+(int)Math.round(r.nextGaussian()*diffA/4);
-                gB=diffB+(int)Math.round(r.nextGaussian()*diffB/4);
-            }
+            do{
+                gA=diffA+(int)Math.round(r.nextGaussian()*diffA);
+                gB=diffB+(int)Math.round(r.nextGaussian()*diffB);
+            }while (gB!=gA);
             gA=Math.round(gA+gB)/2;
             gB=gA;
         }

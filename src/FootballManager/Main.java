@@ -2,11 +2,27 @@ package FootballManager;
 
 import java.util.ArrayList;
 
-public class Main {
+public class Main{
     public static void main(String[] args){
         ArrayList<String> equipas = new ArrayList<>();
+
+        //Juventus
         Avancados ronaldo = new Avancados("Cristiano Ronaldo",7,89,84,87,95,86,95,81,equipas);
-        Avancados felix = new Avancados("Joao Felix",7,81,75,85,79,80,82,77,equipas);
+        Avancados morata = new Avancados("Alvaro Morata",9,80,77,72,84,80,80,71,equipas);
+
+        Medios chiesa = new Medios("Federico Chiesa",22,85,74,86,53,68,74,71,82,equipas);
+        Medios rabiot = new Medios("Adrien Rabiot",25,72,77,75,73,72,80,78,80,equipas);
+        Medios bentancur = new Medios("Rodrigo Bentancur",30,72,87,68,73,60,65,79,81,equipas);
+        Medios cuadrado = new Medios("Juan Cuadrado",16,89,71,91,74,70,84,78,85,equipas);
+
+        Laterais sandro = new Laterais("Alex Sandro",12,81,90,78,79,68,80,77,84,equipas);
+        Laterais danilo = new Laterais("Danilo Silva",13,69,75,67,75,73,84,79,78,equipas);
+
+        Defesas deligt = new Defesas("Matthijs de Ligt",4,72,76,56,84,45,82,75,equipas);
+        Defesas chiellini = new Defesas("Giorgio Chiellini",3,66,54,57,87,45,78,65,equipas);
+
+        GuardaRedes szczesny = new GuardaRedes("Wojciech Szczesny",1,86,45,88,86,14,73,32,87,equipas);
+
         /*
         ronaldo.addEquipa("Andorinha");
         ronaldo.addEquipa("Nacional");
@@ -14,19 +30,73 @@ public class Main {
         ronaldo.addEquipa("Manchester United");
         ronaldo.addEquipa("Real Madrid");
         ronaldo.addEquipa("Juventus");
-        System.out.println(ronaldo);
+        System.out.println(ronaldo.getEquipas());
         */
+
         Equipa juventus = new Equipa();
         juventus.setNome("Juventus");
         juventus.addJogador(ronaldo);
+        juventus.addJogador(morata);
+        juventus.addJogador(chiesa);
+        juventus.addJogador(rabiot);
+        juventus.addJogador(bentancur);
+        juventus.addJogador(cuadrado);
+        juventus.addJogador(sandro);
+        juventus.addJogador(danilo);
+        juventus.addJogador(deligt);
+        juventus.addJogador(chiellini);
+        juventus.addJogador(szczesny);
         System.out.println(juventus);
+
+        /*
+        System.out.println("Ronaldo:"+ronaldo.calculaRatingTotal());
+        System.out.println("Morata:"+morata.calculaRatingTotal());
+        System.out.println("Chiesa:"+chiesa.calculaRatingTotal());
+        System.out.println("Rabiot:"+rabiot.calculaRatingTotal());
+        System.out.println("Bentancur:"+bentancur.calculaRatingTotal());
+        System.out.println("Cuadrado:"+cuadrado.calculaRatingTotal());
+        System.out.println("Sandro:"+sandro.calculaRatingTotal());
+        System.out.println("Danilo:"+danilo.calculaRatingTotal());
+        System.out.println("DeLigt:"+deligt.calculaRatingTotal());
+        System.out.println("Chiellini:"+chiellini.calculaRatingTotal());
+        System.out.println("Szczensy:"+szczesny.calculaRatingTotal());
+        */
+
+        //Atletico
+
+        Avancados felix = new Avancados("Joao Felix",7,81,75,85,79,80,82,77,equipas);
+        Avancados suarez = new Avancados("Luis Suarez",9,70,78,76,69,90,89,83,equipas);
+
+        Medios carrasco = new Medios("Yannick Carrasco",21,91,76,90,71,68,85,76,82,equipas);
+        Medios trippier = new Medios("Kieran Trippier",23,73,88,73,76,58,75,80,83,equipas);
+        Medios lemar = new Medios("Thomas Lemar",11,80,74,88,69,76,79,81,85,equipas);
+        Medios llorente = new Medios("Marcos Llorente",14,84,86,75,66,62,75,84,83,equipas);
+        Medios koke = new Medios("Koke",6,67,94,73,63,56,83,85,84,equipas);
+
+        Defesas gimenez = new Defesas("Jose Gimenez",2,67,64,54,90,30,72,70,equipas);
+        Defesas savic = new Defesas("Stefan Savic",15,61,48,60,86,27,43,71,equipas);
+        Defesas hermoso = new Defesas("Mario Hermoso",22,75,76,75,86,41,65,77,equipas);
+
+        GuardaRedes oblak = new GuardaRedes("Jan Oblak",13,87,41,90,87,13,78,43,90,equipas);
+
 
         Equipa atletico = new Equipa();
         atletico.setNome("Atletico de Madrid");
         atletico.addJogador(felix);
+        atletico.addJogador(suarez);
+        atletico.addJogador(carrasco);
+        atletico.addJogador(trippier);
+        atletico.addJogador(lemar);
+        atletico.addJogador(llorente);
+        atletico.addJogador(koke);
+        atletico.addJogador(gimenez);
+        atletico.addJogador(savic);
+        atletico.addJogador(hermoso);
+        atletico.addJogador(oblak);
         System.out.println(atletico);
 
         Jogo juveAtl = new Jogo(juventus,atletico);
+        juveAtl.resultadoFinal();
         System.out.println(juveAtl);
     }
 
@@ -37,20 +107,20 @@ public class Main {
 Juventus
         ArrayList<String> equipas = new ArrayList<>();
         Avancados ronaldo = new Avancados("Cristiano Ronaldo",7,89,84,87,95,86,95,81,equipas);
-        Avancados morata = new Avancados("Alvaro Morata","Espanhola",80,77,72,84,80,80,71,equipas);
+        Avancados morata = new Avancados("Alvaro Morata",9,80,77,72,84,80,80,71,equipas);
 
-        Medios chiesa = new Medios("Federico Chiesa","Italiana",85,74,86,53,68,74,71,82,equipas);
-        Medios rabiot = new Medios("Adrien Rabiot","Francesa",72,77,75,73,72,80,78,80,equipas);
-        Medios bentancur = new Medios("Rodrigo Bentancur","Argentina",72,87,68,73,60,65,79,81,equipas);
-        Medios cuadrado = new Medios("Juan Cuadrado","Colombiano",89,71,91,74,70,84,78,85,equipas);
+        Medios chiesa = new Medios("Federico Chiesa",22,85,74,86,53,68,74,71,82,equipas);
+        Medios rabiot = new Medios("Adrien Rabiot",25,72,77,75,73,72,80,78,80,equipas);
+        Medios bentancur = new Medios("Rodrigo Bentancur",30,72,87,68,73,60,65,79,81,equipas);
+        Medios cuadrado = new Medios("Juan Cuadrado",16,89,71,91,74,70,84,78,85,equipas);
 
-        Laterais sandro = new Laterais("Alex Sandro","Brasileira",81,90,78,79,68,80,77,84,equipas);
-        Laterais danilo = new Laterais("Danilo Silva","Brasileira",69,75,67,75,73,84,79,78,equipas);
+        Laterais sandro = new Laterais("Alex Sandro",12,81,90,78,79,68,80,77,84,equipas);
+        Laterais danilo = new Laterais("Danilo Silva",13,69,75,67,75,73,84,79,78,equipas);
 
-        Defesas deligt = new Defesas("Matthijs de Ligt","Holandesa",72,76,56,84,45,82,75,equipas);
-        Defesas chiellini = new Defesas("Giorgio Chiellini","Italiana",66,54,57,87,45,78,65,equipas);
+        Defesas deligt = new Defesas("Matthijs de Ligt",4,72,76,56,84,45,82,75,equipas);
+        Defesas chiellini = new Defesas("Giorgio Chiellini",3,66,54,57,87,45,78,65,equipas);
 
-        GuardaRedes szczesny = new GuardaRedes("Wojciech Szczesny","Polaca",86,45,88,86,14,73,32,87,equipas);
+        GuardaRedes szczesny = new GuardaRedes("Wojciech Szczesny",1,86,45,88,86,14,73,32,87,equipas);
 
         ArrayList<Jogador> titulares1=new ArrayList<>();
         ArrayList<Jogador> suplentes1=new ArrayList<>();
@@ -76,8 +146,7 @@ Juventus
         System.out.println("Cuadrado:"+cuadrado.calculaRatingTotal());
         System.out.println("Sandro:"+sandro.calculaRatingTotal());
         System.out.println("Danilo:"+danilo.calculaRatingTotal());
-        System.out.println("Danilo:"+danilo.calculaRatingTotal());
-        System.out.println("Danilo:"+danilo.calculaRatingTotal());
+        System.out.println("DeLigt:"+deligt.calculaRatingTotal());
         System.out.println("Chiellini:"+chiellini.calculaRatingTotal());
         System.out.println("Szczensy:"+szczesny.calculaRatingTotal());
 
@@ -93,20 +162,20 @@ Juventus
 
 /*
 Atletico
-        Avancados felix = new Avancados("Joao Felix","Portuguesa",81,75,85,79,80,82,77,84,equipas);
-        Avancados suarez = new Avancados("Luis Suarez","Argentina",70,78,76,69,90,89,83,91,equipas);
+        Avancados felix = new Avancados("Joao Felix",7,81,75,85,79,80,82,77,equipas);
+        Avancados suarez = new Avancados("Luis Suarez",9,70,78,76,69,90,89,83,equipas);
 
-        Medios carrasco = new Medios("Yannick Carrasco","Belga",91,76,90,71,68,85,76,82,equipas);
-        Medios trippier = new Medios("Kieran Trippier","Ingles",73,88,73,76,58,75,80,83,equipas);
-        Medios lemar = new Medios("Thomas Lemar","Francesa",80,74,88,69,76,79,81,85,equipas);
-        Medios llorente = new Medios("Marcos Llorente","Espanhola",84,86,75,66,62,75,84,83,equipas);
-        Medios koke = new Medios("Koke","Espanhola",67,94,73,63,56,83,85,84,equipas);
+        Medios carrasco = new Medios("Yannick Carrasco",21,91,76,90,71,68,85,76,82,equipas);
+        Medios trippier = new Medios("Kieran Trippier",23,73,88,73,76,58,75,80,83,equipas);
+        Medios lemar = new Medios("Thomas Lemar",11,80,74,88,69,76,79,81,85,equipas);
+        Medios llorente = new Medios("Marcos Llorente",14,84,86,75,66,62,75,84,83,equipas);
+        Medios koke = new Medios("Koke",6,67,94,73,63,56,83,85,84,equipas);
 
-        Defesas gimenez = new Defesas("Jose Gimenez","Argentina",67,64,54,90,30,72,70,90,equipas);
-        Defesas savic = new Defesas("Stefan Savic","Montenegrense",61,48,60,86,27,43,71,79,equipas);
-        Defesas hermoso = new Defesas("Mario Hermoso","Espanhola",75,76,75,86,41,65,77,79,equipas);
+        Defesas gimenez = new Defesas("Jose Gimenez",2,67,64,54,90,30,72,70,equipas);
+        Defesas savic = new Defesas("Stefan Savic",15,61,48,60,86,27,43,71,equipas);
+        Defesas hermoso = new Defesas("Mario Hermoso",22,75,76,75,86,41,65,77,equipas);
 
-        GuardaRedes oblak = new GuardaRedes("Jan Oblak","Eslovena",87,41,90,87,13,78,43,90,equipas);
+        GuardaRedes oblak = new GuardaRedes("Jan Oblak",13,87,41,90,87,13,78,43,90,equipas);
 
         ArrayList<Jogador> titulares2=new ArrayList<>();
         ArrayList<Jogador> suplentes2=new ArrayList<>();
@@ -141,7 +210,13 @@ Atletico
         System.out.println("Atletico:"+atletico.calculaRatingTotal());
         System.out.println("Atk:"+atletico.ataque()+"Def:"+atletico.defesa());
         System.out.println("|-----------------------------------------------------|");
- */
+*/
+
+/*
+        Avancados laverne = new Avancados("Beatriz Ribeiro Terra Almeida",25,90,64,81,55,81,82,69,equipas);
+
+
+*/
 
 /*
         Jogo juveVsAtl = new Jogo(juventus,atletico);
