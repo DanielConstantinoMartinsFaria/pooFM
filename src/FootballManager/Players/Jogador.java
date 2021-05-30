@@ -1,6 +1,10 @@
-package FootballManager;
+package FootballManager.Players;
+
+import FootballManager.JogadorInvalidoException;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Jogador{
     private String nome;
@@ -12,7 +16,7 @@ public abstract class Jogador{
     private int remate;
     private int passe;
     private int numero;
-    private ArrayList<String> equipas;
+    private List<String> equipas;
 
     //Construtores e afins
 
@@ -30,29 +34,33 @@ public abstract class Jogador{
     }
 
     public Jogador(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,ArrayList<String> equipas){
-        this.setNome(nome);
-        this.setVelocidade(velocidade);
-        this.setResistencia(resistencia);
-        this.setDestreza(destreza);
-        this.setImpulsao(impulsao);
-        this.setCabeca(cabeca);
-        this.setRemate(remate);
-        this.setPasse(passe);
-        this.setEquipas(equipas);
-        this.setNumero(numero);
+        try{
+            this.setNome(nome);
+            this.setVelocidade(velocidade);
+            this.setResistencia(resistencia);
+            this.setDestreza(destreza);
+            this.setImpulsao(impulsao);
+            this.setCabeca(cabeca);
+            this.setRemate(remate);
+            this.setPasse(passe);
+            this.setEquipas(equipas);
+            this.setNumero(numero);
+        } catch (JogadorInvalidoException e) {
+            e.printStackTrace();
+        }
     }
 
     public Jogador(Jogador j){
         this.setNome(j.getNome());
-        this.setVelocidade(j.getVelocidade());
-        this.setResistencia(j.getResistencia());
-        this.setDestreza(j.getDestreza());
-        this.setImpulsao(j.getImpulsao());
-        this.setCabeca(j.getCabeca());
-        this.setRemate(j.getRemate());
-        this.setPasse(j.getPasse());
-        this.setEquipas(j.getEquipas());
-        this.setNumero(j.getNumero());
+        this.velocidade=(j.getVelocidade());
+        this.resistencia=(j.getResistencia());
+        this.destreza=(j.getDestreza());
+        this.impulsao=(j.getImpulsao());
+        this.cabeca=(j.getCabeca());
+        this.remate=(j.getRemate());
+        this.passe=(j.getPasse());
+        this.equipas=(j.getEquipas());
+        this.numero=(j.getNumero());
     }
 
     public abstract Jogador clone();
@@ -100,56 +108,60 @@ public abstract class Jogador{
         return velocidade;
     }
 
-    public void setVelocidade(int velocidade) {
-        this.velocidade = velocidade;
+    public void setVelocidade(int velocidade) throws JogadorInvalidoException {
+        if(velocidade>100||velocidade<1)throw new JogadorInvalidoException();
+        else this.velocidade = velocidade;
     }
 
     public int getResistencia() {
         return this.resistencia;
     }
 
-    public void setResistencia(int resistencia) {
-        this.resistencia = resistencia;
-    }
+    public void setResistencia(int resistencia) throws JogadorInvalidoException {
+        if(resistencia>100||resistencia<1)throw new JogadorInvalidoException();
+        else this.resistencia = resistencia;    }
 
     public int getDestreza() {
         return destreza;
     }
 
-    public void setDestreza(int destreza) {
-        this.destreza = destreza;
-    }
+    public void setDestreza(int destreza) throws JogadorInvalidoException {
+        if(destreza>100||destreza<1)throw new JogadorInvalidoException();
+        else this.destreza = destreza;    }
 
     public int getImpulsao() {
         return impulsao;
     }
 
-    public void setImpulsao(int impulsao) {
-        this.impulsao = impulsao;
+    public void setImpulsao(int impulsao) throws JogadorInvalidoException {
+        if(impulsao>100||impulsao<1)throw new JogadorInvalidoException();
+        else this.impulsao = impulsao;
     }
 
     public int getCabeca() {
         return cabeca;
     }
 
-    public void setCabeca(int cabeca) {
-        this.cabeca = cabeca;
-    }
+    public void setCabeca(int cabeca) throws JogadorInvalidoException {
+        if(cabeca>100||cabeca<1)throw new JogadorInvalidoException();
+        else this.cabeca = cabeca;    }
 
     public int getRemate() {
         return remate;
     }
 
-    public void setRemate(int remate) {
-        this.remate = remate;
+    public void setRemate(int remate) throws JogadorInvalidoException {
+        if(remate>100||remate<1)throw new JogadorInvalidoException();
+        else this.remate = remate;
     }
 
     public int getPasse() {
         return passe;
     }
 
-    public void setPasse(int passe) {
-        this.passe = passe;
+    public void setPasse(int passe) throws JogadorInvalidoException {
+        if(passe>100||passe<1)throw new JogadorInvalidoException();
+        else this.passe = passe;
     }
 
     public String getNome() {
@@ -160,21 +172,21 @@ public abstract class Jogador{
         this.nome = nome;
     }
 
-    public ArrayList<String> getEquipas(){
+    public List<String> getEquipas(){
         return new ArrayList<>(this.equipas);
     }
 
-    public void setEquipas(ArrayList<String> equipas){
-        this.equipas= (ArrayList<String>) equipas.clone();
+    public void setEquipas(List<String> equipas){
+        this.equipas = new ArrayList<>(equipas);
     }
 
     public int getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
-        if(numero<100&&numero>0)this.numero=numero;
-        else;
+    public void setNumero(int numero) throws JogadorInvalidoException {
+        if(numero>99||numero<1)throw new JogadorInvalidoException("Numero invalido");
+        else this.numero=numero;
     }
 
     public void addEquipa(String equipa){

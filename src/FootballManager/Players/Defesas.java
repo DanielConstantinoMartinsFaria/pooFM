@@ -1,4 +1,4 @@
-package FootballManager;
+package FootballManager.Players;
 
 import java.util.ArrayList;
 

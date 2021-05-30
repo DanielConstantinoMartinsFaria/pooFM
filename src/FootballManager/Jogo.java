@@ -1,26 +1,50 @@
 package FootballManager;
 
+import FootballManager.Players.Jogador;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class Jogo{
     private Equipa ATeam;
     private Equipa BTeam;
-    private int golosA;
-    private int golosB;
+    private ParInteiros resultado;
+    private LocalDate data;
 
     public Jogo(){
         this.ATeam = new Equipa();
         this.BTeam = new Equipa();
+        resultado=new ParInteiros();
+        data= LocalDate.now();
     }
 
-    public Jogo(Equipa ATeam, Equipa BTeam){
+    public Jogo(Equipa ATeam, Equipa BTeam,LocalDate data){
         this.ATeam=ATeam;
         this.BTeam=BTeam;
+        this.data=data;
+        this.resultado=new ParInteiros();
+    }
+
+    public Jogo(Equipa ATeam, Equipa BTeam,LocalDate data,int gA,int gB){
+        this.ATeam=ATeam;
+        this.BTeam=BTeam;
+        this.data=data;
+        this.resultado=new ParInteiros(gA,gB);
+    }
+
+    public Jogo(Equipa ATeam, Equipa BTeam,LocalDate data,ParInteiros resultado){
+        this.ATeam=ATeam;
+        this.BTeam=BTeam;
+        this.data=data;
+        this.resultado=new ParInteiros(resultado);
     }
 
     public Jogo(Jogo j){
-        this.setATeam(j.getATeam());
-        this.setBTeam(j.getBTeam());
+        this.ATeam=j.getATeam();
+        this.BTeam=j.getBTeam();
+        this.data=j.getData();
+        this.resultado=j.getResultado();
     }
 
     public boolean equals(Object j){
@@ -28,23 +52,26 @@ public class Jogo{
         if(j==this)return true;
         if(this.getClass()!=j.getClass())return false;
         Jogo novo = (Jogo)j;
-        return novo.getATeam().equals(this.getATeam()) && novo.getBTeam().equals(this.getBTeam());
+        return novo.getATeam().equals(this.getATeam())
+                && novo.getBTeam().equals(this.getBTeam())
+                && novo.getData().equals(this.data)
+                && novo.getResultado().equals(this.resultado);
     }
 
     public String toString(){
         StringBuilder sb= new StringBuilder();
         sb.append("Jogo:").append(this.getATeam().getNome()).append(",").append(this.getBTeam().getNome()).append(",");
-        sb.append(this.getGolosA()).append(",").append(this.getGolosB()).append(",");
+        sb.append(this.resultado.toString()).append(",").append(data.toString()).append(",");
         String prefix="";
-        for(Jogador j:ATeam.getTitulares()){
+        for(Integer j:ATeam.getTitulares()){
             sb.append(prefix);
             prefix=",";
-            sb.append(j.getNumero());
+            sb.append(j);
         }
-        for(Jogador j:BTeam.getTitulares()){
+        for(Integer j:BTeam.getTitulares()){
             sb.append(prefix);
             prefix=",";
-            sb.append(j.getNumero());
+            sb.append(j);
         }
         return sb.toString();
     }
@@ -56,42 +83,42 @@ public class Jogo{
     //Gets e Sets
 
     public Equipa getATeam() {
-        return new Equipa(this.ATeam);
+        return ATeam.clone();
     }
 
     public void setATeam(Equipa ATeam) {
-        this.ATeam = ATeam;
+        this.ATeam = ATeam.clone();
     }
 
     public Equipa getBTeam() {
-        return new Equipa(this.BTeam);
+        return BTeam.clone();
     }
 
     public void setBTeam(Equipa BTeam) {
-        this.BTeam = BTeam;
+        this.BTeam = BTeam.clone();
     }
 
-    public int getGolosA() {
-        return golosA;
+    public ParInteiros getResultado(){
+        return resultado.clone();
     }
 
-    public void setGolosA(int golosA) {
-        this.golosA = golosA;
+    public void setResultado(ParInteiros resultado){
+        this.resultado=resultado.clone();
     }
 
-    public int getGolosB() {
-        return golosB;
+    public LocalDate getData(){
+        return data;
     }
 
-    public void setGolosB(int golosB) {
-        this.golosB = golosB;
+    public void setData(LocalDate data){
+        this.data=data;
     }
 
     //
 
     //Tive a fazer aproximações e cheguei esta funções para calcular um possivel resultado final, podemos discutir
     //isto todos juntos se tiverem outras ideias
-    public int resultadoFinal(){
+    public void resultadoFinal(){
         int rateA=ATeam.calculaRatingTotal();
         int rateB=BTeam.calculaRatingTotal();
         double chanceA;
@@ -108,48 +135,45 @@ public class Jogo{
         double result = r.nextDouble();
 
         if(result<chanceA){
-            calculaGolos(0,new Random());
-            return 0;
+            calculaGolos(0,r);
         }
         else if(result<(chanceA+chanceE)){
-            calculaGolos(2,new Random());
-            return 2;
+            calculaGolos(2,r);
         }
         else{
-            calculaGolos(1,new Random());
-            return 1;
+            calculaGolos(1,r);
         }
     }
 
     private void calculaGolos(int res,Random r){
-        int gA=-1;
-        int gB=-1;
-        int diffA=((int)(1.5+(this.ATeam.ataque()-this.BTeam.defesa()*1.2)/20));
-        int diffB=((int)(1.5+(this.BTeam.ataque()-this.ATeam.defesa()*1.2)/20));
+        int gA;
+        int gB;
+        double diffA=1.5+(this.ATeam.ataque()-this.BTeam.defesa()*1.2)/20;
+        double diffB=1.5+(this.BTeam.ataque()-this.ATeam.defesa()*1.2)/20;
         if(diffA<0)diffA=0;
         if(diffB<0)diffB=0;
         if(res==0){
             do{
-                gA=diffA+(int)Math.round(r.nextGaussian()*diffA);
-                gB=diffB+(int)Math.round(r.nextGaussian()*diffB);
+                gA=(int)Math.round(diffA+r.nextGaussian()*diffA);
+                gB=(int)Math.round(diffB+r.nextGaussian()*diffB);
             }while(gA<=gB||gA<=0||gB<0);
         }
         if(res==1){
             do{
-                gA=diffA+(int)Math.round(r.nextGaussian()*diffA);
-                gB=diffB+(int)Math.round(r.nextGaussian()*diffB);
-            }while(gB<=gA||gA<=0||gB<0);
+                gA=(int)Math.round(diffA+r.nextGaussian()*diffA);
+                gB=(int)Math.round(diffB+r.nextGaussian()*diffB);
+            }while(gB<=gA||gA<0||gB<=0);
         }
-        if(res==2){
+        else{
             do{
-                gA=diffA+(int)Math.round(r.nextGaussian()*diffA);
-                gB=diffB+(int)Math.round(r.nextGaussian()*diffB);
+                gA=(int)Math.round(diffA+r.nextGaussian()*diffA);
+                gB=(int)Math.round(diffB+r.nextGaussian()*diffB);
             }while (gB!=gA);
             gA=Math.round(gA+gB)/2;
             gB=gA;
         }
-        this.golosA=gA;
-        this.golosB=gB;
+        this.resultado.setX(gA);
+        this.resultado.setY(gB);
     }
 }
 

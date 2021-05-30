@@ -1,5 +1,9 @@
 package FootballManager;
 
+import FootballManager.Players.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Main{
@@ -36,16 +40,27 @@ public class Main{
         Equipa juventus = new Equipa();
         juventus.setNome("Juventus");
         juventus.addJogador(ronaldo);
+        juventus.add2Titulares(ronaldo.getNumero());
         juventus.addJogador(morata);
+        juventus.add2Titulares(morata.getNumero());
         juventus.addJogador(chiesa);
+        juventus.add2Titulares(chiesa.getNumero());
         juventus.addJogador(rabiot);
+        juventus.add2Titulares(rabiot.getNumero());
         juventus.addJogador(bentancur);
+        juventus.add2Titulares(bentancur.getNumero());
         juventus.addJogador(cuadrado);
+        juventus.add2Titulares(cuadrado.getNumero());
         juventus.addJogador(sandro);
+        juventus.add2Titulares(sandro.getNumero());
         juventus.addJogador(danilo);
+        juventus.add2Titulares(danilo.getNumero());
         juventus.addJogador(deligt);
+        juventus.add2Titulares(deligt.getNumero());
         juventus.addJogador(chiellini);
+        juventus.add2Titulares(chiellini.getNumero());
         juventus.addJogador(szczesny);
+        juventus.add2Titulares(szczesny.getNumero());
         System.out.println(juventus);
 
         /*
@@ -83,19 +98,31 @@ public class Main{
         Equipa atletico = new Equipa();
         atletico.setNome("Atletico de Madrid");
         atletico.addJogador(felix);
+        atletico.add2Titulares(felix.getNumero());
         atletico.addJogador(suarez);
+        atletico.add2Titulares(suarez.getNumero());
         atletico.addJogador(carrasco);
+        atletico.add2Titulares(carrasco.getNumero());
         atletico.addJogador(trippier);
+        atletico.add2Titulares(trippier.getNumero());
         atletico.addJogador(lemar);
+        atletico.add2Titulares(lemar.getNumero());
         atletico.addJogador(llorente);
+        atletico.add2Titulares(llorente.getNumero());
         atletico.addJogador(koke);
+        atletico.add2Titulares(koke.getNumero());
         atletico.addJogador(gimenez);
+        atletico.add2Titulares(gimenez.getNumero());
         atletico.addJogador(savic);
+        atletico.add2Titulares(savic.getNumero());
         atletico.addJogador(hermoso);
+        atletico.add2Titulares(hermoso.getNumero());
         atletico.addJogador(oblak);
+        atletico.add2Titulares(oblak.getNumero());
         System.out.println(atletico);
 
-        Jogo juveAtl = new Jogo(juventus,atletico);
+        LocalDate date = LocalDate.now();
+        Jogo juveAtl = new Jogo(juventus,atletico,date);
         juveAtl.resultadoFinal();
         System.out.println(juveAtl);
     }
