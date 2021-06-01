@@ -1,6 +1,8 @@
-package FootballManager;
+package FootballManager.Auxiliares;
 
-public class ParInteiros {
+import java.util.Comparator;
+
+public class ParInteiros implements Comparable<ParInteiros> {
     private int x;
     private int y;
 
@@ -16,6 +18,13 @@ public class ParInteiros {
     public ParInteiros(ParInteiros par){
         this.x= par.getX();
         this.y=par.getY();
+    }
+
+    @Override
+    public int compareTo(ParInteiros o) {
+        if(this.equals(o))return 0;
+        else if(this.getX() == o.getX())return this.getY()-o.getY();
+        else return this.getX()-o.getX();
     }
 
     public boolean equals(Object o){

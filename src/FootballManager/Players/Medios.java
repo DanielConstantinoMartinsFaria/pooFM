@@ -9,13 +9,14 @@ public class Medios extends Jogador{
         super();
     }
 
-    public Medios(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,int controlo,ArrayList<String>equipas){
+    public Medios(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,int recuperacao,ArrayList<String>equipas){
         super(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
-        this.recuperacao =controlo;
+        this.recuperacao =recuperacao;
     }
 
     public Medios(Medios medio){
         super(medio);
+        this.recuperacao=medio.getRecuperacao();
     }
 
     public Medios clone(){
@@ -23,7 +24,7 @@ public class Medios extends Jogador{
     }
 
     public int getRecuperacao(){
-        return recuperacao;
+        return this.recuperacao;
     }
 
     public void setRecuperacao(int recuperacao){

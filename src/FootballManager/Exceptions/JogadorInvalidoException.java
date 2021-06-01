@@ -1,4 +1,4 @@
-package FootballManager;
+package FootballManager.Exceptions;
 
 public class JogadorInvalidoException extends Exception {
     public JogadorInvalidoException(){

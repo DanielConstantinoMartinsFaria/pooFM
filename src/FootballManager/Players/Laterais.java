@@ -16,6 +16,7 @@ public class Laterais extends Jogador{
 
     public Laterais(Laterais lateral){
         super(lateral);
+        this.cruzamento=lateral.getCruzamento();
     }
 
     public Laterais clone(){
@@ -23,7 +24,7 @@ public class Laterais extends Jogador{
     }
 
     public int getCruzamento(){
-        return cruzamento;
+        return this.cruzamento;
     }
 
     public void setCruzamento(int cruzamento){

@@ -1,10 +1,9 @@
 package FootballManager.Players;
 
-import FootballManager.JogadorInvalidoException;
+import FootballManager.Exceptions.JogadorInvalidoException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class Jogador{
     private String nome;

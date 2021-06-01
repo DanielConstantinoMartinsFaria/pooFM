@@ -1,11 +1,14 @@
 package FootballManager;
 
+import FootballManager.Exceptions.ExcessoJogadoresException;
+import FootballManager.Exceptions.JogadorInexistenteException;
+import FootballManager.Exceptions.JogadorInvalidoException;
 import FootballManager.Players.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Equipa {
+public class Equipa implements Comparable<Equipa>{
     private String nome;
     private Map<Integer, Jogador> jogadores;
     private Set<Integer> titulares;
@@ -35,6 +38,12 @@ public class Equipa {
     }
 
     //Equals, clone, etc...
+
+
+    @Override
+    public int compareTo(Equipa o) {
+        return nome.compareTo(o.getNome());
+    }
 
     public boolean equals(Object eq) {
         if (eq == null) return false;
@@ -151,6 +160,14 @@ public class Equipa {
     public Jogador getJogador(int nCam) throws JogadorInexistenteException {
         if (!jogadores.containsKey(nCam)) throw new JogadorInexistenteException();
         else return jogadores.get(nCam).clone();
+    }
+
+    public boolean eTitular(int nCam){
+        return titulares.contains(nCam);
+    }
+
+    public boolean eSuplente(int nCam){
+        return suplentes.contains(nCam);
     }
 
     //
@@ -320,4 +337,5 @@ public class Equipa {
             return false;
         }
     }
+
 }

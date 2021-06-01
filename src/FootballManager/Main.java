@@ -1,9 +1,11 @@
 package FootballManager;
 
+import FootballManager.Auxiliares.ParInteiros;
+import FootballManager.Exceptions.EquipaInexistenteException;
+import FootballManager.Exceptions.JogoInvalidoException;
 import FootballManager.Players.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Main{
@@ -26,16 +28,6 @@ public class Main{
         Defesas chiellini = new Defesas("Giorgio Chiellini",3,66,54,57,87,45,78,65,equipas);
 
         GuardaRedes szczesny = new GuardaRedes("Wojciech Szczesny",1,86,45,88,86,14,73,32,87,equipas);
-
-        /*
-        ronaldo.addEquipa("Andorinha");
-        ronaldo.addEquipa("Nacional");
-        ronaldo.addEquipa("Sporting");
-        ronaldo.addEquipa("Manchester United");
-        ronaldo.addEquipa("Real Madrid");
-        ronaldo.addEquipa("Juventus");
-        System.out.println(ronaldo.getEquipas());
-        */
 
         Equipa juventus = new Equipa();
         juventus.setNome("Juventus");
@@ -123,7 +115,16 @@ public class Main{
 
         LocalDate date = LocalDate.now();
         Jogo juveAtl = new Jogo(juventus,atletico,date);
-        juveAtl.resultadoFinal();
+        try{
+            ParInteiros res=juveAtl.simulador(juventus,atletico);
+        } catch (EquipaInexistenteException | JogoInvalidoException e) {
+            e.printStackTrace();
+        }
+        try{
+            ParInteiros res=juveAtl.simulador(juventus,atletico);
+        } catch (EquipaInexistenteException | JogoInvalidoException e) {
+            e.printStackTrace();
+        }
         System.out.println(juveAtl);
     }
 
@@ -132,7 +133,7 @@ public class Main{
 
 /*
 Juventus
-        ArrayList<String> equipas = new ArrayList<>();
+
         Avancados ronaldo = new Avancados("Cristiano Ronaldo",7,89,84,87,95,86,95,81,equipas);
         Avancados morata = new Avancados("Alvaro Morata",9,80,77,72,84,80,80,71,equipas);
 
@@ -149,21 +150,32 @@ Juventus
 
         GuardaRedes szczesny = new GuardaRedes("Wojciech Szczesny",1,86,45,88,86,14,73,32,87,equipas);
 
-        ArrayList<Jogador> titulares1=new ArrayList<>();
-        ArrayList<Jogador> suplentes1=new ArrayList<>();
-        ArrayList<Jogador> reservas1=new ArrayList<>();
-        titulares1.add(ronaldo);
-        titulares1.add(rabiot);
-        titulares1.add(morata);
-        titulares1.add(chiellini);
-        titulares1.add(chiesa);
-        titulares1.add(danilo);
-        titulares1.add(sandro);
-        titulares1.add(deligt);
-        titulares1.add(szczesny);
-        titulares1.add(bentancur);
-        titulares1.add(cuadrado);
-        Equipa juventus = new Equipa("Serie A","Juventus",titulares1,suplentes1,reservas1);
+        Equipa juventus = new Equipa();
+        juventus.setNome("Juventus");
+        juventus.addJogador(ronaldo);
+        juventus.add2Titulares(ronaldo.getNumero());
+        juventus.addJogador(morata);
+        juventus.add2Titulares(morata.getNumero());
+        juventus.addJogador(chiesa);
+        juventus.add2Titulares(chiesa.getNumero());
+        juventus.addJogador(rabiot);
+        juventus.add2Titulares(rabiot.getNumero());
+        juventus.addJogador(bentancur);
+        juventus.add2Titulares(bentancur.getNumero());
+        juventus.addJogador(cuadrado);
+        juventus.add2Titulares(cuadrado.getNumero());
+        juventus.addJogador(sandro);
+        juventus.add2Titulares(sandro.getNumero());
+        juventus.addJogador(danilo);
+        juventus.add2Titulares(danilo.getNumero());
+        juventus.addJogador(deligt);
+        juventus.add2Titulares(deligt.getNumero());
+        juventus.addJogador(chiellini);
+        juventus.add2Titulares(chiellini.getNumero());
+        juventus.addJogador(szczesny);
+        juventus.add2Titulares(szczesny.getNumero());
+        System.out.println(juventus);
+
 
         System.out.println("Ronaldo:"+ronaldo.calculaRatingTotal());
         System.out.println("Morata:"+morata.calculaRatingTotal());
@@ -182,7 +194,6 @@ Juventus
         System.out.println("Juventus:"+juventus.calculaRatingTotal());
         System.out.println("Atk:"+juventus.ataque()+"Def:"+juventus.defesa());
         System.out.println("|-----------------------------------------------------|");
-
  */
 
 
@@ -204,21 +215,34 @@ Atletico
 
         GuardaRedes oblak = new GuardaRedes("Jan Oblak",13,87,41,90,87,13,78,43,90,equipas);
 
-        ArrayList<Jogador> titulares2=new ArrayList<>();
-        ArrayList<Jogador> suplentes2=new ArrayList<>();
-        ArrayList<Jogador> reservas2=new ArrayList<>();
-        titulares2.add(felix);
-        titulares2.add(suarez);
-        titulares2.add(carrasco);
-        titulares2.add(trippier);
-        titulares2.add(lemar);
-        titulares2.add(llorente);
-        titulares2.add(koke);
-        titulares2.add(gimenez);
-        titulares2.add(savic);
-        titulares2.add(hermoso);
-        titulares2.add(oblak);
-        Equipa atletico = new Equipa("Espanhola","Atletico de Madrid",titulares2,suplentes2,reservas2);
+
+        Equipa atletico = new Equipa();
+        atletico.setNome("Atletico de Madrid");
+        atletico.addJogador(felix);
+        atletico.add2Titulares(felix.getNumero());
+        atletico.addJogador(suarez);
+        atletico.add2Titulares(suarez.getNumero());
+        atletico.addJogador(carrasco);
+        atletico.add2Titulares(carrasco.getNumero());
+        atletico.addJogador(trippier);
+        atletico.add2Titulares(trippier.getNumero());
+        atletico.addJogador(lemar);
+        atletico.add2Titulares(lemar.getNumero());
+        atletico.addJogador(llorente);
+        atletico.add2Titulares(llorente.getNumero());
+        atletico.addJogador(koke);
+        atletico.add2Titulares(koke.getNumero());
+        atletico.addJogador(gimenez);
+        atletico.add2Titulares(gimenez.getNumero());
+        atletico.addJogador(savic);
+        atletico.add2Titulares(savic.getNumero());
+        atletico.addJogador(hermoso);
+        atletico.add2Titulares(hermoso.getNumero());
+        atletico.addJogador(oblak);
+        atletico.add2Titulares(oblak.getNumero());
+        System.out.println(atletico);
+
+
 
         System.out.println("Felix:"+felix.calculaRatingTotal());
         System.out.println("Suarez:"+suarez.calculaRatingTotal());

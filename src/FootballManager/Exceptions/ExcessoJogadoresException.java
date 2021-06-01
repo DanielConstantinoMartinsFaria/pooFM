@@ -1,4 +1,4 @@
-package FootballManager;
+package FootballManager.Exceptions;
 
 public class ExcessoJogadoresException extends Exception{
     public ExcessoJogadoresException(){
