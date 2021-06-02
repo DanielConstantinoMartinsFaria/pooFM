@@ -1,11 +1,12 @@
-package FootballManager.Players;
+package FootballManager.Model.Players;
 
-import FootballManager.Exceptions.JogadorInvalidoException;
+import FootballManager.Model.Exceptions.JogadorInvalidoException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Jogador{
+public abstract class Jogador implements Serializable {
     private String nome;
     private int velocidade;
     private int resistencia;

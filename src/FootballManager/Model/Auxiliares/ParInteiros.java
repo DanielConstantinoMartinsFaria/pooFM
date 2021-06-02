@@ -1,8 +1,8 @@
-package FootballManager.Auxiliares;
+package FootballManager.Model.Auxiliares;
 
-import java.util.Comparator;
+import java.io.Serializable;
 
-public class ParInteiros implements Comparable<ParInteiros> {
+public class ParInteiros implements Comparable<ParInteiros>, Serializable {
     private int x;
     private int y;
 

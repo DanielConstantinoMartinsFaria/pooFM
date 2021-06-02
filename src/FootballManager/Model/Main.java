@@ -1,9 +1,9 @@
-package FootballManager;
+package FootballManager.Model;
 
-import FootballManager.Auxiliares.ParInteiros;
-import FootballManager.Exceptions.EquipaInexistenteException;
-import FootballManager.Exceptions.JogoInvalidoException;
-import FootballManager.Players.*;
+import FootballManager.Model.Exceptions.EquipaInexistenteException;
+import FootballManager.Model.Exceptions.JogoInvalidoException;
+import FootballManager.Model.Auxiliares.ParInteiros;
+import FootballManager.Model.Players.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -53,7 +53,6 @@ public class Main{
         juventus.add2Titulares(chiellini.getNumero());
         juventus.addJogador(szczesny);
         juventus.add2Titulares(szczesny.getNumero());
-        System.out.println(juventus);
 
         /*
         System.out.println("Ronaldo:"+ronaldo.calculaRatingTotal());
@@ -111,7 +110,6 @@ public class Main{
         atletico.add2Titulares(hermoso.getNumero());
         atletico.addJogador(oblak);
         atletico.add2Titulares(oblak.getNumero());
-        System.out.println(atletico);
 
         LocalDate date = LocalDate.now();
         Jogo juveAtl = new Jogo(juventus,atletico,date);
@@ -120,12 +118,18 @@ public class Main{
         } catch (EquipaInexistenteException | JogoInvalidoException e) {
             e.printStackTrace();
         }
-        try{
-            ParInteiros res=juveAtl.simulador(juventus,atletico);
-        } catch (EquipaInexistenteException | JogoInvalidoException e) {
-            e.printStackTrace();
-        }
-        System.out.println(juveAtl);
+        //System.out.println(juveAtl);
+
+        Estado estado = new Estado();
+        /*
+        estado.addEquipa(juventus);
+        estado.addEquipa(atletico);
+        estado.addJogo(juveAtl);
+        */
+        //estado.printText("teste.txt");
+        estado.readText("teste.txt");
+        System.out.println(estado);
+
     }
 
 }

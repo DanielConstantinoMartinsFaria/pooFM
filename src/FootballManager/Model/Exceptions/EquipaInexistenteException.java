@@ -1,4 +1,4 @@
-package FootballManager.Exceptions;
+package FootballManager.Model.Exceptions;
 
 public class EquipaInexistenteException extends Exception{
     public EquipaInexistenteException(){

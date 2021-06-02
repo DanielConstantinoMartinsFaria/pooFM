@@ -1,14 +1,15 @@
-package FootballManager;
+package FootballManager.Model;
 
-import FootballManager.Exceptions.ExcessoJogadoresException;
-import FootballManager.Exceptions.JogadorInexistenteException;
-import FootballManager.Exceptions.JogadorInvalidoException;
-import FootballManager.Players.*;
+import FootballManager.Model.Exceptions.ExcessoJogadoresException;
+import FootballManager.Model.Exceptions.JogadorInexistenteException;
+import FootballManager.Model.Exceptions.JogadorInvalidoException;
+import FootballManager.Model.Players.*;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Equipa implements Comparable<Equipa>{
+public class Equipa implements Comparable<Equipa>, Serializable {
     private String nome;
     private Map<Integer, Jogador> jogadores;
     private Set<Integer> titulares;
@@ -63,15 +64,10 @@ public class Equipa implements Comparable<Equipa>{
         StringBuilder sb = new StringBuilder();
         sb.append("Equipa:").append(this.getNome()).append("\n");
         String prefix = "";
-        for (Integer i : this.titulares) {
+        for (Jogador i : this.jogadores.values()) {
             sb.append(prefix);
             prefix = "\n";
-            sb.append(jogadores.get(i).toString());
-        }
-        for (Integer i : this.suplentes) {
-            sb.append(prefix);
-            prefix = "\n";
-            sb.append(jogadores.get(i).toString());
+            sb.append(i.toString());
         }
         return sb.toString();
     }

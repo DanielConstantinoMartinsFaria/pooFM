@@ -1,4 +1,4 @@
-package FootballManager.Players;
+package FootballManager.Model.Players;
 import java.util.ArrayList;
 
 public class GuardaRedes extends Jogador{

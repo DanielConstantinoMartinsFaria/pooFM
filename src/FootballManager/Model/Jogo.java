@@ -1,18 +1,19 @@
-package FootballManager;
+package FootballManager.Model;
 
-import FootballManager.Auxiliares.ParInteiros;
-import FootballManager.Exceptions.EquipaInexistenteException;
-import FootballManager.Exceptions.ExcessoJogadoresException;
-import FootballManager.Exceptions.JogadorInexistenteException;
-import FootballManager.Exceptions.JogoInvalidoException;
+import FootballManager.Model.Exceptions.EquipaInexistenteException;
+import FootballManager.Model.Exceptions.ExcessoJogadoresException;
+import FootballManager.Model.Exceptions.JogadorInexistenteException;
+import FootballManager.Model.Exceptions.JogoInvalidoException;
+import FootballManager.Model.Auxiliares.ParInteiros;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-public class Jogo implements Comparable<Jogo>{
+public class Jogo implements Comparable<Jogo>, Serializable {
     private String ATeam;
     private String BTeam;
     private ParInteiros resultado;
@@ -35,11 +36,35 @@ public class Jogo implements Comparable<Jogo>{
         done=false;
     }
 
+    public Jogo(String ATeam,String BTeam,LocalDate data){
+        this.ATeam=ATeam;
+        this.BTeam=BTeam;
+        this.data=data;
+        this.resultado=new ParInteiros();
+        this.APlantel = new TreeSet<>();
+        this.BPlantel = new TreeSet<>();
+        ATeamSubs = new TreeSet<>();
+        BTeamSubs = new TreeSet<>();
+        done=false;
+    }
+
     public Jogo(Equipa ATeam, Equipa BTeam,LocalDate data){
         this.ATeam=ATeam.getNome();
         this.BTeam=BTeam.getNome();
         this.data=data;
         this.resultado=new ParInteiros();
+        APlantel = ATeam.getTitulares();
+        BPlantel = BTeam.getTitulares();
+        ATeamSubs = new TreeSet<>();
+        BTeamSubs = new TreeSet<>();
+        done=false;
+    }
+
+    public Jogo(Equipa ATeam, Equipa BTeam,LocalDate data, ParInteiros res){
+        this.ATeam=ATeam.getNome();
+        this.BTeam=BTeam.getNome();
+        this.data=data;
+        this.resultado=res.clone();
         APlantel = ATeam.getTitulares();
         BPlantel = BTeam.getTitulares();
         ATeamSubs = new TreeSet<>();
@@ -131,6 +156,10 @@ public class Jogo implements Comparable<Jogo>{
         return resultado.clone();
     }
 
+    public void setResultado(ParInteiros resultado) {
+        this.resultado = resultado.clone();
+    }
+
     public LocalDate getData(){
         return data;
     }
@@ -143,20 +172,40 @@ public class Jogo implements Comparable<Jogo>{
         return this.ATeamSubs.stream().map(ParInteiros::clone).collect(Collectors.toSet());
     }
 
+    public void setATeamSubs(Set<ParInteiros>subs){
+        this.ATeamSubs=subs.stream().map(ParInteiros::clone).collect(Collectors.toSet());
+    }
+
     public Set<ParInteiros> getBTeamSubs(){
         return this.BTeamSubs.stream().map(ParInteiros::clone).collect(Collectors.toSet());
+    }
+
+    public void setBTeamSubs(Set<ParInteiros>subs){
+        this.BTeamSubs=subs.stream().map(ParInteiros::clone).collect(Collectors.toSet());
     }
 
     public Set<Integer> getAPlantel(){
         return new TreeSet<>(this.APlantel);
     }
 
+    public void setAPlantel(Set<Integer> aPlantel){
+        this.APlantel= new TreeSet<>(aPlantel);
+    }
+
     public Set<Integer> getBPlantel(){
         return new TreeSet<>(this.BPlantel);
     }
 
+    public void setBPlantel(Set<Integer> bPlantel){
+        this.APlantel= new TreeSet<>(bPlantel);
+    }
+
     public boolean getDone(){
         return done;
+    }
+
+    public void setDone(boolean done){
+        this.done=done;
     }
 
     //
