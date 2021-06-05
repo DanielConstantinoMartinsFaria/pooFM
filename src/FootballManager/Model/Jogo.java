@@ -1,16 +1,14 @@
 package FootballManager.Model;
 
+import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Exceptions.EquipaInexistenteException;
 import FootballManager.Model.Exceptions.ExcessoJogadoresException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.JogoInvalidoException;
-import FootballManager.Model.Auxiliares.ParInteiros;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Jogo implements Comparable<Jogo>, Serializable {
@@ -18,11 +16,14 @@ public class Jogo implements Comparable<Jogo>, Serializable {
     private String BTeam;
     private ParInteiros resultado;
     private LocalDate data;
-    private Set<Integer> APlantel;
-    private Set<Integer> BPlantel;
+    private boolean done;
+    //
+    private Set<Integer>APlantel;
+    private Set<Integer>BPlantel;
+
     private Set<ParInteiros> ATeamSubs;
     private Set<ParInteiros> BTeamSubs;
-    private boolean done;
+
 
     public Jogo(){
         ATeam = "";
@@ -43,33 +44,9 @@ public class Jogo implements Comparable<Jogo>, Serializable {
         this.resultado=new ParInteiros();
         this.APlantel = new TreeSet<>();
         this.BPlantel = new TreeSet<>();
-        ATeamSubs = new TreeSet<>();
-        BTeamSubs = new TreeSet<>();
-        done=false;
-    }
-
-    public Jogo(Equipa ATeam, Equipa BTeam,LocalDate data){
-        this.ATeam=ATeam.getNome();
-        this.BTeam=BTeam.getNome();
-        this.data=data;
-        this.resultado=new ParInteiros();
-        APlantel = ATeam.getTitulares();
-        BPlantel = BTeam.getTitulares();
-        ATeamSubs = new TreeSet<>();
-        BTeamSubs = new TreeSet<>();
-        done=false;
-    }
-
-    public Jogo(Equipa ATeam, Equipa BTeam,LocalDate data, ParInteiros res){
-        this.ATeam=ATeam.getNome();
-        this.BTeam=BTeam.getNome();
-        this.data=data;
-        this.resultado=res.clone();
-        APlantel = ATeam.getTitulares();
-        BPlantel = BTeam.getTitulares();
-        ATeamSubs = new TreeSet<>();
-        BTeamSubs = new TreeSet<>();
-        done=false;
+        this.ATeamSubs = new TreeSet<>();
+        this.BTeamSubs = new TreeSet<>();
+        this.done=false;
     }
 
     public Jogo(Jogo j){
@@ -86,7 +63,13 @@ public class Jogo implements Comparable<Jogo>, Serializable {
 
     @Override
     public int compareTo(Jogo o) {
-        return data.compareTo(o.getData());
+        if(data.compareTo(o.getData())==0){
+            if(ATeam.compareTo(o.ATeam)==0){
+                return BTeam.compareTo(o.BTeam);
+            }
+            else return ATeam.compareTo(o.ATeam);
+        }
+        else return BTeam.compareTo(o.BTeam);
     }
 
     public boolean equals(Object j){
@@ -100,6 +83,30 @@ public class Jogo implements Comparable<Jogo>, Serializable {
                 && novo.getResultado().equals(this.resultado)
                 && this.ATeamSubs.containsAll(novo.getATeamSubs())
                 && this.BTeamSubs.containsAll(novo.getBTeamSubs());
+    }
+
+    public String prettyString(Equipa A,Equipa B) throws EquipaInexistenteException, JogadorInexistenteException {
+        if(A.getNome().equals(ATeam)){
+            if(B.getNome().equals(BTeam)){
+                StringBuilder sb= new StringBuilder();
+                sb.append("Jogo:").append(this.getATeam());
+                if(done)sb.append(" |").append(resultado.getX()).append("| ");
+                sb.append("VS");
+                if(done)sb.append(" |").append(resultado.getX()).append("| ");
+                sb.append(this.BTeam).append(" - ").append(data).append("\n");
+                sb.append(A.prettyString()).append("\n").append(B.prettyString());
+                sb.append("\nSUBS:\n");
+                for(ParInteiros p:ATeamSubs){
+                    sb.append(A.getJogador(p.getX()).getNome()).append("->").append(A.getJogador(p.getY()).getNome()).append("\n");
+                }
+                for(ParInteiros p:BTeamSubs){
+                    sb.append(B.getJogador(p.getX()).getNome()).append("->").append(B.getJogador(p.getY()).getNome()).append("\n");
+                }
+                return sb.toString();
+            }
+            else throw new EquipaInexistenteException(B.getNome());
+        }
+        else throw new EquipaInexistenteException(A.getNome());
     }
 
     public String toString(){
@@ -189,7 +196,7 @@ public class Jogo implements Comparable<Jogo>, Serializable {
     }
 
     public void setAPlantel(Set<Integer> aPlantel){
-        this.APlantel= new TreeSet<>(aPlantel);
+        this.APlantel = new HashSet<>(aPlantel);
     }
 
     public Set<Integer> getBPlantel(){
@@ -197,7 +204,7 @@ public class Jogo implements Comparable<Jogo>, Serializable {
     }
 
     public void setBPlantel(Set<Integer> bPlantel){
-        this.APlantel= new TreeSet<>(bPlantel);
+        this.BPlantel= new HashSet<>(bPlantel);
     }
 
     public boolean getDone(){
@@ -212,39 +219,39 @@ public class Jogo implements Comparable<Jogo>, Serializable {
 
     //Tive a fazer aproximações e cheguei esta funções para calcular um possivel resultado final, podemos discutir
     //isto todos juntos se tiverem outras ideias
-    private void resultadoFinal(Equipa ATeam,Equipa BTeam){
+    private void resultadoFinal(Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares){
 
-        int rateA=ATeam.calculaRatingTotal();
-        int rateB=BTeam.calculaRatingTotal();
+        int rateA=ATeam.calculaRatingTotal(ATitulares);
+        int rateB=BTeam.calculaRatingTotal(BTitulares);
         double chanceA;
         double chanceE;
         if(rateA>rateB){
-            chanceA=(40.0+(ATeam.calculaRatingTotal()-BTeam.calculaRatingTotal())*1.2)/100.0;
-            chanceE=(20.0-(ATeam.calculaRatingTotal()-BTeam.calculaRatingTotal())*0.4)/100.0;
+            chanceA=(40.0+(ATeam.calculaRatingTotal(ATitulares)-BTeam.calculaRatingTotal(BTitulares))*1.2)/100.0;
+            chanceE=(20.0-(ATeam.calculaRatingTotal(ATitulares)-BTeam.calculaRatingTotal(BTitulares))*0.4)/100.0;
         }
         else{
-            chanceA=(40.0-(BTeam.calculaRatingTotal()-ATeam.calculaRatingTotal())*0.8)/100.0;
-            chanceE=(20.0-(BTeam.calculaRatingTotal()-ATeam.calculaRatingTotal())*0.4)/100.0;
+            chanceA=(40.0-(BTeam.calculaRatingTotal(BTitulares)-ATeam.calculaRatingTotal(ATitulares))*0.8)/100.0;
+            chanceE=(20.0-(BTeam.calculaRatingTotal(BTitulares)-ATeam.calculaRatingTotal(ATitulares))*0.4)/100.0;
         }
         Random r = new Random();
         double result = r.nextDouble();
 
         if(result<chanceA){
-            calculaGolos(0,r,ATeam,BTeam);
+            calculaGolos(0,r,ATeam,BTeam,ATitulares,BTitulares);
         }
         else if(result<(chanceA+chanceE)){
-            calculaGolos(2,r,ATeam,BTeam);
+            calculaGolos(2,r,ATeam,BTeam,ATitulares,BTitulares);
         }
         else{
-            calculaGolos(1,r,ATeam,BTeam);
+            calculaGolos(1,r,ATeam,BTeam,ATitulares,BTitulares);
         }
     }
 
-    private void calculaGolos(int res,Random r,Equipa ATeam,Equipa BTeam){
+    private void calculaGolos(int res,Random r,Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares){
         int gA;
         int gB;
-        double diffA=1.5+(ATeam.ataque()-BTeam.defesa()*1.2)/20;
-        double diffB=1.5+(BTeam.ataque()-ATeam.defesa()*1.2)/20;
+        double diffA=1.5+(ATeam.ataque(ATitulares)-BTeam.defesa(BTitulares)*1.2)/20;
+        double diffB=1.5+(BTeam.ataque(BTitulares)-ATeam.defesa(ATitulares)*1.2)/20;
         if(diffA<0)diffA=0;
         if(diffB<0)diffB=0;
         if(res==0){
@@ -271,7 +278,7 @@ public class Jogo implements Comparable<Jogo>, Serializable {
         this.resultado.setY(gB);
     }
 
-    public ParInteiros simulador(Equipa ATeam,Equipa BTeam) throws EquipaInexistenteException, JogoInvalidoException {
+    public ParInteiros simulador(Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares) throws EquipaInexistenteException, JogoInvalidoException {
         //Este método irá chamar tanto o resultado final, como o simulador passo-a-passo, ainda por implementar
 
         if(done)throw new JogoInvalidoException("Jogo já foi realizado");
@@ -279,58 +286,9 @@ public class Jogo implements Comparable<Jogo>, Serializable {
         if(BTeam==null)throw new EquipaInexistenteException("Equipa B inexistente");
         if(!ATeam.getNome().equals(this.ATeam))throw new EquipaInexistenteException("Equipa "+ATeam.getNome()+" nao pertence ao jogo");
         if(!BTeam.getNome().equals(this.BTeam))throw new EquipaInexistenteException("Equipa "+BTeam.getNome()+" nao pertence ao jogo");
-        this.resultadoFinal(ATeam,BTeam);
+        this.resultadoFinal(ATeam,BTeam,ATitulares,BTitulares);
         done=true;
         return resultado.clone();
     }
 
-    public boolean substituicao(int in,int out,Equipa team){
-        try{
-            if(team.getNome().equals(ATeam)){
-                if(ATeamSubs.size()>=3)throw new ExcessoJogadoresException("Equipa A atingiu o limite de substituicoes");
-                if(team.eTitular(out)){
-                    if(team.eSuplente(in)){
-                        team.substituicao(in,out);
-                        ParInteiros novo=new ParInteiros(out,in);
-                        ATeamSubs.add(novo);
-                        return true;
-                    }
-                    else throw new JogadorInexistenteException("Jogador N:"+in+" nao encontrado");
-                }
-                else throw new JogadorInexistenteException("Jogador N:"+out+" nao encontrado");
-            }
-            else if(team.getNome().equals(BTeam)){
-                if(BTeamSubs.size()>=3)throw new ExcessoJogadoresException("Equipa B atingiu o limite de substituicoes");
-                if(team.eTitular(out)){
-                    if(team.eSuplente(in)){
-                        team.substituicao(in,out);
-                        ParInteiros novo=new ParInteiros(out,in);
-                        BTeamSubs.add(novo);
-                        return true;
-                    }
-                    else throw new JogadorInexistenteException("Jogador N:"+in+" nao encontrado");
-                }
-                else throw new JogadorInexistenteException("Jogador N:"+out+" nao encontrado");
-            }
-            else{
-                return false;
-            }
-        } catch (ExcessoJogadoresException | JogadorInexistenteException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
-
-        /*if(ATeam.calculaRatingTotal() > BTeam.calculaRatingTotal()) return 0;
-        else if(ATeam.calculaRatingTotal() < BTeam.calculaRatingTotal()) return 1;
-        else return 2;
-        */
-
-/*ideia a desenvolver para determinar quem ganha um jogo (Não definitiva):
-    -Geramos um valor aleatório entre A e B ( A < B e estão entre 0 e 1)
-    -Se o resultado for abaixo de 0.5 ganha a equipa A , senão ganha a B
-    -Caso a equipa A seja melhor, o valor B fica mais baixo , sendo mais provavel A ganhar
-    -Caso a equipa B seja melhor, o valor A fica mais alto , sendo mais provavel B ganhar
-    -Quanto maior a diferença, mais os valores transitam para perto do 0.5 sem passar para a outra metade
- */

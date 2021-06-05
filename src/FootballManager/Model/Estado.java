@@ -2,6 +2,7 @@ package FootballManager.Model;
 
 import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Exceptions.EquipaInexistenteException;
+import FootballManager.Model.Exceptions.JogoInvalidoException;
 import FootballManager.Model.Players.*;
 
 import java.io.*;
@@ -9,30 +10,35 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Estado implements Serializable{
-    private Set<Equipa> equipas;
+    private Map<String,Equipa> equipas;
     private Set<Jogo> jogos;
+    private Map<Integer,Jogador>freelancers;
+
+    //Construtores
 
     public Estado(){
-        equipas=new TreeSet<>();
+        equipas=new TreeMap<>();
         jogos=new TreeSet<>();
+        freelancers=new TreeMap<>();
     }
 
-    public Estado(Set<Equipa>equipas,Set<Jogo>jogos){
+    public Estado(Set<Equipa>equipas,Set<Jogo>jogos,Set<Jogador>freelancers){
         this.setEquipas(equipas);
         this.setJogos(jogos);
+        this.setFreelancers(freelancers);
     }
 
     public Estado(Estado estado){
-        this.equipas=estado.getEquipas();
+        this.equipas=estado.getEquipas().stream().collect(Collectors.toMap(Equipa :: getNome,j->j));
         this.jogos=estado.getJogos();
+        this.freelancers=estado.getFreelancers().stream().collect(Collectors.toMap(Jogador::getNumero,j->j));
     }
+
+    //Defaults
 
     public Estado clone(){
         return new Estado(this);
@@ -40,157 +46,119 @@ public class Estado implements Serializable{
 
     public String toString(){
         StringBuilder sb= new StringBuilder();
-        for(Equipa e:equipas)sb.append(e).append("\n");
+        for(Equipa e:equipas.values())sb.append(e).append("\n");
         for(Jogo j:jogos)sb.append(j).append("\n");
         return sb.toString();
     }
 
+    //Getter & Setters
+
     public Set<Equipa> getEquipas(){
-        return this.equipas.stream().map(Equipa::clone).collect(Collectors.toSet());
+        return this.equipas.values().stream().map(Equipa::clone).collect(Collectors.toSet());
     }
 
     public Set<Jogo> getJogos(){
         return this.jogos.stream().map(Jogo::clone).collect(Collectors.toSet());
     }
 
+    public Set<Jogador> getFreelancers(){
+        return this.freelancers.values().stream().map(Jogador::clone).collect(Collectors.toSet());
+    }
+
     public void setEquipas(Set<Equipa>equipas){
-        this.equipas=equipas.stream().map(Equipa::clone).collect(Collectors.toSet());
+        if(equipas==null)this.equipas=new TreeMap<>();
+        else this.equipas=equipas.stream().collect(Collectors.toMap(Equipa::getNome, Equipa::clone));
     }
 
     public void setJogos(Set<Jogo>jogos){
-        this.jogos=jogos.stream().map(Jogo::clone).collect(Collectors.toSet());
+        if(jogos!=null) this.jogos = jogos.stream().map(Jogo::clone).collect(Collectors.toSet());
+        else this.jogos=new TreeSet<>();
+
     }
 
-    public boolean addJogo(Jogo j){
-        try{
-            if(equipas.stream().map(Equipa::getNome).anyMatch(a->a.equals(j.getATeam()))){
-                if(equipas.stream().map(Equipa::getNome).anyMatch(a->a.equals(j.getBTeam()))){
-                    jogos.add(j);
-                    return true;
-                }
-                else throw new EquipaInexistenteException("Equipa B inexistente");
-            }
-            else throw new EquipaInexistenteException("Equipa A inexistente");
-        }catch(EquipaInexistenteException e){
-            e.printStackTrace();
-            return false;
-        }
+    public void setFreelancers(Set<Jogador>freelancers){
+        if(freelancers==null)this.freelancers= new TreeMap<>();
+        else this.freelancers=freelancers.stream().collect(Collectors.toMap(Jogador::getNumero, Jogador::clone));
     }
 
-    public void addEquipa(Equipa e){
-        equipas.add(e);
+    //Escrita
+
+    public void printText(String pathname) throws FileNotFoundException {
+        PrintWriter printer = new PrintWriter(pathname);
+        printer.print(this.toString());
+        printer.flush();
+        printer.close();
+
     }
 
-    public Equipa getEquipa(String nome){
-        try{
-            if(equipas.stream().anyMatch(a->a.getNome().equals(nome))){
-                for(Equipa e:equipas)if(e.getNome().equals(nome))return e;
-                return null;
-            }
-            else throw new EquipaInexistenteException("Equipa nao encontrada");
-        }catch(EquipaInexistenteException e){
-            e.printStackTrace();
-            return null;
-        }
+    public void printBinary(String pathname) throws IOException {
+        FileOutputStream fileStream= new FileOutputStream(pathname);
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileStream);
+        outputStream.writeObject(this);
+        outputStream.flush();
+        outputStream.close();
     }
 
-    public void printText(String pathname){
-        try{
-            PrintWriter printer = new PrintWriter(pathname);
-            printer.print(this.toString());
-            printer.flush();
-            printer.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    //Leitura
+
+    public void readBinary(String pathname) throws IOException, ClassNotFoundException {
+        FileInputStream fileStream= new FileInputStream(pathname);
+        ObjectInputStream inputStream = new ObjectInputStream(fileStream);
+        Estado novo=(Estado)inputStream.readObject();
+        this.equipas=novo.equipas;
+        this.jogos=novo.jogos;
+        inputStream.close();
+
     }
 
-    public void printBinary(String pathname){
-        try{
-            FileOutputStream fileStream= new FileOutputStream(pathname);
-            ObjectOutputStream outputStream = new ObjectOutputStream(fileStream);
-            outputStream.writeObject(this);
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public List<String> lerFicheiro(String pathname) throws IOException {
+        return Files.readAllLines(Paths.get(pathname), StandardCharsets.UTF_8);
     }
 
-    public void readBinary(String pathname){
-        try{
-            FileInputStream fileStream= new FileInputStream(pathname);
-            ObjectInputStream inputStream = new ObjectInputStream(fileStream);
-            Estado novo=(Estado)inputStream.readObject();
-            this.equipas=novo.getEquipas();
-            this.jogos=novo.getJogos();
-            inputStream.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<String> lerFicheiro(String pathname) {
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(Paths.get(pathname), StandardCharsets.UTF_8);
-        }
-        catch(IOException exc) {
-            exc.printStackTrace();
-            lines = new ArrayList<>();
-        }
-        return lines;
-    }
-
-
-    public void readText(String pathname){
+    public void readText(String pathname) throws IOException, EquipaInexistenteException {
         List<String> linhas = lerFicheiro(pathname);
         String[] linhaPartida;
         Equipa e=null;
         for (String linha : linhas) {
             linhaPartida = linha.split(":", 2);
-            try {
-                if(linhaPartida[0].equals("Equipa")){
-                        if(e!=null)equipas.add(e.clone());
-                        e = new Equipa();
-                        e.setNome(linhaPartida[1]);
-                    }
-                else if(linhaPartida[0].equals("Guarda-Redes")){
-                    if(e==null)throw new EquipaInexistenteException();
+            switch (linhaPartida[0]) {
+                case "Equipa" -> {
+                    if (e != null) equipas.put(e.getNome(), e);
+                    e = new Equipa();
+                    e.setNome(linhaPartida[1]);
+                }
+                case "Guarda-Redes" -> {
+                    if (e == null) throw new EquipaInexistenteException();
                     GuardaRedes g = parseGuardaRedes(linhaPartida[1]);
                     e.addJogador(g);
                 }
-                else if(linhaPartida[0].equals("Avancado")){
-                    if(e==null)throw new EquipaInexistenteException();
+                case "Avancado" -> {
+                    if (e == null) throw new EquipaInexistenteException();
                     Avancados a = parseAvancado(linhaPartida[1]);
                     e.addJogador(a);
                 }
-                else if(linhaPartida[0].equals("Medio")){
-                    if(e==null)throw new EquipaInexistenteException();
+                case "Medio" -> {
+                    if (e == null) throw new EquipaInexistenteException();
                     Medios m = parseMedio(linhaPartida[1]);
                     e.addJogador(m);
                 }
-                else if(linhaPartida[0].equals("Defesa")){
-                    if(e==null)throw new EquipaInexistenteException();
+                case "Defesa" -> {
+                    if (e == null) throw new EquipaInexistenteException();
                     Defesas d = parseDefesa(linhaPartida[1]);
                     e.addJogador(d);
                 }
-                else if(linhaPartida[0].equals("Lateral")){
-                    if(e==null)throw new EquipaInexistenteException();
+                case "Lateral" -> {
+                    if (e == null) throw new EquipaInexistenteException();
                     Laterais l = parseLateral(linhaPartida[1]);
                     e.addJogador(l);
                 }
-                else if(linhaPartida[0].equals("Jogo")){
-                    if(e!=null)equipas.add(e);
+                case "Jogo" -> {
+                    if (e != null) equipas.put(e.getNome(), e);
                     Jogo j = parseJogo(linhaPartida[1]);
                     jogos.add(j);
                 }
-                else{
-                    System.out.println("Linha invalida.");
-                    break;
-                }
-            } catch (EquipaInexistenteException equipaInexistenteException) {
-                equipaInexistenteException.printStackTrace();
+                default -> System.out.println("Linha invalida.");
+
             }
         }
     }
@@ -233,15 +201,16 @@ public class Estado implements Serializable{
         Set<ParInteiros> BTeamSubs=new TreeSet<>();
         for(int i=5;i<campos.length;i++){
             if(team){
-                if(campos[i].contains("->")){
+                if(campos[i].contains("-")){
                     String[]par=campos[i].split("->");
                     ATeamSubs.add(new ParInteiros(Integer.parseInt(par[0]),Integer.parseInt(par[1])));
-                    if(!campos[i+1].contains("->")) {
-                        team = false;
-                    }
                 }
                 else{
-                    ATeam.add(Integer.parseInt(campos[i]));
+                    if(ATeam.size()<11)ATeam.add(Integer.parseInt(campos[i]));
+                    else {
+                        team=false;
+                        i--;
+                    }
                 }
             }
             else{
@@ -250,7 +219,7 @@ public class Estado implements Serializable{
                     BTeamSubs.add(new ParInteiros(Integer.parseInt(par[0]),Integer.parseInt(par[1])));
                 }
                 else{
-                    BTeam.add(Integer.parseInt(campos[i]));
+                    if(BTeam.size()<11)BTeam.add(Integer.parseInt(campos[i]));
                 }
             }
         }
@@ -264,4 +233,61 @@ public class Estado implements Serializable{
         return novo;
     }
 
+    //Manipulação
+
+    public boolean addJogo(String A,String B,LocalDate data) throws EquipaInexistenteException {
+        if(equipas.containsKey(A)){
+            if(equipas.containsKey(B)){
+                Jogo j = new Jogo(A,B,data);
+                jogos.add(j);
+                return true;
+            }
+            else throw new EquipaInexistenteException(B);
+        }
+        else throw new EquipaInexistenteException(A);
+    }
+
+    public boolean addJogo(Jogo j) throws EquipaInexistenteException {
+        if(equipas.containsKey(j.getATeam())){
+            if(equipas.containsKey(j.getBTeam())){
+                jogos.add(j);
+                return true;
+            }
+            else throw new EquipaInexistenteException("Equipa B inexistente");
+        }
+        else throw new EquipaInexistenteException("Equipa A inexistente");
+    }
+
+    public void addEquipa(Equipa e){
+        equipas.put(e.getNome(),e.clone());
+    }
+
+    public void addJogador(Jogador j,String equipa){
+        equipas.get(equipa).addJogador(j.clone());
+    }
+
+    public ParInteiros simular(String ATeam, String BTeam, LocalDate data,Set<Integer>ATitulares,Set<Integer>BTitulares) throws JogoInvalidoException, EquipaInexistenteException {
+        for(Jogo j:jogos){
+            if(j.getData().equals(data)&&j.getATeam().equals(ATeam)&&j.getBTeam().equals(BTeam)){
+                return j.simulador(equipas.get(ATeam),equipas.get(BTeam),ATitulares,BTitulares);
+            }
+        }
+        throw new JogoInvalidoException("Jogo entre "+ATeam+" e "+BTeam+"no dia "+data+" não encontrado");
+    }
+
+    public Jogo getJogo(String ATeam,String BTeam,LocalDate data) throws JogoInvalidoException, EquipaInexistenteException {
+        if(!equipas.containsKey(ATeam))throw new EquipaInexistenteException("Equipa "+ATeam+" nao encontrada");
+        if(!equipas.containsKey(BTeam))throw new EquipaInexistenteException("Equipa "+BTeam+" nao encontrada");
+        for(Jogo j:jogos){
+            if(j.getData().equals(data)&&j.getATeam().equals(ATeam)&&j.getBTeam().equals(BTeam)){
+                return j;
+            }
+        }
+        throw new JogoInvalidoException("Jogo entre "+ATeam+" e "+BTeam+"no dia "+data+" não encontrado");
+    }
+
+    public Equipa getEquipa(String nome) throws EquipaInexistenteException {
+        if(equipas.containsKey(nome))return equipas.get(nome).clone();
+        else throw new EquipaInexistenteException("Equipa nao encontrada");
+    }
 }

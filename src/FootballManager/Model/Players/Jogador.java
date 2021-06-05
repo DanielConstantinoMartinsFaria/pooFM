@@ -80,6 +80,29 @@ public abstract class Jogador implements Serializable {
                 (novo.getNome().equals(this.getNome()));
     }
 
+    public String prettyString(){
+        StringBuilder sb= new StringBuilder();
+        if(this instanceof Medios)sb.append("MED:");
+        else if(this instanceof Defesas)sb.append("DEF:");
+        else if(this instanceof Avancados)sb.append("AVA:");
+        else if(this instanceof Laterais)sb.append("LAT:");
+        else if(this instanceof GuardaRedes)sb.append("G-R:");
+        sb.append(this.getNome()).append("|");
+        sb.append(this.getNumero()).append("| VEL:|");
+        sb.append(this.getVelocidade()).append("| RES:|");
+        sb.append(this.getResistencia()).append("| DES:|");
+        sb.append(this.getDestreza()).append("| IMP:|");
+        sb.append(this.getImpulsao()).append("| CAB:|");
+        sb.append(this.getCabeca()).append("| REM:|");
+        sb.append(this.getRemate()).append("| PAS:|");
+        sb.append(this.getPasse());
+        if(this instanceof Laterais) sb.append("| CRU:|").append(((Laterais) this).getCruzamento());
+        else if(this instanceof GuardaRedes) sb.append("| ELA:|").append(((GuardaRedes) this).getElasticidade());
+        else if(this instanceof Medios) sb.append("| REC:|").append(((Medios) this).getRecuperacao());
+        sb.append("|");
+        return sb.toString();
+    }
+
     public String toString(){
         StringBuilder sb= new StringBuilder();
         if(this instanceof Medios)sb.append("Medio:");
