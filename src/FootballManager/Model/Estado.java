@@ -1,8 +1,10 @@
 package FootballManager.Model;
 
 import FootballManager.Model.Auxiliares.ParInteiros;
-import FootballManager.Model.Exceptions.EquipaInexistenteException;
+import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.JogoInvalidoException;
+import FootballManager.Model.Exceptions.TaticaInvalidaException;
 import FootballManager.Model.Players.*;
 
 import java.io.*;
@@ -14,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Estado implements Serializable{
-    private Map<String,Equipa> equipas;
+    private Map<String, Equipa> equipas;
     private Set<Jogo> jogos;
     private Map<Integer,Jogador>freelancers;
 
@@ -115,7 +117,7 @@ public class Estado implements Serializable{
         return Files.readAllLines(Paths.get(pathname), StandardCharsets.UTF_8);
     }
 
-    public void readText(String pathname) throws IOException, EquipaInexistenteException {
+    public void readText(String pathname) throws IOException, EquipaInvalidaException {
         List<String> linhas = lerFicheiro(pathname);
         String[] linhaPartida;
         Equipa e=null;
@@ -128,27 +130,27 @@ public class Estado implements Serializable{
                     e.setNome(linhaPartida[1]);
                 }
                 case "Guarda-Redes" -> {
-                    if (e == null) throw new EquipaInexistenteException();
+                    if (e == null) throw new EquipaInvalidaException();
                     GuardaRedes g = parseGuardaRedes(linhaPartida[1]);
                     e.addJogador(g);
                 }
                 case "Avancado" -> {
-                    if (e == null) throw new EquipaInexistenteException();
+                    if (e == null) throw new EquipaInvalidaException();
                     Avancados a = parseAvancado(linhaPartida[1]);
                     e.addJogador(a);
                 }
                 case "Medio" -> {
-                    if (e == null) throw new EquipaInexistenteException();
+                    if (e == null) throw new EquipaInvalidaException();
                     Medios m = parseMedio(linhaPartida[1]);
                     e.addJogador(m);
                 }
                 case "Defesa" -> {
-                    if (e == null) throw new EquipaInexistenteException();
+                    if (e == null) throw new EquipaInvalidaException();
                     Defesas d = parseDefesa(linhaPartida[1]);
                     e.addJogador(d);
                 }
                 case "Lateral" -> {
-                    if (e == null) throw new EquipaInexistenteException();
+                    if (e == null) throw new EquipaInvalidaException();
                     Laterais l = parseLateral(linhaPartida[1]);
                     e.addJogador(l);
                 }
@@ -235,27 +237,27 @@ public class Estado implements Serializable{
 
     //Manipulação
 
-    public boolean addJogo(String A,String B,LocalDate data) throws EquipaInexistenteException {
+    public boolean addJogo(String A,String B,LocalDate data) throws EquipaInvalidaException {
         if(equipas.containsKey(A)){
             if(equipas.containsKey(B)){
                 Jogo j = new Jogo(A,B,data);
                 jogos.add(j);
                 return true;
             }
-            else throw new EquipaInexistenteException(B);
+            else throw new EquipaInvalidaException(B);
         }
-        else throw new EquipaInexistenteException(A);
+        else throw new EquipaInvalidaException(A);
     }
 
-    public boolean addJogo(Jogo j) throws EquipaInexistenteException {
+    public boolean addJogo(Jogo j) throws EquipaInvalidaException {
         if(equipas.containsKey(j.getATeam())){
             if(equipas.containsKey(j.getBTeam())){
                 jogos.add(j);
                 return true;
             }
-            else throw new EquipaInexistenteException("Equipa B inexistente");
+            else throw new EquipaInvalidaException("Equipa B inexistente");
         }
-        else throw new EquipaInexistenteException("Equipa A inexistente");
+        else throw new EquipaInvalidaException("Equipa A inexistente");
     }
 
     public void addEquipa(Equipa e){
@@ -266,7 +268,7 @@ public class Estado implements Serializable{
         equipas.get(equipa).addJogador(j.clone());
     }
 
-    public ParInteiros simular(String ATeam, String BTeam, LocalDate data,Set<Integer>ATitulares,Set<Integer>BTitulares) throws JogoInvalidoException, EquipaInexistenteException {
+    public ParInteiros simular(String ATeam, String BTeam, LocalDate data,Set<Integer>ATitulares,Set<Integer>BTitulares) throws JogoInvalidoException, EquipaInvalidaException, TaticaInvalidaException {
         for(Jogo j:jogos){
             if(j.getData().equals(data)&&j.getATeam().equals(ATeam)&&j.getBTeam().equals(BTeam)){
                 return j.simulador(equipas.get(ATeam),equipas.get(BTeam),ATitulares,BTitulares);
@@ -275,9 +277,9 @@ public class Estado implements Serializable{
         throw new JogoInvalidoException("Jogo entre "+ATeam+" e "+BTeam+"no dia "+data+" não encontrado");
     }
 
-    public Jogo getJogo(String ATeam,String BTeam,LocalDate data) throws JogoInvalidoException, EquipaInexistenteException {
-        if(!equipas.containsKey(ATeam))throw new EquipaInexistenteException("Equipa "+ATeam+" nao encontrada");
-        if(!equipas.containsKey(BTeam))throw new EquipaInexistenteException("Equipa "+BTeam+" nao encontrada");
+    public Jogo getJogo(String ATeam,String BTeam,LocalDate data) throws JogoInvalidoException, EquipaInvalidaException {
+        if(!equipas.containsKey(ATeam))throw new EquipaInvalidaException("Equipa "+ATeam+" nao encontrada");
+        if(!equipas.containsKey(BTeam))throw new EquipaInvalidaException("Equipa "+BTeam+" nao encontrada");
         for(Jogo j:jogos){
             if(j.getData().equals(data)&&j.getATeam().equals(ATeam)&&j.getBTeam().equals(BTeam)){
                 return j;
@@ -286,8 +288,8 @@ public class Estado implements Serializable{
         throw new JogoInvalidoException("Jogo entre "+ATeam+" e "+BTeam+"no dia "+data+" não encontrado");
     }
 
-    public Equipa getEquipa(String nome) throws EquipaInexistenteException {
+    public Equipa getEquipa(String nome) throws EquipaInvalidaException {
         if(equipas.containsKey(nome))return equipas.get(nome).clone();
-        else throw new EquipaInexistenteException("Equipa nao encontrada");
+        else throw new EquipaInvalidaException("Equipa nao encontrada");
     }
 }

@@ -17,6 +17,10 @@ public class Defesas extends Jogador{
         super(defesa);
     }
 
+    public Defesas(Jogador jogador){
+        super(jogador);
+    }
+
     public Defesas clone(){
         return new Defesas(this);
     }

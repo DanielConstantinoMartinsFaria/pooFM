@@ -15,7 +15,12 @@ public class GuardaRedes extends Jogador{
 
     public GuardaRedes(GuardaRedes redes){
         super(redes);
-        this.setElasticidade(redes.getElasticidade());
+        this.elasticidade=redes.getElasticidade();
+    }
+
+    public GuardaRedes(Jogador jogador){
+        super(jogador);
+        this.elasticidade=(int)Math.round((jogador.getImpulsao()+jogador.getDestreza())/2.4);
     }
 
     public GuardaRedes clone(){

@@ -1,11 +1,21 @@
 package FootballManager.Model;
 
 import FootballManager.Interpretador.Interpretador;
+import FootballManager.Model.Players.Avancados;
+import FootballManager.Model.Players.GuardaRedes;
+import FootballManager.Model.Players.Jogador;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Main{
     public static void main(String[] args){
-        Interpretador interpretador = new Interpretador();
-        interpretador.run();
+        Avancados ronaldo = new Avancados("Cristiano Ronaldo",7,89,84,87,95,86,95,81,new ArrayList<>());
+        Map<Integer,Jogador> teste=new TreeMap<>();
+        teste.put(7,ronaldo);
+        GuardaRedes novo= new GuardaRedes(teste.get(7));
+        System.out.println(novo);
     }
 }
 

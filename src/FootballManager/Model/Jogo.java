@@ -1,10 +1,11 @@
 package FootballManager.Model;
 
 import FootballManager.Model.Auxiliares.ParInteiros;
-import FootballManager.Model.Exceptions.EquipaInexistenteException;
-import FootballManager.Model.Exceptions.ExcessoJogadoresException;
+import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.JogoInvalidoException;
+import FootballManager.Model.Exceptions.TaticaInvalidaException;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -85,7 +86,7 @@ public class Jogo implements Comparable<Jogo>, Serializable {
                 && this.BTeamSubs.containsAll(novo.getBTeamSubs());
     }
 
-    public String prettyString(Equipa A,Equipa B) throws EquipaInexistenteException, JogadorInexistenteException {
+    public String prettyString(Equipa A, Equipa B) throws EquipaInvalidaException, JogadorInexistenteException {
         if(A.getNome().equals(ATeam)){
             if(B.getNome().equals(BTeam)){
                 StringBuilder sb= new StringBuilder();
@@ -104,9 +105,9 @@ public class Jogo implements Comparable<Jogo>, Serializable {
                 }
                 return sb.toString();
             }
-            else throw new EquipaInexistenteException(B.getNome());
+            else throw new EquipaInvalidaException(B.getNome());
         }
-        else throw new EquipaInexistenteException(A.getNome());
+        else throw new EquipaInvalidaException(A.getNome());
     }
 
     public String toString(){
@@ -217,41 +218,39 @@ public class Jogo implements Comparable<Jogo>, Serializable {
 
     //
 
-    //Tive a fazer aproximações e cheguei esta funções para calcular um possivel resultado final, podemos discutir
-    //isto todos juntos se tiverem outras ideias
-    private void resultadoFinal(Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares){
+    private void resultadoFinal(Equipa ATeam,Equipa BTeam) throws TaticaInvalidaException {
 
-        int rateA=ATeam.calculaRatingTotal(ATitulares);
-        int rateB=BTeam.calculaRatingTotal(BTitulares);
+        int rateA=ATeam.calculaRatingTotal();
+        int rateB=BTeam.calculaRatingTotal();
         double chanceA;
         double chanceE;
         if(rateA>rateB){
-            chanceA=(40.0+(ATeam.calculaRatingTotal(ATitulares)-BTeam.calculaRatingTotal(BTitulares))*1.2)/100.0;
-            chanceE=(20.0-(ATeam.calculaRatingTotal(ATitulares)-BTeam.calculaRatingTotal(BTitulares))*0.4)/100.0;
+            chanceA=(40.0+(ATeam.calculaRatingTotal()-BTeam.calculaRatingTotal())*1.2)/100.0;
+            chanceE=(20.0-(ATeam.calculaRatingTotal()-BTeam.calculaRatingTotal())*0.4)/100.0;
         }
         else{
-            chanceA=(40.0-(BTeam.calculaRatingTotal(BTitulares)-ATeam.calculaRatingTotal(ATitulares))*0.8)/100.0;
-            chanceE=(20.0-(BTeam.calculaRatingTotal(BTitulares)-ATeam.calculaRatingTotal(ATitulares))*0.4)/100.0;
+            chanceA=(40.0-(BTeam.calculaRatingTotal()-ATeam.calculaRatingTotal())*0.8)/100.0;
+            chanceE=(20.0-(BTeam.calculaRatingTotal()-ATeam.calculaRatingTotal())*0.4)/100.0;
         }
         Random r = new Random();
         double result = r.nextDouble();
 
         if(result<chanceA){
-            calculaGolos(0,r,ATeam,BTeam,ATitulares,BTitulares);
+            calculaGolos(0,r,ATeam,BTeam);
         }
         else if(result<(chanceA+chanceE)){
-            calculaGolos(2,r,ATeam,BTeam,ATitulares,BTitulares);
+            calculaGolos(2,r,ATeam,BTeam);
         }
         else{
-            calculaGolos(1,r,ATeam,BTeam,ATitulares,BTitulares);
+            calculaGolos(1,r,ATeam,BTeam);
         }
     }
 
-    private void calculaGolos(int res,Random r,Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares){
+    private void calculaGolos(int res,Random r,Equipa ATeam,Equipa BTeam) throws TaticaInvalidaException {
         int gA;
         int gB;
-        double diffA=1.5+(ATeam.ataque(ATitulares)-BTeam.defesa(BTitulares)*1.2)/20;
-        double diffB=1.5+(BTeam.ataque(BTitulares)-ATeam.defesa(ATitulares)*1.2)/20;
+        double diffA=1.5+(ATeam.ataque()-BTeam.defesa()*1.2)/20;
+        double diffB=1.5+(BTeam.ataque()-ATeam.defesa()*1.2)/20;
         if(diffA<0)diffA=0;
         if(diffB<0)diffB=0;
         if(res==0){
@@ -278,15 +277,19 @@ public class Jogo implements Comparable<Jogo>, Serializable {
         this.resultado.setY(gB);
     }
 
-    public ParInteiros simulador(Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares) throws EquipaInexistenteException, JogoInvalidoException {
+    private void simulaEvento(Equipa ATeam, Equipa BTeam, Set<Integer> ATitulares, Set<Integer> BTitulares,Set<Integer> ASuplentes, Set<Integer> BSuplentes){
+
+    }
+
+    public ParInteiros simulador(Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares) throws EquipaInvalidaException, JogoInvalidoException, TaticaInvalidaException {
         //Este método irá chamar tanto o resultado final, como o simulador passo-a-passo, ainda por implementar
 
         if(done)throw new JogoInvalidoException("Jogo já foi realizado");
-        if(ATeam==null)throw new EquipaInexistenteException("Equipa A inexistente");
-        if(BTeam==null)throw new EquipaInexistenteException("Equipa B inexistente");
-        if(!ATeam.getNome().equals(this.ATeam))throw new EquipaInexistenteException("Equipa "+ATeam.getNome()+" nao pertence ao jogo");
-        if(!BTeam.getNome().equals(this.BTeam))throw new EquipaInexistenteException("Equipa "+BTeam.getNome()+" nao pertence ao jogo");
-        this.resultadoFinal(ATeam,BTeam,ATitulares,BTitulares);
+        if(ATeam==null)throw new EquipaInvalidaException("Equipa A inexistente");
+        if(BTeam==null)throw new EquipaInvalidaException("Equipa B inexistente");
+        if(!ATeam.getNome().equals(this.ATeam))throw new EquipaInvalidaException("Equipa "+ATeam.getNome()+" nao pertence ao jogo");
+        if(!BTeam.getNome().equals(this.BTeam))throw new EquipaInvalidaException("Equipa "+BTeam.getNome()+" nao pertence ao jogo");
+        this.resultadoFinal(ATeam,BTeam);
         done=true;
         return resultado.clone();
     }

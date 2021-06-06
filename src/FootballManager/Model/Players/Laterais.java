@@ -19,6 +19,11 @@ public class Laterais extends Jogador{
         this.cruzamento=lateral.getCruzamento();
     }
 
+    public Laterais(Jogador jogador){
+        super(jogador);
+        this.cruzamento=(int)Math.round((jogador.getPasse()+ jogador.getDestreza())/2.0);
+    }
+
     public Laterais clone(){
         return new Laterais(this);
     }

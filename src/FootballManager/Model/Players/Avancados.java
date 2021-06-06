@@ -17,6 +17,10 @@ public class Avancados extends Jogador{
         super(avancado);
     }
 
+    public Avancados(Jogador jogador){
+        super(jogador);
+    }
+
     public Avancados clone(){
         return new Avancados(this);
     }

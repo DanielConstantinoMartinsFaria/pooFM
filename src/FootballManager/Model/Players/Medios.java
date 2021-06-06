@@ -19,6 +19,11 @@ public class Medios extends Jogador{
         this.recuperacao=medio.getRecuperacao();
     }
 
+    public Medios(Jogador jogador){
+        super(jogador);
+        this.recuperacao=(int)Math.round((jogador.getResistencia()+jogador.getDestreza())/2.0);
+    }
+
     public Medios clone(){
         return new Medios(this);
     }

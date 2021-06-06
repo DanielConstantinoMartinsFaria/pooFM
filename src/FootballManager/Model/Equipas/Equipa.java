@@ -1,7 +1,9 @@
-package FootballManager.Model;
+package FootballManager.Model.Equipas;
 
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
+import FootballManager.Model.Exceptions.TaticaInvalidaException;
 import FootballManager.Model.Players.*;
+import FootballManager.Model.Equipas.Taticas.Tatica;
 
 import java.io.Serializable;
 import java.util.*;
@@ -10,8 +12,7 @@ import java.util.stream.Collectors;
 public class Equipa implements Comparable<Equipa>, Serializable {
     private String nome;
     private Map<Integer, Jogador> jogadores;
-    private Set<Integer>defaultTitulares;
-    private Set<Integer>defaultSuplentes;
+    private Tatica tatica;
 
     //Construtores
 
@@ -28,10 +29,10 @@ public class Equipa implements Comparable<Equipa>, Serializable {
     public Equipa(Equipa eq) {
         this.nome = eq.getNome();
         this.jogadores = eq.getJogadores();
+        this.tatica= eq.tatica.clone();
     }
 
     //Equals, clone, etc...
-
 
     @Override
     public int compareTo(Equipa o) {
@@ -87,7 +88,6 @@ public class Equipa implements Comparable<Equipa>, Serializable {
         this.nome = nome;
     }
 
-
     public Map<Integer, Jogador> getJogadores() {
         return this.jogadores.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, a -> a.getValue().clone()));
     }
@@ -101,80 +101,28 @@ public class Equipa implements Comparable<Equipa>, Serializable {
         else return jogadores.get(nCam).clone();
     }
 
-    public int numDefesas(Set<Integer> titulares) {
-        int res = 0;
-        for (Jogador j : titulares.stream().map(a -> jogadores.get(a)).collect(Collectors.toSet()))
-            if (j instanceof Defesas) res++;
-        return res;
+    public void setTatica(Tatica tatica){
+        this.tatica=tatica.clone();
     }
 
-    public int numAvancados(Set<Integer> titulares) {
-        int res = 0;
-        for (Jogador j : titulares.stream().map(a -> jogadores.get(a)).collect(Collectors.toSet()))
-            if (j instanceof Avancados) res++;
-        return res;
+    //Calculos
+
+    public int defesa() throws TaticaInvalidaException {
+        if(tatica==null)throw new TaticaInvalidaException("Nenhuma","nao foi colocada uma tatica");
+        else return (int)Math.round(tatica.defesa(this));
     }
 
-    public int numLaterais(Set<Integer> titulares) {
-        int res = 0;
-        for (Jogador j : titulares.stream().map(a -> jogadores.get(a)).collect(Collectors.toSet()))
-            if (j instanceof Laterais) res++;
-        return res;
+    public int ataque() throws TaticaInvalidaException {
+        if(tatica==null)throw new TaticaInvalidaException("Nenhuma","nao foi colocada uma tatica");
+        else return (int)Math.round(tatica.ataque(this));
     }
 
-    public int numMedios(Set<Integer> titulares) {
-        int res = 0;
-        for (Jogador j : titulares.stream().map(a -> jogadores.get(a)).collect(Collectors.toSet()))
-            if (j instanceof Medios) res++;
-        return res;
+    public int calculaRatingTotal() throws TaticaInvalidaException {
+        if(tatica==null)throw new TaticaInvalidaException("Nenhuma","nao foi colocada uma tatica");
+        else return (int) ((this.ataque() + this.defesa()) / 2.0);
     }
 
-    public int numGuardaRedes(Set<Integer> titulares) {
-        int res = 0;
-        for (Jogador j : titulares.stream().map(a -> jogadores.get(a)).collect(Collectors.toSet()))
-            if (j instanceof GuardaRedes) res++;
-        return res;
-    }
-
-    public int defesa(Set<Integer> titulares) {
-        double valor = 0;
-        double def = this.numDefesas(titulares);
-        double gk = this.numGuardaRedes(titulares);
-        if (gk != 1) return 0;
-        double lat = this.numLaterais(titulares);
-        double med = this.numMedios(titulares);
-        double total = gk + def + med * 0.5 + lat * 0.67;
-        for (Jogador j : titulares.stream().map(a -> jogadores.get(a)).collect(Collectors.toSet())) {
-            if (j instanceof GuardaRedes) valor += j.calculaRatingTotal();
-            else if (j instanceof Defesas) valor += j.calculaRatingTotal();
-            else if (j instanceof Laterais) valor += j.calculaRatingTotal() * 0.55;
-            else if (j instanceof Medios) valor += j.calculaRatingTotal() * 0.45;
-        }
-        valor /= total;
-        if (valor > 100) return 100;
-        return (int) Math.round(valor);
-    }
-
-    public int ataque(Set<Integer> titulares) {
-        double valor = 0;
-        if (this.numGuardaRedes(titulares) != 1) return 0;
-        double atk = this.numAvancados(titulares);
-        double med = this.numMedios(titulares);
-        double lat = this.numLaterais(titulares);
-        double total = atk + med * 0.5 + lat * 0.33;
-        for (Jogador j : titulares.stream().map(a -> jogadores.get(a)).collect(Collectors.toSet())) {
-            if (j instanceof Avancados) valor += j.calculaRatingTotal();
-            else if (j instanceof Medios) valor += j.calculaRatingTotal() * 0.55;
-            else if (j instanceof Laterais) valor += j.calculaRatingTotal() * 0.45;
-        }
-        valor /= total;
-        if (valor > 100) return 100;
-        return (int) Math.round(valor);
-    }
-
-    public int calculaRatingTotal(Set<Integer> titulares) {
-        return (int) ((this.ataque(titulares) + this.defesa(titulares)) / 2.0);
-    }
+    //manipular equipa
 
     public void addJogador(Jogador j) {
         if (j == null) return;
@@ -193,4 +141,7 @@ public class Equipa implements Comparable<Equipa>, Serializable {
         }
     }
 
+    public void substituicao(int in,int out){
+        tatica.substituicao(in,out,this);
+    }
 }

@@ -1,7 +1,7 @@
 package FootballManager.Interpretador;
 
 import FootballManager.Model.Estado;
-import FootballManager.Model.Exceptions.EquipaInexistenteException;
+import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.JogoInvalidoException;
 
@@ -117,7 +117,7 @@ public class Interpretador {
         try{
             if(isBin)estado.readBinary(pathname);
             else estado.readText(pathname);
-        } catch (IOException | ClassNotFoundException | EquipaInexistenteException e) {
+        } catch (IOException | ClassNotFoundException | EquipaInvalidaException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -134,7 +134,7 @@ public class Interpretador {
     public void show(String equipa){
         try{
             System.out.println(estado.getEquipa(equipa).prettyString());
-        } catch (EquipaInexistenteException e) {
+        } catch (EquipaInvalidaException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -143,7 +143,7 @@ public class Interpretador {
         try{
             System.out.println(estado.getJogo(ATeam,BTeam,data)
                     .prettyString(estado.getEquipa(ATeam),estado.getEquipa(BTeam)));
-        } catch (JogoInvalidoException | EquipaInexistenteException | JogadorInexistenteException e) {
+        } catch (JogoInvalidoException | EquipaInvalidaException | JogadorInexistenteException e) {
             System.out.println(e.getMessage());
         }
     }

@@ -221,4 +221,13 @@ public abstract class Jogador implements Serializable {
     }
 
     public abstract int calculaRatingTotal();
+
+    public boolean isCentral(){
+        if(this instanceof Laterais)return false;
+        else if(this instanceof Defesas)return true;
+        else if(this instanceof GuardaRedes)return true;
+        else if(this instanceof Avancados)return remate>velocidade;
+        else if(this instanceof Medios)return ((Medios) this).getRecuperacao()>velocidade;
+        else return false;
+    }
 }
