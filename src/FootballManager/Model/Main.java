@@ -1,9 +1,13 @@
 package FootballManager.Model;
 
 import FootballManager.Interpretador.Interpretador;
-import FootballManager.Model.Players.Avancados;
-import FootballManager.Model.Players.GuardaRedes;
-import FootballManager.Model.Players.Jogador;
+import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Equipas.Taticas.QuatroQuatroDois;
+import FootballManager.Model.Equipas.Taticas.QuatroTresTres;
+import FootballManager.Model.Equipas.Taticas.Tatica;
+import FootballManager.Model.Exceptions.JogadorInexistenteException;
+import FootballManager.Model.Exceptions.TaticaInvalidaException;
+import FootballManager.Model.Players.*;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -11,17 +15,78 @@ import java.util.TreeMap;
 
 public class Main{
     public static void main(String[] args){
-        Avancados ronaldo = new Avancados("Cristiano Ronaldo",7,89,84,87,95,86,95,81,new ArrayList<>());
-        Map<Integer,Jogador> teste=new TreeMap<>();
-        teste.put(7,ronaldo);
-        GuardaRedes novo= new GuardaRedes(teste.get(7));
-        System.out.println(novo);
+        Interpretador interpretador= new Interpretador();
+        interpretador.run();
     }
 }
 
+/*
+        Interpretador interpretador= new Interpretador();
+        interpretador.run();
+*/
 
 /*
-ArrayList<String> equipas = new ArrayList<>();
+        ArrayList<String> equipas = new ArrayList<>();
+        Avancados felix = new Avancados("Joao Felix",7,81,75,85,79,80,82,77,equipas);
+        Avancados suarez = new Avancados("Luis Suarez",9,70,78,76,69,90,89,83,equipas);
+
+        Medios carrasco = new Medios("Yannick Carrasco",21,91,76,90,71,68,85,76,82,equipas);
+        Medios trippier = new Medios("Kieran Trippier",23,73,88,73,76,58,75,80,83,equipas);
+        Medios lemar = new Medios("Thomas Lemar",11,80,74,88,69,76,79,81,85,equipas);
+        Medios llorente = new Medios("Marcos Llorente",14,84,86,75,66,62,75,84,83,equipas);
+        Medios koke = new Medios("Koke",6,67,94,73,63,56,83,85,84,equipas);
+
+        Defesas gimenez = new Defesas("Jose Gimenez",2,67,64,54,90,30,72,70,equipas);
+        Defesas savic = new Defesas("Stefan Savic",15,61,48,60,86,27,43,71,equipas);
+        Defesas hermoso = new Defesas("Mario Hermoso",22,75,76,75,86,41,65,77,equipas);
+
+        GuardaRedes oblak = new GuardaRedes("Jan Oblak",13,87,41,90,87,13,78,43,90,equipas);
+
+        Equipa atletico = new Equipa();
+        atletico.setNome("Atletico de Madrid");
+        atletico.addJogador(felix);
+        atletico.addJogador(suarez);
+        atletico.addJogador(carrasco);
+        atletico.addJogador(trippier);
+        atletico.addJogador(lemar);
+        atletico.addJogador(llorente);
+        atletico.addJogador(koke);
+        atletico.addJogador(gimenez);
+        atletico.addJogador(savic);
+        atletico.addJogador(hermoso);
+        atletico.addJogador(oblak);
+
+        Tatica tatica = new QuatroQuatroDois();
+        try {
+            tatica.setJogador(oblak,0,true);
+
+            tatica.setJogador(gimenez,1,true);
+            tatica.setJogador(trippier,2,true);
+            tatica.setJogador(savic,3,true);
+            tatica.setJogador(hermoso,4,true);
+
+            tatica.setJogador(koke,5,true);
+            tatica.setJogador(lemar,6,true);
+            tatica.setJogador(llorente,7,true);
+            tatica.setJogador(carrasco,8,true);
+
+            tatica.setJogador(felix,9,true);
+            tatica.setJogador(suarez,10,true);
+        } catch (JogadorInexistenteException | TaticaInvalidaException e) {
+            e.printStackTrace();
+        }
+        atletico.setTatica(tatica);
+        try{
+            int atk=atletico.ataque();
+            System.out.println(atk);
+        } catch (TaticaInvalidaException e) {
+            e.printStackTrace();
+        }
+ */
+
+
+/*
+        ArrayList<String> equipas = new ArrayList<>();
 
         //Juventus
         Avancados ronaldo = new Avancados("Cristiano Ronaldo",7,89,84,87,95,86,95,81,equipas);

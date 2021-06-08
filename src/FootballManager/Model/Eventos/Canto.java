@@ -1,6 +1,7 @@
 package FootballManager.Model.Eventos;
 
 import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Exceptions.TaticaInvalidaException;
 import FootballManager.Model.Players.Jogador;
 import FootballManager.Model.Players.Laterais;
 import FootballManager.Model.Players.Medios;
@@ -12,18 +13,31 @@ public class Canto extends Eventos{
     private boolean lado;//False-> esquerda, True-> direita
     private Jogador marcador;
 
-    public Canto(boolean equipaCasa,boolean lado,Jogador marcador) {
-        super(equipaCasa);
+    public Canto(boolean lado) {
+        super();
         this.lado=lado;
-        this.marcador=marcador;
     }
 
-    public boolean golo(Equipa Defensora, Equipa Atacante,Set<Integer> AtkTitulares, Set<Integer>DefTitulares){
+    public Canto(boolean lado,Jogador marcador) {
+        super();
+        this.lado=lado;
+        this.marcador=marcador.clone();
+    }
+
+    public void setMarcador(Jogador marcador){
+        this.marcador=marcador.clone();
+    }
+
+    public boolean qualLado(){
+        return lado;
+    }
+
+    public boolean golo(Equipa Defensora, Equipa Atacante) throws TaticaInvalidaException {
         Random r=new Random();
         int boost=0;
         if(marcador instanceof Laterais)boost=((Laterais) marcador).getCruzamento()/10;
         else if(marcador instanceof Medios)boost=marcador.getPasse()/20;
-        double chanceGolo=(0.05+(Atacante.ataque(AtkTitulares)-Defensora.defesa(DefTitulares)+boost)/500.0);
+        double chanceGolo=(0.05+(Atacante.ataque()-Defensora.defesa()+boost)/500.0);
         return r.nextDouble() < chanceGolo;
     }
 }

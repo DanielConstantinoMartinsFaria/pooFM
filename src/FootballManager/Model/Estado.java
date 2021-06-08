@@ -110,7 +110,6 @@ public class Estado implements Serializable{
         this.equipas=novo.equipas;
         this.jogos=novo.jogos;
         inputStream.close();
-
     }
 
     public List<String> lerFicheiro(String pathname) throws IOException {
@@ -156,6 +155,7 @@ public class Estado implements Serializable{
                 }
                 case "Jogo" -> {
                     if (e != null) equipas.put(e.getNome(), e);
+                    e=null;
                     Jogo j = parseJogo(linhaPartida[1]);
                     jogos.add(j);
                 }
@@ -163,6 +163,7 @@ public class Estado implements Serializable{
 
             }
         }
+        if(e!=null)equipas.put(e.getNome(),e);
     }
 
     public GuardaRedes parseGuardaRedes(String input){
@@ -268,10 +269,10 @@ public class Estado implements Serializable{
         equipas.get(equipa).addJogador(j.clone());
     }
 
-    public ParInteiros simular(String ATeam, String BTeam, LocalDate data,Set<Integer>ATitulares,Set<Integer>BTitulares) throws JogoInvalidoException, EquipaInvalidaException, TaticaInvalidaException {
+    public ParInteiros simular(String ATeam, String BTeam, LocalDate data) throws JogoInvalidoException, EquipaInvalidaException, TaticaInvalidaException {
         for(Jogo j:jogos){
             if(j.getData().equals(data)&&j.getATeam().equals(ATeam)&&j.getBTeam().equals(BTeam)){
-                return j.simulador(equipas.get(ATeam),equipas.get(BTeam),ATitulares,BTitulares);
+                return j.simulador(equipas.get(ATeam),equipas.get(BTeam));
             }
         }
         throw new JogoInvalidoException("Jogo entre "+ATeam+" e "+BTeam+"no dia "+data+" não encontrado");

@@ -9,66 +9,66 @@ import FootballManager.Model.Players.*;
 import java.util.Map;
 import java.util.Random;
 
-public class QuatroTresTres extends Tatica{
+public class QuatroQuatroDois extends Tatica{
+
     /*
+
                   |00|
 
              |01|      |02|
      |03|                      |04|
-                  |05|
-           |06|          |07|
+             |05|      |06|
+      |07|                    |08|
 
-       |08|                  |09|
-                  |10|
-
+            |09|       |10|
      */
 
-    public QuatroTresTres(){
+    public QuatroQuatroDois(){
         super();
     }
 
-    public QuatroTresTres(Tatica t){
+    public QuatroQuatroDois(Tatica t){
         super(t);
     }
 
+    @Override
     public Tatica clone() {
-        return new QuatroTresTres(this);
+        return new QuatroQuatroDois(this);
     }
 
+    @Override
     public double ataque(Equipa team) {
         Integer[] titulares = this.getTitulares();
         Map<Integer, Jogador> jogadores = team.getJogadores();
         double atk = 0;
         double fator=0;
 
-        Avancados exEsq=new Avancados(jogadores.get(titulares[9]));
-        if(exEsq.isLado()) atk+=exEsq.calculaRatingTotal();
-        else atk+=exEsq.calculaRatingTotal()*0.95;
+        Avancados exEsq=new Avancados(jogadores.get(titulares[10]));
+        atk+=exEsq.calculaRatingTotal();
         fator++;
 
-        Avancados exDir=new Avancados(jogadores.get(titulares[8]));
-        if(exEsq.isLado())atk+=exDir.calculaRatingTotal();
-        else atk+=exDir.calculaRatingTotal()*0.95;
+        Avancados exDir=new Avancados(jogadores.get(titulares[9]));
+        atk+=exDir.calculaRatingTotal();
         fator++;
 
-        Avancados ponta=new Avancados(jogadores.get(titulares[10]));
-        if(ponta.isCentral())atk+=ponta.calculaRatingTotal();
-        else atk+=ponta.calculaRatingTotal()*0.95;
-        fator++;
-
-        Medios medEsq=new Medios(jogadores.get(titulares[7]));
-        if(exEsq.isLado())atk+=medEsq.calculaRatingTotal()*0.6;
+        Medios medEsq=new Medios(jogadores.get(titulares[8]));
+        if(medEsq.isLado())atk+=medEsq.calculaRatingTotal()*0.6;
         else atk+=medEsq.calculaRatingTotal()*0.57;
         fator+=0.6;
 
-        Medios medDir=new Medios(jogadores.get(titulares[6]));
+        Medios medDir=new Medios(jogadores.get(titulares[7]));
         if(medDir.isLado())atk+=medDir.calculaRatingTotal()*0.6;
         else atk+=medDir.calculaRatingTotal()*0.57;
         fator+=0.6;
 
-        Medios medCen=new Medios(jogadores.get(titulares[5]));
-        if(medCen.isCentral())atk+=medCen.calculaRatingTotal()*0.4;
-        else atk+=medCen.calculaRatingTotal()*0.38;
+        Medios medCen1=new Medios(jogadores.get(titulares[5]));
+        if(medCen1.isCentral())atk+=medCen1.calculaRatingTotal()*0.4;
+        else atk+=medCen1.calculaRatingTotal()*0.38;
+        fator+=0.4;
+
+        Medios medCen2=new Medios(jogadores.get(titulares[6]));
+        if(medCen2.isCentral())atk+=medCen2.calculaRatingTotal()*0.4;
+        else atk+=medCen2.calculaRatingTotal()*0.38;
         fator+=0.4;
 
         Laterais latEsq=new Laterais(jogadores.get(titulares[4]));
@@ -77,14 +77,15 @@ public class QuatroTresTres extends Tatica{
         fator+=0.4;
 
         Laterais latDir=new Laterais(jogadores.get(titulares[3]));
-        if(latEsq.isLado())atk+=latDir.calculaRatingTotal()*0.4;
+        if(latDir.isLado())atk+=latDir.calculaRatingTotal()*0.4;
         else atk+=latDir.calculaRatingTotal()*0.38;
         fator+=0.4;
 
         return atk/fator;
     }
 
-    public double defesa(Equipa team){
+    @Override
+    public double defesa(Equipa team) {
         Integer[] titulares = this.getTitulares();
         Map<Integer, Jogador> jogadores = team.getJogadores();
         double def = 0;
@@ -101,23 +102,27 @@ public class QuatroTresTres extends Tatica{
         fator++;
 
         GuardaRedes guardaRedes=new GuardaRedes(jogadores.get(titulares[0]));
-        if(guardaRedes.isCentral())def+=guardaRedes.calculaRatingTotal();
-        else def+=guardaRedes.calculaRatingTotal()*0.95;
+        def+=guardaRedes.calculaRatingTotal();
         fator++;
 
-        Medios medEsq=new Medios(jogadores.get(titulares[7]));
+        Medios medEsq=new Medios(jogadores.get(titulares[8]));
         if(medEsq.isLado())def+=medEsq.calculaRatingTotal()*0.4;
         else def+=medEsq.calculaRatingTotal()*0.38;
         fator+=0.4;
 
-        Medios medDir=new Medios(jogadores.get(titulares[6]));
+        Medios medDir=new Medios(jogadores.get(titulares[7]));
         if(medDir.isLado())def+=medDir.calculaRatingTotal()*0.4;
         else def+=medDir.calculaRatingTotal()*0.38;
         fator+=0.4;
 
-        Medios medCen=new Medios(jogadores.get(titulares[5]));
-        if(medCen.isCentral())def+=medCen.calculaRatingTotal()*0.6;
-        else def+=medCen.calculaRatingTotal()*0.57;
+        Medios medCen2=new Medios(jogadores.get(titulares[5]));
+        if(medCen2.isCentral())def+=medCen2.calculaRatingTotal()*0.6;
+        else def+=medCen2.calculaRatingTotal()*0.57;
+        fator+=0.6;
+
+        Medios medCen1=new Medios(jogadores.get(titulares[5]));
+        if(medCen1.isCentral())def+=medCen1.calculaRatingTotal()*0.6;
+        else def+=medCen1.calculaRatingTotal()*0.57;
         fator+=0.6;
 
         Laterais latEsq=new Laterais(jogadores.get(titulares[4]));
@@ -147,17 +152,14 @@ public class QuatroTresTres extends Tatica{
                 return (j instanceof Defesas)||(j instanceof Laterais)||
                         (j instanceof Medios&&j.isLado())||(j instanceof Avancados&&j.isLado());
             }
-            case 5 ->{
+            case 5,6 ->{
                 return (j instanceof Medios)||(!(j instanceof GuardaRedes)&&j.isCentral());
             }
-            case 6,7->{
+            case 7,8->{
                 return (j instanceof Medios)||(!(j instanceof GuardaRedes)&&j.isLado());
             }
-            case 8,9->{
-                return (j instanceof Avancados)||(!(j instanceof GuardaRedes)&&j.isLado());
-            }
-            case 10 ->{
-                return (j instanceof Avancados)||(!(j instanceof GuardaRedes)&&j.isCentral());
+            case 9,10->{
+                return (!(j instanceof GuardaRedes));
             }
             default ->{
                 return false;
@@ -166,8 +168,8 @@ public class QuatroTresTres extends Tatica{
     }
 
     @Override
-    public double ratioCruzamento() {
-        return 0.5;
+    public double ratioCruzamento(){
+        return 0.67;
     }
 
     @Override
@@ -178,27 +180,32 @@ public class QuatroTresTres extends Tatica{
             res=r.nextInt()%3;
             if(((Canto) evento).qualLado()){
                 if(res==0)return 3;
-                else if(res==1)return 6;
-                else return 8;
+                else if(res==1)return 5;
+                else return 7;
             }
             else {
                 if(res==0)return 4;
-                else if(res==1)return 7;
-                else return 9;
+                else if(res==1)return 6;
+                else return 8;
             }
         }
         else if(evento instanceof Remate){
-            res=r.nextInt()%5;
-            return res+6;
+            res=r.nextInt()%4;
+            return res+7;
         }
         else if(evento instanceof Livre){
-            res=r.nextInt()%5;
-            return res+6;
+            res=r.nextInt()%2;
+            if(((Livre) evento).getDistancia()<23.5){
+                return 9+res;
+            }
+            else {
+                return 7+res;
+            }
         }
         else if(evento instanceof Cruzamento){
-            res=r.nextInt()%6;
+            res=r.nextInt()%4;
             if(res<2)return 3+res;
-            else return 4+res;
+            else return 5+res;
         }else throw new EventoInvalidoException();
     }
 
@@ -209,15 +216,13 @@ public class QuatroTresTres extends Tatica{
             case 1,2->{return "Defesa Central";}
             case 3->{return "Lateral Direito";}
             case 4->{return "Lateral Esquerdo";}
-            case 5->{return "Trinco";}
-            case 6->{return "Medio Direito";}
-            case 7->{return "Medio Esquerdo";}
-            case 8->{return "Extremo Direito";}
-            case 9->{return "Extremo Esquerdo";}
-            case 10->{return "Ponta de Lança";}
+            case 5,6->{return "Medio Centro";}
+            case 7->{return "Medio Direito";}
+            case 8->{return "Medio Esquerdo";}
+            case 9->{return "Extremo Direito";}
+            case 10->{return "Extremo Esquerdo";}
             default -> {throw new TaticaInvalidaException(); }
         }
     }
-
 
 }

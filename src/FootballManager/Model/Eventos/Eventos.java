@@ -1,9 +1,14 @@
 package FootballManager.Model.Eventos;
 
-public abstract class Eventos {
-    public boolean equipaCasa;
+import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Exceptions.EventoInvalidoException;
+import FootballManager.Model.Exceptions.JogadorInexistenteException;
+import FootballManager.Model.Exceptions.TaticaInvalidaException;
 
-    public Eventos(boolean equipaCasa){
-        this.equipaCasa=equipaCasa;
+public abstract class Eventos {
+
+    public Eventos(){
     }
+
+    public abstract boolean golo(Equipa Atacante,Equipa Defensora) throws TaticaInvalidaException, EventoInvalidoException, JogadorInexistenteException;
 }

@@ -1,5 +1,7 @@
 package FootballManager.Model.Equipas;
 
+import FootballManager.Model.Eventos.Eventos;
+import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
 import FootballManager.Model.Players.*;
@@ -29,7 +31,8 @@ public class Equipa implements Comparable<Equipa>, Serializable {
     public Equipa(Equipa eq) {
         this.nome = eq.getNome();
         this.jogadores = eq.getJogadores();
-        this.tatica= eq.tatica.clone();
+        if(eq.tatica!=null)this.tatica=eq.tatica;
+        else this.tatica=null;
     }
 
     //Equals, clone, etc...
@@ -141,7 +144,19 @@ public class Equipa implements Comparable<Equipa>, Serializable {
         }
     }
 
-    public void substituicao(int in,int out){
-        tatica.substituicao(in,out,this);
+    public void substituicao(Jogador in,Jogador out){
+        tatica.substituicao(in,out);
+    }
+
+    public double chanceCruzamento(){
+        return this.tatica.ratioCruzamento();
+    }
+
+    public int randomPlayer(Eventos evento) throws EventoInvalidoException{
+        return this.tatica.randomPlayer(evento);
+    }
+
+    public boolean temTatica(){
+        return tatica!=null;
     }
 }

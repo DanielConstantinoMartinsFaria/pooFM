@@ -2,6 +2,8 @@ package FootballManager.Model;
 
 import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Eventos.Ataque;
+import FootballManager.Model.Eventos.Eventos;
 import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.JogoInvalidoException;
@@ -277,13 +279,7 @@ public class Jogo implements Comparable<Jogo>, Serializable {
         this.resultado.setY(gB);
     }
 
-    private void simulaEvento(Equipa ATeam, Equipa BTeam, Set<Integer> ATitulares, Set<Integer> BTitulares,Set<Integer> ASuplentes, Set<Integer> BSuplentes){
-
-    }
-
-    public ParInteiros simulador(Equipa ATeam,Equipa BTeam,Set<Integer>ATitulares,Set<Integer>BTitulares) throws EquipaInvalidaException, JogoInvalidoException, TaticaInvalidaException {
-        //Este método irá chamar tanto o resultado final, como o simulador passo-a-passo, ainda por implementar
-
+    public ParInteiros simulador(Equipa ATeam,Equipa BTeam) throws EquipaInvalidaException, JogoInvalidoException, TaticaInvalidaException {
         if(done)throw new JogoInvalidoException("Jogo já foi realizado");
         if(ATeam==null)throw new EquipaInvalidaException("Equipa A inexistente");
         if(BTeam==null)throw new EquipaInvalidaException("Equipa B inexistente");

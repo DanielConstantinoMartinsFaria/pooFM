@@ -1,14 +1,30 @@
 package FootballManager.Model.Eventos;
 
+import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Players.GuardaRedes;
 import FootballManager.Model.Players.Jogador;
 
-public class Remate extends Eventos{
-    private Jogador marcador;
-    private Jogador guardaRedes;
+import java.util.Random;
 
-    public Remate(boolean equipaCasa,Jogador marcador,Jogador guardaRedes){
-        super(equipaCasa);
-        this.marcador=marcador;
-        this.guardaRedes=guardaRedes;
+public class Remate extends Ataque{
+    private Jogador marcador;
+
+    public Remate(){
+        super();
+    }
+
+    public Remate(Jogador marcador){
+        super();
+        this.marcador=marcador.clone();
+    }
+
+    public void setMarcador(Jogador marcador){
+        this.marcador=marcador.clone();
+    }
+
+    public boolean golo(GuardaRedes gk){
+        Random r= new Random();
+        double chanceGolo=0.25+((marcador.getRemate()-gk.calculaRatingTotal())/100.0)*r.nextGaussian();
+        return r.nextDouble() < chanceGolo;
     }
 }

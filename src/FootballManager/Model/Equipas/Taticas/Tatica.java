@@ -2,9 +2,13 @@ package FootballManager.Model.Equipas.Taticas;
 
 
 import FootballManager.Model.Equipas.Equipa;
+import FootballManager.Model.Eventos.Eventos;
+import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
 import FootballManager.Model.Players.*;
+
+import java.util.Set;
 
 public abstract class Tatica {
     private Integer[] titulares;
@@ -42,25 +46,35 @@ public abstract class Tatica {
 
     public abstract double defesa(Equipa team);
 
-    public void setJogador(int in,int pos,boolean titulares){
-        if(titulares)this.titulares[pos]=in;
-        else this.suplentes[pos]=in;
+    public void setJogador(Jogador j,int pos,boolean titulares) throws TaticaInvalidaException, JogadorInexistenteException {
+        int in=j.getNumero();
+        if(titulares){
+            if(pos>10)throw new TaticaInvalidaException();
+            if(this.compatible(j,pos)){
+                this.titulares[pos] = in;
+            }
+            else throw new TaticaInvalidaException();
+        }
+        else {
+            if(pos>6)throw new TaticaInvalidaException();
+            if(this.compatible(j,pos)){
+                this.suplentes[pos] = in;
+            }
+        }
     }
 
-    public void substituicao(int in,int out,Equipa team){
+    public void substituicao(Jogador in,Jogador out){
         int pos1=-1;
         for(int i=0;i<11&&(pos1==-1);i++){
-            if(out==this.getTitulares()[i])pos1=i;
+            if(out.getNumero()==this.getTitulares()[i])pos1=i;
         }
         int pos2=-1;
         for(int i=0;i<7&&(pos2==-1);i++){
-            if(in==this.getSuplentes()[i])pos2=i;
+            if(in.getNumero()==this.getSuplentes()[i])pos2=i;
         }
         if(pos1!=-1&&pos2!=-1){
             try{
-                Jogador inJ = team.getJogador(in);
-                Jogador outJ = team.getJogador(out);
-                if(compatible(inJ,outJ)){
+                if(compatible(in,pos1)){
                     this.setJogador(in,pos1,true);
                     this.setJogador(out,pos2,false);
                 }
@@ -71,12 +85,17 @@ public abstract class Tatica {
         }
     }
 
-    public boolean compatible(Jogador j1, Jogador j2) {
-        if(j1 instanceof GuardaRedes)return (j2 instanceof GuardaRedes);
-        else if(j1 instanceof Defesas)return (j2 instanceof Defesas)||(j1.isCentral()==j2.isCentral());
-        else if(j1 instanceof Laterais)return (j2 instanceof Laterais)||(j1.isCentral()==j2.isCentral());
-        else if(j1 instanceof Medios)return (j2 instanceof Medios)||(j1.isCentral()==j2.isCentral());
-        else if(j1 instanceof Avancados)return (j2 instanceof Avancados)||(j1.isCentral()==j2.isCentral());
-        return false;
+    public abstract boolean compatible(Jogador j, int pos);
+
+    public abstract double ratioCruzamento();
+
+    public abstract int randomPlayer(Eventos evento) throws EventoInvalidoException;
+
+    public void printCompatible(Equipa team, int pos, Set<Integer> adicionados){
+        for(Jogador j:team.getJogadores().values()){
+            if(this.compatible(j,pos)&&!adicionados.contains(j.getNumero()))System.out.println(j.prettyString());
+        }
     }
+
+    public abstract String nomePosicao(int pos) throws TaticaInvalidaException;
 }

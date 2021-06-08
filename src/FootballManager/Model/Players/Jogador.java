@@ -226,8 +226,19 @@ public abstract class Jogador implements Serializable {
         if(this instanceof Laterais)return false;
         else if(this instanceof Defesas)return true;
         else if(this instanceof GuardaRedes)return true;
-        else if(this instanceof Avancados)return remate>velocidade;
-        else if(this instanceof Medios)return ((Medios) this).getRecuperacao()>velocidade;
+        else if(this instanceof Avancados)return remate>velocidade-10;
+        else if(this instanceof Medios)return ((Medios) this).getRecuperacao()>velocidade-10;
         else return false;
     }
+
+    public boolean isLado(){
+        if(this instanceof Laterais)return true;
+        else if(this instanceof Defesas)return false;
+        else if(this instanceof GuardaRedes)return true;
+        else if(this instanceof Avancados)return velocidade>remate-10;
+        else if(this instanceof Medios)return velocidade>((Medios) this).getRecuperacao()-10;
+        else return false;
+    }
+
+
 }

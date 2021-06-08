@@ -74,4 +74,11 @@ public class ParInteiros implements Comparable<ParInteiros>, Serializable {
         if(y<res)res=y;
         return res;
     }
+
+    public void addX(int value){
+        x+=value;
+    }
+    public void addY(int value){
+        y+=value;
+    }
 }
