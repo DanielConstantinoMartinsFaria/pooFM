@@ -9,7 +9,7 @@ import FootballManager.Model.Players.Medios;
 import java.util.Random;
 import java.util.Set;
 
-public class Canto extends Eventos{
+public class Canto extends Ataque{
     private boolean lado;//False-> esquerda, True-> direita
     private Jogador marcador;
 
@@ -32,7 +32,7 @@ public class Canto extends Eventos{
         return lado;
     }
 
-    public boolean golo(Equipa Defensora, Equipa Atacante) throws TaticaInvalidaException {
+    public boolean golo(Equipa Atacante, Equipa Defensora) throws TaticaInvalidaException {
         Random r=new Random();
         int boost=0;
         if(marcador instanceof Laterais)boost=((Laterais) marcador).getCruzamento()/10;

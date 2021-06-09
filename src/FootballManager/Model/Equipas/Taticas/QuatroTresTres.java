@@ -171,7 +171,7 @@ public class QuatroTresTres extends Tatica{
     }
 
     @Override
-    public int randomPlayer(Eventos evento) throws EventoInvalidoException {
+    public int randomPlayer(Ataque evento) throws EventoInvalidoException {
         Random r = new Random();
         int res;
         if(evento instanceof Canto){

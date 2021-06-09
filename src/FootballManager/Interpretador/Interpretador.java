@@ -1,10 +1,12 @@
 package FootballManager.Interpretador;
 
+import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Equipas.Taticas.QuatroQuatroDois;
 import FootballManager.Model.Equipas.Taticas.QuatroTresTres;
 import FootballManager.Model.Equipas.Taticas.Tatica;
 import FootballManager.Model.Estado;
+import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.JogoInvalidoException;
@@ -14,9 +16,9 @@ import FootballManager.Model.Players.Jogador;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class Interpretador {
     private Estado estado;
@@ -87,15 +89,13 @@ public class Interpretador {
                             this.simulaResultado(fullLine[1],fullLine[2],LocalDate.parse(fullLine[3]),true);
                         }
                         else if(fullLine[4].equalsIgnoreCase("true")){
-                            //Nao implementado
-                            int n=0;
+                            this.simulaResultado(fullLine[1],fullLine[2],LocalDate.parse(fullLine[3]),false);
                         }
                     }
                 }
-                default -> {
-                    System.out.println("Comando Invalido");
-                }
+                default -> System.out.println("Comando Invalido");
             }
+            System.out.print("----------------------\n\n");
         } while (loop);
         System.out.println();
     }
@@ -197,6 +197,7 @@ public class Interpretador {
                 System.out.println("Jogador invalido");
                 i--;
             }
+            System.out.println("-----------------------------");
         }
 
         for(int i=0;i<7;i++){
@@ -224,55 +225,129 @@ public class Interpretador {
     public void simulaResultado(String ATeam,String BTeam, LocalDate data, boolean apenasResultado) {
         Scanner scanner = new Scanner(System.in);
         boolean looooooop=true;
+        Jogo jogo=new Jogo(ATeam,BTeam,data);
         try{
-            if(apenasResultado){
-                System.out.println(ATeam+":Qual Tática?\n"+qualTatica()+"\n");
-                Equipa ateam=estado.getEquipa(ATeam);
-                if(ateam.temTatica()){
-                    while(looooooop){
-                        System.out.println("Deseja alterar a tatica?:(Y/N)");
-                        String str=scanner.nextLine();
-                        if(str.equalsIgnoreCase("y")){
-                            Tatica tatica1=this.criaTatica(ateam,scanner.nextInt());
-                            ateam.setTatica(tatica1);
-                            looooooop=false;
-                        }
-                        else if(!str.equalsIgnoreCase("n")){
-                            System.out.println("Comando invalido\n");
-                        }
+            Tatica tatica1;
+            Tatica tatica2;
+            System.out.println(ATeam+":Qual Tática?\n"+qualTatica());
+            Equipa ateam=estado.getEquipa(ATeam);
+            if(ateam.temTatica()){
+                while(looooooop){
+                    System.out.println("Deseja alterar a tatica?:(Y/N)");
+                    String str=scanner.nextLine();
+                    if(str.equalsIgnoreCase("y")){
+                        tatica1=this.criaTatica(ateam,scanner.nextInt());
+                        jogo.setAPlantel(Arrays.stream(tatica1.getTitulares()).collect(Collectors.toSet()));
+                        ateam.setTatica(tatica1);
+                        looooooop=false;
+                    }
+                    else if(!str.equalsIgnoreCase("n")){
+                        System.out.println("Comando invalido\n");
                     }
                 }
-                else{
-                    Tatica tatica1=this.criaTatica(ateam,scanner.nextInt());
-                    ateam.setTatica(tatica1);
-                }
-                looooooop=true;
-                System.out.println(BTeam+":Qual Tática?\n"+qualTatica()+"\n");
-                Equipa bteam=estado.getEquipa(BTeam);
-                if(bteam.temTatica()){
-                    while(looooooop){
-                        System.out.println("Deseja alterar a tatica?:(Y/N)");
-                        String str=scanner.nextLine();
-                        if(str.equalsIgnoreCase("y")){
-                            Tatica tatica2=this.criaTatica(bteam,scanner.nextInt());
-                            ateam.setTatica(tatica2);
-                            looooooop=false;
-                        }
-                        else if(!str.equalsIgnoreCase("n")){
-                            System.out.println("Comando invalido\n");
-                        }
-                    }
-                }
-                else{
-                    Tatica tatica2=this.criaTatica(bteam,scanner.nextInt());
-                    bteam.setTatica(tatica2);
-                }
-                Jogo jogo=new Jogo(ATeam,BTeam,data);
-                jogo.simulador(ateam,bteam);
-                estado.addJogo(jogo);
-                System.out.println(jogo.prettyString(ateam,bteam));
             }
-        } catch (JogoInvalidoException | JogadorInexistenteException e) {
+            else{
+                tatica1=this.criaTatica(ateam,scanner.nextInt());
+                ateam.setTatica(tatica1);
+                jogo.setAPlantel(Arrays.stream(tatica1.getTitulares()).collect(Collectors.toSet()));
+            }
+            looooooop=true;
+            System.out.println(BTeam+":Qual Tática?\n"+qualTatica()+"\n");
+            Equipa bteam=estado.getEquipa(BTeam);
+            if(bteam.temTatica()){
+                while(looooooop){
+                    System.out.println("Deseja alterar a tatica?:(Y/N)");
+                    String str=scanner.nextLine();
+                    if(str.equalsIgnoreCase("y")){
+                        tatica2=this.criaTatica(bteam,scanner.nextInt());
+                        ateam.setTatica(tatica2);
+                        jogo.setBPlantel(Arrays.stream(tatica2.getTitulares()).collect(Collectors.toSet()));
+                        looooooop=false;
+                    }
+                    else if(!str.equalsIgnoreCase("n")){
+                        System.out.println("Comando invalido\n");
+                    }
+                }
+            }
+            else{
+                tatica2=this.criaTatica(bteam,scanner.nextInt());
+                bteam.setTatica(tatica2);
+                jogo.setBPlantel(Arrays.stream(tatica2.getTitulares()).collect(Collectors.toSet()));
+            }
+            if(apenasResultado){
+                jogo.simulador(ateam,bteam);
+            }
+            else{
+                ParInteiros resultado = new ParInteiros();
+                Random rand=new Random();
+                Ataque atk=new Ataque();
+                boolean equipa=true;
+                boolean sucess;
+                String cmd;
+                int in;
+                int out;
+                System.out.println("\n\n\n\n-----------"+ATeam+"vs"+BTeam+"-----------");
+                for(int i=0;i<91;i++){
+                    if(i==45)System.out.println("-----------Intervalo-----------");
+                    System.out.println("\n\n\n-----------Minuto:"+i+"-----------");
+                    if(equipa){
+                        sucess=atk.golo(ateam,bteam);
+                        System.out.println(atk.getAcontecimento()+" para a "+ATeam+"...");
+                    }
+                    else {
+                        sucess = atk.golo(bteam, ateam);
+                        System.out.println(atk.getAcontecimento()+" para a "+BTeam+"...");
+                    }
+                    if(sucess) {
+                        System.out.println("E é golo!");
+                        if(equipa)resultado.addX(1);
+                        else resultado.addY(1);
+                        equipa=!equipa;
+                    }
+                    else {
+                        System.out.println("E falhou...");
+                        equipa = rand.nextBoolean();
+                    }
+                    System.out.println("-----------"+ATeam+resultado.getX()+
+                            "vs"+resultado.getY()+BTeam+"-----------");
+
+                    TimeUnit.MILLISECONDS.sleep(500);
+                    cmd=scanner.nextLine();
+                    if(cmd.equals("sub")){
+                        System.out.print("Qual Equipa?:");
+                        cmd=scanner.nextLine();
+                        if(cmd.equals(ATeam)&&jogo.getATeamSubs().size()<3){
+                            System.out.print("Jogador que sai:");
+                            in=scanner.nextInt();
+                            System.out.print("Jogador que entra:");
+                            out=scanner.nextInt();
+                            ateam.substituicao(in,out);
+                            jogo.addSub(in,out,true);
+                        }
+                        else if(cmd.equals(BTeam)&&jogo.getBTeamSubs().size()<3){
+                            System.out.print("Jogador que sai:");
+                            in=scanner.nextInt();
+                            System.out.print("Jogador que entra:");
+                            out=scanner.nextInt();
+                            bteam.substituicao(in,out);
+                            jogo.addSub(in,out,false);
+                        }
+                        else{
+                            if(!cmd.equals(ATeam)&&!cmd.equals(BTeam)){
+                                System.out.print("Equipa indisponivel");
+                            }
+                            else System.out.print("Máximo de subsituicoes atingido");
+                        }
+                    }
+                }
+                jogo.setResultado(resultado);
+                jogo.setDone(true);
+            }
+            estado.addEquipa(bteam);
+            estado.addEquipa(ateam);
+            estado.addJogo(jogo);
+            System.out.println(jogo.prettyString(ateam,bteam));
+        } catch (JogoInvalidoException | InterruptedException | JogadorInexistenteException e) {
             e.printStackTrace();
         } catch (TaticaInvalidaException | EquipaInvalidaException e) {
             System.out.println(e.getMessage());

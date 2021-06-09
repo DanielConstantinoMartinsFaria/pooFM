@@ -10,7 +10,7 @@ import FootballManager.Model.Players.Laterais;
 import java.util.Random;
 
 
-public class Livre extends Eventos{
+public class Livre extends Ataque{
     private float distancia;
     private Jogador marcador;
 
@@ -37,13 +37,13 @@ public class Livre extends Eventos{
         return distancia;
     }
 
-    public boolean golo(Equipa Defensora, Equipa Atacante) throws TaticaInvalidaException {
+    public boolean golo(Equipa Atacante, Equipa Defensora) throws TaticaInvalidaException {
         Random r=new Random();
         int boost=0;
         if(marcador instanceof Avancados)boost=marcador.getRemate()/10;
         else if(marcador instanceof Laterais)boost=((Laterais) marcador).getCruzamento()/20;
         boost+=10-Math.abs(distancia-20);
-        double chanceGolo=(0.10+boost/2.0+(Atacante.ataque()-Defensora.defesa())/500.0);
-        return r.nextDouble() < chanceGolo;
+        double chanceGolo=(0.07+boost/2.0+(Atacante.ataque()-Defensora.defesa())/500.0);
+        return r.nextDouble()*2 < chanceGolo;
     }
 }

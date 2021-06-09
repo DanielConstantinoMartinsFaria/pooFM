@@ -1,6 +1,6 @@
 package FootballManager.Model.Equipas;
 
-import FootballManager.Model.Eventos.Eventos;
+import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
@@ -148,11 +148,15 @@ public class Equipa implements Comparable<Equipa>, Serializable {
         tatica.substituicao(in,out);
     }
 
+    public void substituicao(int in,int out){
+        tatica.substituicao(jogadores.get(in),jogadores.get(out));
+    }
+
     public double chanceCruzamento(){
         return this.tatica.ratioCruzamento();
     }
 
-    public int randomPlayer(Eventos evento) throws EventoInvalidoException{
+    public int randomPlayer(Ataque evento) throws EventoInvalidoException{
         return this.tatica.randomPlayer(evento);
     }
 

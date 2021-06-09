@@ -23,12 +23,16 @@ public class Cruzamento extends Ataque{
         this.marcador=marcador.clone();
     }
 
+    public String getMarcador(){
+        return marcador.getNome();
+    }
+
     public boolean golo(Equipa Atacante, Equipa Defensora) throws TaticaInvalidaException {
         Random r = new Random();
         int boost;
         if(marcador instanceof Laterais)boost= ((Laterais) marcador).getCruzamento();
         else boost = ((Jogador) marcador).getPasse()/2;
-        double chance=0.25+((Atacante.ataque()-Defensora.defesa()+boost/10.0)/100.0)*r.nextGaussian();
-        return r.nextDouble() < chance;
+        double chance=0.05+((Atacante.ataque()-Defensora.defesa()+boost/10.0)/100.0)*r.nextGaussian();
+        return r.nextDouble()*1.5 < chance;
     }
 }

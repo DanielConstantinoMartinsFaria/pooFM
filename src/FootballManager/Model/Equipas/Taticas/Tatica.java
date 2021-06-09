@@ -2,7 +2,7 @@ package FootballManager.Model.Equipas.Taticas;
 
 
 import FootballManager.Model.Equipas.Equipa;
-import FootballManager.Model.Eventos.Eventos;
+import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
@@ -89,12 +89,22 @@ public abstract class Tatica {
 
     public abstract double ratioCruzamento();
 
-    public abstract int randomPlayer(Eventos evento) throws EventoInvalidoException;
+    public abstract int randomPlayer(Ataque evento) throws EventoInvalidoException;
 
     public void printCompatible(Equipa team, int pos, Set<Integer> adicionados){
+        StringBuilder res= new StringBuilder();
+        StringBuilder str;
         for(Jogador j:team.getJogadores().values()){
-            if(this.compatible(j,pos)&&!adicionados.contains(j.getNumero()))System.out.println(j.prettyString());
+            if(this.compatible(j,pos)&&!adicionados.contains(j.getNumero())) {
+                str=new StringBuilder();
+                str.append(j.getClass().getSimpleName()).append(":").append(j.getNome())
+                        .append(" |").append(j.getNumero()).append("|")
+                        .append(" ".repeat(Math.max(0, 35 - str.length())))
+                        .append("|").append(j.calculaRatingTotal()).append("|\n");
+                res.append(str);
+            }
         }
+        System.out.println(res.toString());
     }
 
     public abstract String nomePosicao(int pos) throws TaticaInvalidaException;

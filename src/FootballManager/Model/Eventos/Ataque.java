@@ -7,25 +7,31 @@ import FootballManager.Model.Exceptions.TaticaInvalidaException;
 
 import java.util.Random;
 
-public class Ataque extends Eventos{
-
+public class Ataque {
+    private String acontecimento;
     public Ataque(){
         super();
+        acontecimento="";
     }
 
-    @Override
+    public String getAcontecimento(){
+        return acontecimento;
+    }
+
     public boolean golo(Equipa Atacante, Equipa Defensora) throws TaticaInvalidaException {
         Random r=new Random();
-        double chance = 0.2+((Atacante.ataque()-Defensora.defesa())/100.0)*r.nextGaussian();
+        double chance = 0.05+((Atacante.ataque()-Defensora.defesa())/100.0)*r.nextGaussian();
         try{
             if(r.nextDouble()<chance){
                 if(r.nextDouble()<Atacante.chanceCruzamento()){
                     Cruzamento cruzamento = new Cruzamento();
                     cruzamento.setMarcador(Atacante.getJogador(Atacante.randomPlayer(cruzamento)));
-                    return cruzamento.golo(Atacante,Defensora);
+                    acontecimento="Cruzamento";
+                    return cruzamento.golo(Atacante, Defensora);
                 }else{
                     Remate remate = new Remate();
                     remate.setMarcador(Atacante.getJogador(Atacante.randomPlayer(remate)));
+                    acontecimento="Remate";
                     return remate.golo(Atacante,Defensora);
                 }
             }
@@ -34,23 +40,27 @@ public class Ataque extends Eventos{
                     if(r.nextBoolean()){
                         Canto canto = new Canto(r.nextBoolean());
                         canto.setMarcador(Atacante.getJogador(Atacante.randomPlayer(canto)));
-                        return canto.golo(Defensora,Atacante);
+                        acontecimento="Canto";
+                        return canto.golo(Atacante,Defensora);
                     }
                     else {
                         double distancia=25+25*r.nextGaussian();
                         if(distancia<16.5)distancia=20+3.5*r.nextGaussian();
+                        if(distancia<16.5)distancia=16.5;
                         Livre livre = new Livre((float) distancia);
                         livre.setMarcador(Atacante.getJogador(Atacante.randomPlayer(livre)));
-                        return livre.golo(Defensora,Atacante);
+                        acontecimento="Livre";
+                        return livre.golo(Atacante,Defensora);
                     }
                 }
-                else return false;
+                else{
+                    acontecimento="Tentativa de ataque";
+                    return false;
+                }
             }
         } catch (EventoInvalidoException | JogadorInexistenteException e) {
             e.printStackTrace();
             return false;
         }
     }
-
-
 }

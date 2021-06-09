@@ -262,7 +262,10 @@ public class Estado implements Serializable{
     }
 
     public void addEquipa(Equipa e){
-        equipas.put(e.getNome(),e.clone());
+        if(equipas.containsKey(e.getNome())){
+            equipas.replace(e.getNome(),e);
+        }
+        else equipas.put(e.getNome(),e.clone());
     }
 
     public void addJogador(Jogador j,String equipa){

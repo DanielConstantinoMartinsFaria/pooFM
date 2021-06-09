@@ -172,40 +172,39 @@ public class QuatroQuatroDois extends Tatica{
         return 0.67;
     }
 
-    @Override
-    public int randomPlayer(Eventos evento) throws EventoInvalidoException {
+    public int randomPlayer(Ataque evento) throws EventoInvalidoException {
         Random r = new Random();
         int res;
         if(evento instanceof Canto){
             res=r.nextInt()%3;
             if(((Canto) evento).qualLado()){
-                if(res==0)return 3;
-                else if(res==1)return 5;
-                else return 7;
+                if(res==0)return this.getTitulares()[3];
+                else if(res==1)return this.getTitulares()[5];
+                else return this.getTitulares()[7];
             }
             else {
-                if(res==0)return 4;
-                else if(res==1)return 6;
-                else return 8;
+                if(res==0)return this.getTitulares()[4];
+                else if(res==1)return this.getTitulares()[6];
+                else return this.getTitulares()[8];
             }
         }
         else if(evento instanceof Remate){
             res=r.nextInt()%4;
-            return res+7;
+            return this.getTitulares()[res+7];
         }
         else if(evento instanceof Livre){
             res=r.nextInt()%2;
             if(((Livre) evento).getDistancia()<23.5){
-                return 9+res;
+                return this.getTitulares()[9+res];
             }
             else {
-                return 7+res;
+                return this.getTitulares()[7+res];
             }
         }
         else if(evento instanceof Cruzamento){
             res=r.nextInt()%4;
-            if(res<2)return 3+res;
-            else return 5+res;
+            if(res<2)return this.getTitulares()[3+res];
+            else return this.getTitulares()[5+res];
         }else throw new EventoInvalidoException();
     }
 

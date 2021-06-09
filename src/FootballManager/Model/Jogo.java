@@ -2,8 +2,6 @@ package FootballManager.Model;
 
 import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Equipas.Equipa;
-import FootballManager.Model.Eventos.Ataque;
-import FootballManager.Model.Eventos.Eventos;
 import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.JogoInvalidoException;
@@ -72,7 +70,7 @@ public class Jogo implements Comparable<Jogo>, Serializable {
             }
             else return ATeam.compareTo(o.ATeam);
         }
-        else return BTeam.compareTo(o.BTeam);
+        else return data.compareTo(o.data);
     }
 
     public boolean equals(Object j){
@@ -290,4 +288,8 @@ public class Jogo implements Comparable<Jogo>, Serializable {
         return resultado.clone();
     }
 
+    public void addSub(int in,int out,boolean which){
+        if(which)ATeamSubs.add(new ParInteiros(out,in));
+        else BTeamSubs.add(new ParInteiros(out,in));
+    }
 }
