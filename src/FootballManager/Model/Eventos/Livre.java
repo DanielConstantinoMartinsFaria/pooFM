@@ -43,7 +43,7 @@ public class Livre extends Ataque{
         if(marcador instanceof Avancados)boost=marcador.getRemate()/10;
         else if(marcador instanceof Laterais)boost=((Laterais) marcador).getCruzamento()/20;
         boost+=10-Math.abs(distancia-20);
-        double chanceGolo=(0.07+boost/2.0+(Atacante.ataque()-Defensora.defesa())/500.0);
-        return r.nextDouble()*2 < chanceGolo;
+        double chanceGolo=(0.03+(Atacante.ataque()-Defensora.defesa()+boost)/500.0)+0.03*r.nextGaussian();
+        return r.nextDouble() < chanceGolo;
     }
 }

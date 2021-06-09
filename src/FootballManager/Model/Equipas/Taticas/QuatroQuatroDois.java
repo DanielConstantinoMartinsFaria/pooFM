@@ -120,7 +120,7 @@ public class QuatroQuatroDois extends Tatica{
         else def+=medCen2.calculaRatingTotal()*0.57;
         fator+=0.6;
 
-        Medios medCen1=new Medios(jogadores.get(titulares[5]));
+        Medios medCen1=new Medios(jogadores.get(titulares[6]));
         if(medCen1.isCentral())def+=medCen1.calculaRatingTotal()*0.6;
         else def+=medCen1.calculaRatingTotal()*0.57;
         fator+=0.6;
@@ -224,4 +224,32 @@ public class QuatroQuatroDois extends Tatica{
         }
     }
 
+    @Override
+    public String plantelTatica() {
+        Integer[]titulares=this.getTitulares();
+        Integer[]suplentes=this.getSuplentes();
+        StringBuilder res= new StringBuilder(
+                          "             |" + String.format("%02d",titulares[0]) + "|\n" +
+                "        |" + String.format("%02d",titulares[1]) + "|      |" + String.format("%02d",titulares[2]) + "|\n" +
+                "|" + String.format("%02d",titulares[3]) + "|                      |" + String.format("%02d",titulares[4]) + "|\n" +
+                "        |" + String.format("%02d",titulares[5]) + "|      |" + String.format("%02d",titulares[6]) + "|\n" +
+                " |" + String.format("%02d",titulares[7]) + "|                    |" + String.format("%02d",titulares[8]) + "|\n" +
+                "       |" + String.format("%02d",titulares[9]) + "|        |" + String.format("%02d",titulares[10]) + "|\n\n");
+        for(Integer i:suplentes){
+            if(i!=null)res.append("|").append(i).append("|  ");
+        }
+        return res.toString()+"\n";
+    }
+
+    /*
+
+                  |00|
+             |01|      |02|
+     |03|                      |04|
+             |05|      |06|
+      |07|                    |08|
+            |09|       |10|
+     */
 }
+
+

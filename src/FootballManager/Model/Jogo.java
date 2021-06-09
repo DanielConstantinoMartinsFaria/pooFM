@@ -2,10 +2,7 @@ package FootballManager.Model;
 
 import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Equipas.Equipa;
-import FootballManager.Model.Exceptions.EquipaInvalidaException;
-import FootballManager.Model.Exceptions.JogadorInexistenteException;
-import FootballManager.Model.Exceptions.JogoInvalidoException;
-import FootballManager.Model.Exceptions.TaticaInvalidaException;
+import FootballManager.Model.Exceptions.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -86,14 +83,14 @@ public class Jogo implements Comparable<Jogo>, Serializable {
                 && this.BTeamSubs.containsAll(novo.getBTeamSubs());
     }
 
-    public String prettyString(Equipa A, Equipa B) throws EquipaInvalidaException, JogadorInexistenteException {
+    public String prettyString(Equipa A, Equipa B) throws EquipaInvalidaException, JogadorInvalidoException {
         if(A.getNome().equals(ATeam)){
             if(B.getNome().equals(BTeam)){
                 StringBuilder sb= new StringBuilder();
                 sb.append("Jogo:").append(this.getATeam());
                 if(done)sb.append(" |").append(resultado.getX()).append("| ");
                 sb.append("VS");
-                if(done)sb.append(" |").append(resultado.getX()).append("| ");
+                if(done)sb.append(" |").append(resultado.getY()).append("| ");
                 sb.append(this.BTeam).append(" - ").append(data).append("\n");
                 sb.append(A.prettyString()).append("\n").append(B.prettyString());
                 sb.append("\nSUBS:\n");

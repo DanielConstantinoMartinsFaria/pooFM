@@ -4,13 +4,13 @@ package FootballManager.Model.Equipas.Taticas;
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
-import FootballManager.Model.Exceptions.JogadorInexistenteException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
 import FootballManager.Model.Players.*;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public abstract class Tatica {
+public abstract class Tatica implements Serializable {
     private Integer[] titulares;
     private Integer[] suplentes;
 
@@ -46,7 +46,7 @@ public abstract class Tatica {
 
     public abstract double defesa(Equipa team);
 
-    public void setJogador(Jogador j,int pos,boolean titulares) throws TaticaInvalidaException, JogadorInexistenteException {
+    public void setJogador(Jogador j,int pos,boolean titulares) throws TaticaInvalidaException {
         int in=j.getNumero();
         if(titulares){
             if(pos>10)throw new TaticaInvalidaException();
@@ -79,7 +79,7 @@ public abstract class Tatica {
                     this.setJogador(out,pos2,false);
                 }
                 else throw new TaticaInvalidaException("Quatro-Tres-Tres","tentou realizar uma substituicao incompativel");
-            } catch (JogadorInexistenteException | TaticaInvalidaException e) {
+            } catch (TaticaInvalidaException e) {
                 e.printStackTrace();
             }
         }
@@ -98,8 +98,8 @@ public abstract class Tatica {
             if(this.compatible(j,pos)&&!adicionados.contains(j.getNumero())) {
                 str=new StringBuilder();
                 str.append(j.getClass().getSimpleName()).append(":").append(j.getNome())
-                        .append(" |").append(j.getNumero()).append("|")
-                        .append(" ".repeat(Math.max(0, 35 - str.length())))
+                        .append(" ".repeat(Math.max(0, 30 - str.length())))
+                        .append(" |").append(String.format("%02d",j.getNumero())).append("|")
                         .append("|").append(j.calculaRatingTotal()).append("|\n");
                 res.append(str);
             }
@@ -108,4 +108,6 @@ public abstract class Tatica {
     }
 
     public abstract String nomePosicao(int pos) throws TaticaInvalidaException;
+
+    public abstract String plantelTatica();
 }

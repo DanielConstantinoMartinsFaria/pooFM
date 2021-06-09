@@ -24,7 +24,7 @@ public class Remate extends Ataque{
 
     public boolean golo(GuardaRedes gk){
         Random r= new Random();
-        double chanceGolo=0.05+((marcador.getRemate()-gk.calculaRatingTotal())/100.0)*r.nextGaussian();
-        return r.nextDouble() < chanceGolo;
+        double chanceGolo=0.05+((marcador.getRemate()-gk.calculaRatingTotal())/500.0);
+        return r.nextDouble() < chanceGolo*r.nextGaussian();
     }
 }

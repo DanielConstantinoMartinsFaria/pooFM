@@ -2,9 +2,7 @@ package FootballManager.Model;
 
 import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Equipas.Equipa;
-import FootballManager.Model.Exceptions.EquipaInvalidaException;
-import FootballManager.Model.Exceptions.JogoInvalidoException;
-import FootballManager.Model.Exceptions.TaticaInvalidaException;
+import FootballManager.Model.Exceptions.*;
 import FootballManager.Model.Players.*;
 
 import java.io.*;
@@ -116,7 +114,7 @@ public class Estado implements Serializable{
         return Files.readAllLines(Paths.get(pathname), StandardCharsets.UTF_8);
     }
 
-    public void readText(String pathname) throws IOException, EquipaInvalidaException {
+    public void readText(String pathname) throws IOException, EquipaInvalidaException, ExcessoJogadoresException {
         List<String> linhas = lerFicheiro(pathname);
         String[] linhaPartida;
         Equipa e=null;
@@ -268,17 +266,23 @@ public class Estado implements Serializable{
         else equipas.put(e.getNome(),e.clone());
     }
 
-    public void addJogador(Jogador j,String equipa){
+    public void addJogador(Jogador j,String equipa) {
         equipas.get(equipa).addJogador(j.clone());
     }
 
-    public ParInteiros simular(String ATeam, String BTeam, LocalDate data) throws JogoInvalidoException, EquipaInvalidaException, TaticaInvalidaException {
-        for(Jogo j:jogos){
-            if(j.getData().equals(data)&&j.getATeam().equals(ATeam)&&j.getBTeam().equals(BTeam)){
-                return j.simulador(equipas.get(ATeam),equipas.get(BTeam));
+    public void transferencia(int nCam,String saida,String destino) throws JogadorInvalidoException, EquipaInvalidaException, ExcessoJogadoresException {
+        if(equipas.containsKey(saida)){
+            if(equipas.containsKey(destino)){
+                Equipa e1=equipas.get(saida);
+                Equipa e2=equipas.get(destino);
+
+                Jogador j=e1.getJogador(nCam);
+                e1.rmvJogador(j);
+
+                e2.addJogador(j);
             }
         }
-        throw new JogoInvalidoException("Jogo entre "+ATeam+" e "+BTeam+"no dia "+data+" não encontrado");
+        else throw new EquipaInvalidaException(saida," nao encontrada");
     }
 
     public Jogo getJogo(String ATeam,String BTeam,LocalDate data) throws JogoInvalidoException, EquipaInvalidaException {

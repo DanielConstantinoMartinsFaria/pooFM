@@ -32,7 +32,7 @@ public class Cruzamento extends Ataque{
         int boost;
         if(marcador instanceof Laterais)boost= ((Laterais) marcador).getCruzamento();
         else boost = ((Jogador) marcador).getPasse()/2;
-        double chance=0.05+((Atacante.ataque()-Defensora.defesa()+boost/10.0)/100.0)*r.nextGaussian();
-        return r.nextDouble()*1.5 < chance;
+        double chance=0.05+((Atacante.ataque()-Defensora.defesa()+boost)/500.0)+0.05*r.nextGaussian();
+        return r.nextDouble() < chance;
     }
 }

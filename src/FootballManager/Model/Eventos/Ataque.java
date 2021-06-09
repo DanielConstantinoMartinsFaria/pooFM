@@ -2,7 +2,7 @@ package FootballManager.Model.Eventos;
 
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
-import FootballManager.Model.Exceptions.JogadorInexistenteException;
+import FootballManager.Model.Exceptions.JogadorInvalidoException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
 
 import java.util.Random;
@@ -20,7 +20,7 @@ public class Ataque {
 
     public boolean golo(Equipa Atacante, Equipa Defensora) throws TaticaInvalidaException {
         Random r=new Random();
-        double chance = 0.05+((Atacante.ataque()-Defensora.defesa())/100.0)*r.nextGaussian();
+        double chance = 0.05+((Atacante.ataque()-Defensora.defesa())/100.0);
         try{
             if(r.nextDouble()<chance){
                 if(r.nextDouble()<Atacante.chanceCruzamento()){
@@ -31,12 +31,12 @@ public class Ataque {
                 }else{
                     Remate remate = new Remate();
                     remate.setMarcador(Atacante.getJogador(Atacante.randomPlayer(remate)));
-                    acontecimento="Remate";
+                    acontecimento="Grande Oportunidade";
                     return remate.golo(Atacante,Defensora);
                 }
             }
             else{
-                if(r.nextDouble()<0.33){
+                if(r.nextDouble()<0.15){
                     if(r.nextBoolean()){
                         Canto canto = new Canto(r.nextBoolean());
                         canto.setMarcador(Atacante.getJogador(Atacante.randomPlayer(canto)));
@@ -54,11 +54,12 @@ public class Ataque {
                     }
                 }
                 else{
-                    acontecimento="Tentativa de ataque";
+                    if(r.nextDouble()<80)acontecimento="Tentativa de ataque";
+                    else acontecimento="Boa Tentativa de ataque";
                     return false;
                 }
             }
-        } catch (EventoInvalidoException | JogadorInexistenteException e) {
+        } catch (EventoInvalidoException | JogadorInvalidoException e) {
             e.printStackTrace();
             return false;
         }

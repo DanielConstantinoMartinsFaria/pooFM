@@ -1,17 +1,6 @@
 package FootballManager.Model;
 
 import FootballManager.Interpretador.Interpretador;
-import FootballManager.Model.Equipas.Equipa;
-import FootballManager.Model.Equipas.Taticas.QuatroQuatroDois;
-import FootballManager.Model.Equipas.Taticas.QuatroTresTres;
-import FootballManager.Model.Equipas.Taticas.Tatica;
-import FootballManager.Model.Exceptions.JogadorInexistenteException;
-import FootballManager.Model.Exceptions.TaticaInvalidaException;
-import FootballManager.Model.Players.*;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Main{
     public static void main(String[] args){
@@ -76,18 +65,9 @@ public class Main{
             e.printStackTrace();
         }
         atletico.setTatica(tatica);
-        try{
-            int atk=atletico.ataque();
-            System.out.println(atk);
-        } catch (TaticaInvalidaException e) {
-            e.printStackTrace();
-        }
  */
 
-
 /*
-        ArrayList<String> equipas = new ArrayList<>();
-
         //Juventus
         Avancados ronaldo = new Avancados("Cristiano Ronaldo",7,89,84,87,95,86,95,81,equipas);
         Avancados morata = new Avancados("Alvaro Morata",9,80,77,72,84,80,80,71,equipas);
@@ -107,108 +87,46 @@ public class Main{
 
 
         Equipa juventus = new Equipa();
-        try{
-            juventus.setNome("Juventus");
-            juventus.addJogador(ronaldo);
-            juventus.add2Titulares(ronaldo.getNumero());
-            juventus.addJogador(morata);
-            juventus.add2Titulares(morata.getNumero());
-            juventus.addJogador(chiesa);
-            juventus.add2Titulares(chiesa.getNumero());
-            juventus.addJogador(rabiot);
-            juventus.add2Titulares(rabiot.getNumero());
-            juventus.addJogador(bentancur);
-            juventus.add2Titulares(bentancur.getNumero());
-            juventus.addJogador(cuadrado);
-            juventus.add2Titulares(cuadrado.getNumero());
-            juventus.addJogador(sandro);
-            juventus.add2Titulares(sandro.getNumero());
-            juventus.addJogador(danilo);
-            juventus.add2Titulares(danilo.getNumero());
-            juventus.addJogador(deligt);
-            juventus.add2Titulares(deligt.getNumero());
-            juventus.addJogador(chiellini);
-            juventus.add2Titulares(chiellini.getNumero());
-            juventus.addJogador(szczesny);
-            juventus.add2Titulares(szczesny.getNumero());
+        juventus.setNome("Juventus");
+        juventus.addJogador(ronaldo);
+        juventus.addJogador(morata);
+        juventus.addJogador(chiesa);
+        juventus.addJogador(rabiot);
+        juventus.addJogador(bentancur);
+        juventus.addJogador(cuadrado);
+        juventus.addJogador(sandro);
+        juventus.addJogador(danilo);
+        juventus.addJogador(deligt);
+        juventus.addJogador(chiellini);
+        juventus.addJogador(szczesny);
 
-        } catch (JogadorInexistenteException | ExcessoJogadoresException e) {
+        Tatica tatica2 = new QuatroQuatroDois();
+        try{
+            tatica2.setJogador(szczesny,0,true);
+            tatica2.setJogador(chiesa,1,true);
+            tatica2.setJogador(deligt,2,true);
+            tatica2.setJogador(sandro,3,true);
+            tatica2.setJogador(danilo,4,true);
+            tatica2.setJogador(bentancur,5,true);
+            tatica2.setJogador(rabiot,6,true);
+            tatica2.setJogador(cuadrado,7,true);
+            tatica2.setJogador(chiesa,8,true);
+            tatica2.setJogador(ronaldo,9,true);
+            tatica2.setJogador(morata,10,true);
+        } catch (JogadorInexistenteException | TaticaInvalidaException e) {
             e.printStackTrace();
         }
+        juventus.setTatica(tatica2);
+*/
 
-        //Atletico
+/*
+        Jogo jogo = new Jogo(juventus.getNome(),atletico.getNome(), LocalDate.now());
 
-        Avancados felix = new Avancados("Joao Felix",7,81,75,85,79,80,82,77,equipas);
-        Avancados suarez = new Avancados("Luis Suarez",9,70,78,76,69,90,89,83,equipas);
-
-        Medios carrasco = new Medios("Yannick Carrasco",21,91,76,90,71,68,85,76,82,equipas);
-        Medios trippier = new Medios("Kieran Trippier",23,73,88,73,76,58,75,80,83,equipas);
-        Medios lemar = new Medios("Thomas Lemar",11,80,74,88,69,76,79,81,85,equipas);
-        Medios llorente = new Medios("Marcos Llorente",14,84,86,75,66,62,75,84,83,equipas);
-        Medios koke = new Medios("Koke",6,67,94,73,63,56,83,85,84,equipas);
-
-        Defesas gimenez = new Defesas("Jose Gimenez",2,67,64,54,90,30,72,70,equipas);
-        Defesas savic = new Defesas("Stefan Savic",15,61,48,60,86,27,43,71,equipas);
-        Defesas hermoso = new Defesas("Mario Hermoso",22,75,76,75,86,41,65,77,equipas);
-
-        GuardaRedes oblak = new GuardaRedes("Jan Oblak",13,87,41,90,87,13,78,43,90,equipas);
-
-        Equipa atletico = new Equipa();
-        try{
-            atletico.setNome("Atletico de Madrid");
-            atletico.addJogador(felix);
-            atletico.add2Titulares(felix.getNumero());
-            atletico.addJogador(suarez);
-            atletico.add2Titulares(suarez.getNumero());
-            atletico.addJogador(carrasco);
-            atletico.add2Titulares(carrasco.getNumero());
-            atletico.addJogador(trippier);
-            atletico.add2Titulares(trippier.getNumero());
-            atletico.addJogador(lemar);
-            atletico.add2Titulares(lemar.getNumero());
-            atletico.addJogador(llorente);
-            atletico.add2Titulares(llorente.getNumero());
-            atletico.addJogador(koke);
-            atletico.add2Titulares(koke.getNumero());
-            atletico.addJogador(gimenez);
-            atletico.add2Titulares(gimenez.getNumero());
-            atletico.addJogador(savic);
-            atletico.add2Titulares(savic.getNumero());
-            atletico.addJogador(hermoso);
-            atletico.add2Titulares(hermoso.getNumero());
-            atletico.addJogador(oblak);
-            atletico.add2Titulares(oblak.getNumero());
-            atletico.addJogador(sandro);
-            atletico.add2Suplentes(sandro.getNumero());
-        } catch (JogadorInexistenteException | ExcessoJogadoresException e) {
-            e.printStackTrace();
-        }
-
-        LocalDate date = LocalDate.now();
-        Jogo juveAtl = new Jogo(juventus,atletico,date);
-        try{
-            juveAtl.substituicao(sandro.getNumero(),savic.getNumero(),atletico);
-            ParInteiros res=juveAtl.simulador(juventus,atletico);
-        } catch (EquipaInexistenteException | JogoInvalidoException | JogadorInexistenteException | ExcessoJogadoresException e) {
-            e.printStackTrace();
-        }
-        //System.out.println(juveAtl);
-
-        Estado estado = new Estado();
-
+        Estado estado=new Estado();
         estado.addEquipa(juventus);
         estado.addEquipa(atletico);
-        try{
-            estado.addJogo(juveAtl);
-        } catch (EquipaInexistenteException e) {
-            e.printStackTrace();
-        }
+        Interpretador interpretador=new Interpretador(estado);
 
-        try{
-            estado.printText("teste.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Interpretador interpretador = new Interpretador(estado);
-*/
+        interpretador.simulaResultado(juventus.getNome(),atletico.getNome(),jogo.getData(),false);
+        interpretador.showAll();
+ */

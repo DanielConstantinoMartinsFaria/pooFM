@@ -37,7 +37,7 @@ public class Canto extends Ataque{
         int boost=0;
         if(marcador instanceof Laterais)boost=((Laterais) marcador).getCruzamento()/10;
         else if(marcador instanceof Medios)boost=marcador.getPasse()/20;
-        double chanceGolo=(0.05+(Atacante.ataque()-Defensora.defesa()+boost)/500.0);
+        double chanceGolo=(0.05+(Atacante.ataque()-Defensora.defesa()+boost)/500.0)+0.05*r.nextGaussian();
         return r.nextDouble() < chanceGolo;
     }
 }

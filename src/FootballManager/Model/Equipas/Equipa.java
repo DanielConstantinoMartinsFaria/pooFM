@@ -1,9 +1,7 @@
 package FootballManager.Model.Equipas;
 
 import FootballManager.Model.Eventos.Ataque;
-import FootballManager.Model.Exceptions.EventoInvalidoException;
-import FootballManager.Model.Exceptions.JogadorInexistenteException;
-import FootballManager.Model.Exceptions.TaticaInvalidaException;
+import FootballManager.Model.Exceptions.*;
 import FootballManager.Model.Players.*;
 import FootballManager.Model.Equipas.Taticas.Tatica;
 
@@ -99,13 +97,17 @@ public class Equipa implements Comparable<Equipa>, Serializable {
         this.jogadores = jogadores.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, a -> a.getValue().clone()));
     }
 
-    public Jogador getJogador(int nCam) throws JogadorInexistenteException {
-        if (!jogadores.containsKey(nCam)) throw new JogadorInexistenteException();
+    public Jogador getJogador(int nCam) throws JogadorInvalidoException {
+        if (!jogadores.containsKey(nCam)) throw new JogadorInvalidoException(nCam," nao encontrado");
         else return jogadores.get(nCam).clone();
     }
 
     public void setTatica(Tatica tatica){
         this.tatica=tatica.clone();
+    }
+
+    public Tatica getTatica(){
+        return this.tatica.clone();
     }
 
     //Calculos
@@ -127,25 +129,26 @@ public class Equipa implements Comparable<Equipa>, Serializable {
 
     //manipular equipa
 
-    public void addJogador(Jogador j) {
+    public void addJogador(Jogador j){
         if (j == null) return;
-        jogadores.put(j.getNumero(), j.clone());
-    }
-
-    public boolean rmvJogador(Jogador j) {
-        try {
-            if (jogadores.remove(j.getNumero()) == null) {
-                throw new JogadorInexistenteException("Jogador:" + j.getNome() + " N:" + j.getNumero() + " inexistente");
-            } else return true;
-
-        } catch (JogadorInexistenteException e) {
-            e.printStackTrace();
-            return false;
+        Random rand=new Random();
+        if(!jogadores.containsKey(j.getNumero())){
+            jogadores.put(j.getNumero(), j.clone());
         }
+        else{
+            do{
+                try{
+                    j.setNumero((rand.nextInt()%99)+1);
+                } catch (JogadorInvalidoException ignored) {
+                }
+            }while(jogadores.containsKey(j.getNumero()));
+        }
+        jogadores.put(j.getNumero(),j.clone());
     }
 
-    public void substituicao(Jogador in,Jogador out){
-        tatica.substituicao(in,out);
+    public void rmvJogador(Jogador j) throws JogadorInvalidoException {
+        if (jogadores.remove(j.getNumero()) == null)
+            throw new JogadorInvalidoException(j.getNumero(), " nao encontrado");
     }
 
     public void substituicao(int in,int out){
@@ -162,5 +165,9 @@ public class Equipa implements Comparable<Equipa>, Serializable {
 
     public boolean temTatica(){
         return tatica!=null;
+    }
+
+    public String plantelTatica(){
+        return tatica.plantelTatica();
     }
 }
