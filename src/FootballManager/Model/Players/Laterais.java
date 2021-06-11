@@ -40,13 +40,13 @@ public class Laterais extends Jogador{
 
     public int calculaRatingTotal(){
         double valor = this.getVelocidade() *0.25;
-        valor += this.getResistencia() *0.18;
-        valor += this.getDestreza() *0.13;
+        valor += this.getResistencia() *0.20;
+        valor += this.getDestreza() *0.15;
         valor += this.getImpulsao() *0.02;
-        valor += this.getCabeca() *0.02;
-        valor += this.getRemate() *0.04;
-        valor += this.getPasse() *0.12;
-        valor += this.getCruzamento() *0.24;
+        valor += this.getCabeca() *0.01;
+        valor += this.getRemate() *0.02;
+        valor += this.getPasse() *0.10;
+        valor += this.getCruzamento() *0.25;
         return (int)Math.round(valor);
     }
 }

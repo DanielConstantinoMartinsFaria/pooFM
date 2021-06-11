@@ -236,7 +236,7 @@ public class QuatroDoisTresUm extends Tatica{
                 "  |" + String.format("%02d",titulares[7]) + "|       |" + String.format("%02d",titulares[8]) +
                 "|       |" + String.format("%02d",titulares[9]) + "|\n             |" + String.format("%02d",titulares[10]) + "|\n\n");
         for(Integer i:suplentes){
-            if(i!=null)res.append("|").append(i).append("|  ");
+            if(i!=null)res.append("|").append(String.format("%02d",i)).append("|  ");
         }
         return res.toString()+"\n";
     }

@@ -59,9 +59,7 @@ public abstract class Tatica implements Serializable {
         }
         else {
             if(pos>6)throw new TaticaInvalidaException();
-            if(this.compatible(j,pos)){
-                this.suplentes[pos] = in;
-            }
+            this.suplentes[pos] = in;
         }
     }
 
@@ -94,40 +92,41 @@ public abstract class Tatica implements Serializable {
     public void randomTatica(Equipa team) throws TaticaInvalidaException {
         Map<Integer,Jogador> jogadores= team.getJogadores();
         Set<Integer>usados=new TreeSet<>();
+        List<Integer>lista;
+        Random r=new Random();
+        int rand;
         for(int i=0;i<11;i++){
             int n=0;
+            lista=new ArrayList<>();
             for(Jogador j:jogadores.values()){
-                if(this.compatible(j,i)){
-                    if(n==0)n=j.getNumero();
-                    else if(j.calculaRatingTotal()>jogadores.get(n).calculaRatingTotal()){
-                        n=j.getNumero();
-                    }
+                if(this.compatible(j,i)&&!usados.contains(j.getNumero())){
+                    n++;
+                    lista.add(j.getNumero());
                 }
             }
-            if((n!=0)&&!usados.contains(n)) {
-                this.setJogador(jogadores.get(n), i, true);
-                usados.add(n);
-            }
-            else throw new TaticaInvalidaException("Equipa incompativel com tatica");
+            if(n==0)throw new TaticaInvalidaException("Equipa incompativel com tatica");
+            rand=lista.get(Math.abs(r.nextInt()%n));
+            this.setJogador(jogadores.get(rand), i, true);
+            usados.add(n);
         }
     }
 
     public abstract int randomPlayer(Ataque evento) throws EventoInvalidoException;
 
     public void printCompatible(Equipa team, int pos, Set<Integer> adicionados){
-        StringBuilder res= new StringBuilder();
-        StringBuilder str;
         for(Jogador j:team.getJogadores().values()){
             if(this.compatible(j,pos)&&!adicionados.contains(j.getNumero())) {
-                str=new StringBuilder();
-                str.append(j.getClass().getSimpleName()).append(":").append(j.getNome())
-                        .append(" ".repeat(Math.max(0, 30 - str.length())))
-                        .append(" |").append(String.format("%02d",j.getNumero())).append("|")
-                        .append("|").append(j.calculaRatingTotal()).append("|\n");
-                res.append(str);
+                System.out.println(j.prettyString());
             }
         }
-        System.out.println(res.toString());
+    }
+
+    public void printMissing(Equipa team){
+        for(Jogador j:team.getJogadores().values()){
+            if(Arrays.stream(titulares).noneMatch(a->a!=null&&a==j.getNumero()) && Arrays.stream(suplentes).noneMatch(a->a!=null&&a==j.getNumero())){
+                System.out.println(j.prettyString());
+            }
+        }
     }
 
     public abstract String nomePosicao(int pos) throws TaticaInvalidaException;

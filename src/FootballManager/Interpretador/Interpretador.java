@@ -41,7 +41,10 @@ public class Interpretador {
             fullLine = in.nextLine().trim().split("[,()]+");
             cmd = fullLine[0].toLowerCase();
             switch (cmd) {
-                case "settatica"->setTatica(fullLine[1]);
+                case "settatica"-> {
+                    if(fullLine.length==2)setTatica(fullLine[1]);
+                    else System.out.println("Formato nao reconhecido");
+                }
                 case "createequipa"-> criaEquipa();
                 case "createjogador"-> criaJogador();
                 case "read" -> {
@@ -77,6 +80,12 @@ public class Interpretador {
                     else if(fullLine.length==4){
                         this.show(fullLine[1],fullLine[2],LocalDate.parse(fullLine[3]));
                     }
+                    else System.out.println("Formato nao reconhecido");
+                }
+                case "plantel"->{
+                    if(fullLine.length==2){
+                        this.mostraPlantel(fullLine[1]);
+                    }else System.out.println("Formato nao reconhecido");
                 }
                 case "exit" -> {
                     System.out.println("Exiting...");
@@ -103,7 +112,10 @@ public class Interpretador {
                                 loooooooop=false;
                             }
                         }
-                        else loooooooop=false;
+                        else {
+                            System.out.println("Formato nao reconhecido");
+                            loooooooop = false;
+                        }
                     }
                 }
                 case "transferencia"-> transferencia();
@@ -269,6 +281,8 @@ public class Interpretador {
                 transferencia: Inicia o processo de transferencia de um jogador
                 createJogador: Inicia o processo de criacao de um jogador
                 createEquipa: Inicia o processo de criacao de uma equipa
+                setTatica: Mudifica a tatica da equipa especificada
+                plantel: Mostra o plantel e tatica da equipa especificada
                 Exemplo - show(Equipa A,Equipa B,2021-04-27)""";
     }
 
@@ -364,6 +378,27 @@ public class Interpretador {
 
     }
 
+    public void mostraPlantel(String team){
+        try{
+            Equipa e=estado.getEquipa(team);
+            System.out.println(e.plantelTatica());
+            System.out.println(" ".repeat(10)+align(60,"Titulares"));
+            if(!e.temTatica()) {
+                System.out.println("Não tem tatica");
+                return;
+            }
+            for(Integer i:e.getTatica().getTitulares()){
+                if(i!=null)System.out.println(e.getJogador(i).prettyString());
+            }
+            System.out.println(" ".repeat(10)+align(60,"Suplentes"));
+            for(Integer i:e.getTatica().getSuplentes()){
+                if(i!=null)System.out.println(e.getJogador(i).prettyString());
+            }
+        } catch (EquipaInvalidaException | JogadorInvalidoException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public Tatica criaTatica(Equipa equipa,int nTatica) throws TaticaInvalidaException {
         Tatica tatica;
         if(nTatica==1)tatica=new QuatroQuatroDois();
@@ -401,6 +436,8 @@ public class Interpretador {
 
         for(int i=0;i<7;i++){
             int k=(i+1);
+            System.out.println("-".repeat(60));
+            tatica.printMissing(equipa);
             System.out.print("Escolha um jogador para suplente n:"+k+":\n(0 caso nao queira adicionar mais)");
             System.out.print(">");
             numero=scanner.nextInt();

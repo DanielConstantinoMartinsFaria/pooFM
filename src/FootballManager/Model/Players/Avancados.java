@@ -12,9 +12,23 @@ public class Avancados extends Jogador{
         super();
     }
 
-    public Avancados(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int desmarcacao,int passe,ArrayList<String>equipas) throws JogadorInvalidoException {
+    public Avancados(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,int desmarcacao,ArrayList<String>equipas) throws JogadorInvalidoException {
         super(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
         this.desmarcacao=desmarcacao;
+    }
+
+    public Avancados(Avancados avancado){
+        super(avancado);
+        this.desmarcacao=avancado.desmarcacao;
+    }
+
+    public Avancados(Jogador jogador){
+        super(jogador);
+        desmarcacao=(int)Math.round(jogador.getVelocidade()*0.6+ jogador.getDestreza()*0.2+ jogador.getImpulsao()*0.2);
+    }
+
+    public Avancados clone(){
+        return new Avancados(this);
     }
 
     public void setDesmarcacao(int desmarcacao){
@@ -23,18 +37,6 @@ public class Avancados extends Jogador{
 
     public int getDesmarcacao(){
         return desmarcacao;
-    }
-
-    public Avancados(Avancados avancado){
-        super(avancado);
-    }
-
-    public Avancados(Jogador jogador){
-        super(jogador);
-    }
-
-    public Avancados clone(){
-        return new Avancados(this);
     }
 
     public int calculaRatingTotal(){
