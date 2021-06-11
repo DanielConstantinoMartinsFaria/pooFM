@@ -23,7 +23,7 @@ public class Cruzamento extends Ataque{
         this.marcador=marcador.clone();
     }
 
-    public String getMarcador(){
+    public String marcadorName(){
         return marcador.getNome();
     }
 

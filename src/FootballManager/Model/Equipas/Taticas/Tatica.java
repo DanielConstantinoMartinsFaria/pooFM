@@ -3,12 +3,14 @@ package FootballManager.Model.Equipas.Taticas;
 
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Eventos.Ataque;
+import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
 import FootballManager.Model.Players.*;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class Tatica implements Serializable {
     private Integer[] titulares;
@@ -78,7 +80,7 @@ public abstract class Tatica implements Serializable {
                     this.setJogador(in,pos1,true);
                     this.setJogador(out,pos2,false);
                 }
-                else throw new TaticaInvalidaException("Quatro-Tres-Tres","tentou realizar uma substituicao incompativel");
+                else throw new TaticaInvalidaException(this.getClass().getSimpleName(),"tentou realizar uma substituicao incompativel");
             } catch (TaticaInvalidaException e) {
                 e.printStackTrace();
             }
@@ -88,6 +90,27 @@ public abstract class Tatica implements Serializable {
     public abstract boolean compatible(Jogador j, int pos);
 
     public abstract double ratioCruzamento();
+
+    public void randomTatica(Equipa team) throws TaticaInvalidaException {
+        Map<Integer,Jogador> jogadores= team.getJogadores();
+        Set<Integer>usados=new TreeSet<>();
+        for(int i=0;i<11;i++){
+            int n=0;
+            for(Jogador j:jogadores.values()){
+                if(this.compatible(j,i)){
+                    if(n==0)n=j.getNumero();
+                    else if(j.calculaRatingTotal()>jogadores.get(n).calculaRatingTotal()){
+                        n=j.getNumero();
+                    }
+                }
+            }
+            if((n!=0)&&!usados.contains(n)) {
+                this.setJogador(jogadores.get(n), i, true);
+                usados.add(n);
+            }
+            else throw new TaticaInvalidaException("Equipa incompativel com tatica");
+        }
+    }
 
     public abstract int randomPlayer(Ataque evento) throws EventoInvalidoException;
 

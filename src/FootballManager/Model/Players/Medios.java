@@ -1,5 +1,7 @@
 package FootballManager.Model.Players;
 
+import FootballManager.Model.Exceptions.JogadorInvalidoException;
+
 import java.util.ArrayList;
 
 public class Medios extends Jogador{
@@ -9,7 +11,7 @@ public class Medios extends Jogador{
         super();
     }
 
-    public Medios(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,int recuperacao,ArrayList<String>equipas){
+    public Medios(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,int recuperacao,ArrayList<String>equipas) throws JogadorInvalidoException {
         super(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,equipas);
         this.recuperacao =recuperacao;
     }

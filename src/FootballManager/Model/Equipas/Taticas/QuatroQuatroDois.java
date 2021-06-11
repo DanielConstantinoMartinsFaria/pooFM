@@ -177,6 +177,7 @@ public class QuatroQuatroDois extends Tatica{
         int res;
         if(evento instanceof Canto){
             res=r.nextInt()%3;
+            res=Math.abs(res);
             if(((Canto) evento).qualLado()){
                 if(res==0)return this.getTitulares()[3];
                 else if(res==1)return this.getTitulares()[5];
@@ -194,6 +195,7 @@ public class QuatroQuatroDois extends Tatica{
         }
         else if(evento instanceof Livre){
             res=r.nextInt()%2;
+            res=Math.abs(res);
             if(((Livre) evento).getDistancia()<23.5){
                 return this.getTitulares()[9+res];
             }
@@ -203,6 +205,7 @@ public class QuatroQuatroDois extends Tatica{
         }
         else if(evento instanceof Cruzamento){
             res=r.nextInt()%4;
+            res=Math.abs(res);
             if(res<2)return this.getTitulares()[3+res];
             else return this.getTitulares()[5+res];
         }else throw new EventoInvalidoException();

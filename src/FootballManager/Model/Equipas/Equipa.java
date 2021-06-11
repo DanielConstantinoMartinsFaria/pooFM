@@ -1,9 +1,9 @@
 package FootballManager.Model.Equipas;
 
+import FootballManager.Model.Equipas.Taticas.*;
 import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.*;
 import FootballManager.Model.Players.*;
-import FootballManager.Model.Equipas.Taticas.Tatica;
 
 import java.io.Serializable;
 import java.util.*;
@@ -103,7 +103,8 @@ public class Equipa implements Comparable<Equipa>, Serializable {
     }
 
     public void setTatica(Tatica tatica){
-        this.tatica=tatica.clone();
+        if(tatica==null)this.tatica=null;
+        else this.tatica=tatica.clone();
     }
 
     public Tatica getTatica(){
@@ -132,6 +133,7 @@ public class Equipa implements Comparable<Equipa>, Serializable {
     public void addJogador(Jogador j){
         if (j == null) return;
         Random rand=new Random();
+        j.addEquipa(nome);
         if(!jogadores.containsKey(j.getNumero())){
             jogadores.put(j.getNumero(), j.clone());
         }
@@ -169,5 +171,23 @@ public class Equipa implements Comparable<Equipa>, Serializable {
 
     public String plantelTatica(){
         return tatica.plantelTatica();
+    }
+
+    public void randomTatica(){
+        boolean loop=true;
+        int counter=0;
+        while(loop&&counter<4){
+            try{
+                if(counter==0)tatica=new QuatroQuatroDois();
+                else if(counter==1)tatica=new QuatroTresTres();
+                else if(counter==2)tatica=new TresQuatroTres();
+                else if(counter==3)tatica=new QuatroDoisTresUm();
+                counter++;
+                if(tatica!=null)this.tatica.randomTatica(this);
+                loop=false;
+            } catch (TaticaInvalidaException e) {
+                this.tatica=null;
+            }
+        }
     }
 }

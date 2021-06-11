@@ -33,6 +33,10 @@ public class Livre extends Ataque{
         this.marcador=marcador.clone();
     }
 
+    public String marcadorName(){
+        return marcador.getNome();
+    }
+
     public float getDistancia(){
         return distancia;
     }
@@ -40,8 +44,8 @@ public class Livre extends Ataque{
     public boolean golo(Equipa Atacante, Equipa Defensora) throws TaticaInvalidaException {
         Random r=new Random();
         int boost=0;
-        if(marcador instanceof Avancados)boost=marcador.getRemate()/10;
-        else if(marcador instanceof Laterais)boost=((Laterais) marcador).getCruzamento()/20;
+        if(marcador instanceof Avancados&&distancia<28)boost=marcador.getRemate()/10;
+        else if(marcador instanceof Laterais&&distancia>20)boost=((Laterais) marcador).getCruzamento()/20;
         boost+=10-Math.abs(distancia-20);
         double chanceGolo=(0.03+(Atacante.ataque()-Defensora.defesa()+boost)/500.0)+0.03*r.nextGaussian();
         return r.nextDouble() < chanceGolo;

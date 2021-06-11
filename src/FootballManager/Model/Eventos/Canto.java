@@ -28,6 +28,10 @@ public class Canto extends Ataque{
         this.marcador=marcador.clone();
     }
 
+    public String marcadorName(){
+        return marcador.getNome();
+    }
+
     public boolean qualLado(){
         return lado;
     }

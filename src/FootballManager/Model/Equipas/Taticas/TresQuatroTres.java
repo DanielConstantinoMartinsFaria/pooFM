@@ -171,21 +171,25 @@ public class TresQuatroTres extends Tatica{
         }
         else if(evento instanceof Remate){
             res=r.nextInt()%5;
+            res=Math.abs(res);
             return this.getTitulares()[res+6];
         }
         else if(evento instanceof Livre){
 
             if(((Livre) evento).getDistancia()<23.5){
                 res=r.nextInt()%3;
+                res=Math.abs(res);
                 return this.getTitulares()[8+res];
             }
             else {
                 res=r.nextInt()%2;
+                res=Math.abs(res);
                 return this.getTitulares()[6+res];
             }
         }
         else if(evento instanceof Cruzamento){
             res=r.nextInt()%2;
+            res=Math.abs(res);
             return this.getTitulares()[6+res];
         }else throw new EventoInvalidoException();
     }

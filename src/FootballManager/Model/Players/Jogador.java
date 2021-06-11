@@ -33,8 +33,7 @@ public abstract class Jogador implements Serializable {
         this.equipas= new ArrayList<>();
     }
 
-    public Jogador(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,ArrayList<String> equipas){
-        try{
+    public Jogador(String nome,int numero,int velocidade,int resistencia,int destreza,int impulsao,int cabeca,int remate,int passe,ArrayList<String> equipas) throws JogadorInvalidoException {
             this.setNome(nome);
             this.setVelocidade(velocidade);
             this.setResistencia(resistencia);
@@ -45,9 +44,6 @@ public abstract class Jogador implements Serializable {
             this.setPasse(passe);
             this.setEquipas(equipas);
             this.setNumero(numero);
-        } catch (JogadorInvalidoException e) {
-            e.printStackTrace();
-        }
     }
 
     public Jogador(Jogador j){
@@ -87,18 +83,20 @@ public abstract class Jogador implements Serializable {
         else if(this instanceof Avancados)sb.append("AVA:");
         else if(this instanceof Laterais)sb.append("LAT:");
         else if(this instanceof GuardaRedes)sb.append("G-R:");
-        sb.append(this.getNome()).append("|");
-        sb.append(this.getNumero()).append("| VEL:|");
-        sb.append(this.getVelocidade()).append("| RES:|");
-        sb.append(this.getResistencia()).append("| DES:|");
-        sb.append(this.getDestreza()).append("| IMP:|");
-        sb.append(this.getImpulsao()).append("| CAB:|");
-        sb.append(this.getCabeca()).append("| REM:|");
-        sb.append(this.getRemate()).append("| PAS:|");
-        sb.append(this.getPasse());
-        if(this instanceof Laterais) sb.append("| CRU:|").append(((Laterais) this).getCruzamento());
-        else if(this instanceof GuardaRedes) sb.append("| ELA:|").append(((GuardaRedes) this).getElasticidade());
-        else if(this instanceof Medios) sb.append("| REC:|").append(((Medios) this).getRecuperacao());
+        sb.append(this.getNome()).append(" ".repeat(Math.max(0,24-this.getNome().length()))).append("|");
+        sb.append(String.format("%02d",this.getNumero())).append("| VEL:|");
+        sb.append(String.format("%02d",this.getVelocidade())).append("| RES:|");
+        sb.append(String.format("%02d",this.getResistencia())).append("| DEX:|");
+        sb.append(String.format("%02d",this.getDestreza())).append("| IMP:|");
+        sb.append(String.format("%02d",this.getImpulsao())).append("| CAB:|");
+        sb.append(String.format("%02d",this.getCabeca())).append("| REM:|");
+        sb.append(String.format("%02d",this.getRemate())).append("| PAS:|");
+        sb.append(String.format("%02d",this.getPasse()));
+        if(this instanceof Laterais) sb.append("| CRU:|").append(String.format("%02d",((Laterais) this).getCruzamento()));
+        else if(this instanceof GuardaRedes) sb.append("| ELA:|").append(String.format("%02d",((GuardaRedes) this).getElasticidade()));
+        else if(this instanceof Medios) sb.append("| REC:|").append(String.format("%02d",((Medios) this).getRecuperacao()));
+        else if(this instanceof Defesas) sb.append("| COR:|").append(String.format("%02d",((Defesas) this).getCorpo()));
+        else if(this instanceof Avancados) sb.append("| DES:|").append(String.format("%02d",((Avancados) this).getDesmarcacao()));
         sb.append("|");
         return sb.toString();
     }
@@ -122,6 +120,8 @@ public abstract class Jogador implements Serializable {
         if(this instanceof Laterais) sb.append(",").append(((Laterais) this).getCruzamento());
         else if(this instanceof GuardaRedes) sb.append(",").append(((GuardaRedes) this).getElasticidade());
         else if(this instanceof Medios) sb.append(",").append(((Medios) this).getRecuperacao());
+        else if(this instanceof Defesas) sb.append(",").append(((Defesas) this).getCorpo());
+        else if(this instanceof Avancados) sb.append(",").append(((Avancados) this).getDesmarcacao());
         return sb.toString();
     }
 
@@ -132,7 +132,7 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setVelocidade(int velocidade) throws JogadorInvalidoException {
-        if(velocidade>100||velocidade<1)throw new JogadorInvalidoException();
+        if(velocidade>100||velocidade<0)throw new JogadorInvalidoException(nome);
         else this.velocidade = velocidade;
     }
 
@@ -141,7 +141,7 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setResistencia(int resistencia) throws JogadorInvalidoException {
-        if(resistencia>100||resistencia<1)throw new JogadorInvalidoException();
+        if(resistencia>100||resistencia<0)throw new JogadorInvalidoException(nome);
         else this.resistencia = resistencia;    }
 
     public int getDestreza() {
@@ -149,7 +149,7 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setDestreza(int destreza) throws JogadorInvalidoException {
-        if(destreza>100||destreza<1)throw new JogadorInvalidoException();
+        if(destreza>100||destreza<0)throw new JogadorInvalidoException(nome);
         else this.destreza = destreza;    }
 
     public int getImpulsao() {
@@ -157,7 +157,7 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setImpulsao(int impulsao) throws JogadorInvalidoException {
-        if(impulsao>100||impulsao<1)throw new JogadorInvalidoException();
+        if(impulsao>100||impulsao<0)throw new JogadorInvalidoException(nome);
         else this.impulsao = impulsao;
     }
 
@@ -166,7 +166,7 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setCabeca(int cabeca) throws JogadorInvalidoException {
-        if(cabeca>100||cabeca<1)throw new JogadorInvalidoException();
+        if(cabeca>100||cabeca<0)throw new JogadorInvalidoException(nome);
         else this.cabeca = cabeca;    }
 
     public int getRemate() {
@@ -174,7 +174,7 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setRemate(int remate) throws JogadorInvalidoException {
-        if(remate>100||remate<1)throw new JogadorInvalidoException();
+        if(remate>100||remate<0)throw new JogadorInvalidoException(nome);
         else this.remate = remate;
     }
 
@@ -183,7 +183,7 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setPasse(int passe) throws JogadorInvalidoException {
-        if(passe>100||passe<1)throw new JogadorInvalidoException();
+        if(passe>100||passe<0)throw new JogadorInvalidoException(nome);
         else this.passe = passe;
     }
 
@@ -208,16 +208,12 @@ public abstract class Jogador implements Serializable {
     }
 
     public void setNumero(int numero) throws JogadorInvalidoException {
-        if(numero>99||numero<1)throw new JogadorInvalidoException("Numero invalido");
+        if(numero>99||numero<0)throw new JogadorInvalidoException("Numero invalido:"+nome);
         else this.numero=numero;
     }
 
     public void addEquipa(String equipa){
         this.equipas.add(equipa);
-    }
-
-    public void rmvEquipa(String equipa){
-        this.equipas.removeIf(l -> l.equals(equipa));
     }
 
     public abstract int calculaRatingTotal();
@@ -226,7 +222,7 @@ public abstract class Jogador implements Serializable {
         if(this instanceof Laterais)return false;
         else if(this instanceof Defesas)return true;
         else if(this instanceof GuardaRedes)return true;
-        else if(this instanceof Avancados)return remate>velocidade-10;
+        else if(this instanceof Avancados)return ((Avancados)this).getDesmarcacao()>velocidade-10;
         else if(this instanceof Medios)return ((Medios) this).getRecuperacao()>velocidade-10;
         else return false;
     }
@@ -239,6 +235,4 @@ public abstract class Jogador implements Serializable {
         else if(this instanceof Medios)return velocidade>((Medios) this).getRecuperacao()-10;
         else return false;
     }
-
-
 }

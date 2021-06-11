@@ -7,7 +7,7 @@ import FootballManager.Model.Estado;
 import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.*;
 import FootballManager.Model.Jogo;
-import FootballManager.Model.Players.Jogador;
+import FootballManager.Model.Players.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -41,6 +41,9 @@ public class Interpretador {
             fullLine = in.nextLine().trim().split("[,()]+");
             cmd = fullLine[0].toLowerCase();
             switch (cmd) {
+                case "settatica"->setTatica(fullLine[1]);
+                case "createequipa"-> criaEquipa();
+                case "createjogador"-> criaJogador();
                 case "read" -> {
                     if(fullLine.length==3){
                         if(fullLine[2].equalsIgnoreCase("binario"))readFile(fullLine[1],true);
@@ -111,6 +114,149 @@ public class Interpretador {
         System.out.println();
     }
 
+    public void criaEquipa(){
+        Scanner scanner=new Scanner(System.in);
+        String nome;
+        boolean loop=true;
+        while(loop){
+            System.out.print("Nome da Equipa:");
+            nome=scanner.nextLine();
+            Equipa e=new Equipa(nome, new TreeMap<>());
+            try{
+                estado.addEquipa(e,false);
+                loop=false;
+            } catch (EquipaInvalidaException equipaInvalidaException) {
+                while(loop){
+                    System.out.println(equipaInvalidaException.getMessage()+"\nDeseja subsitituir?(Y/N)");
+                    String option = scanner.nextLine();
+                    if(option.equalsIgnoreCase("y")){
+                        try{
+                            estado.addEquipa(e,true);
+                            loop=false;
+                        } catch (EquipaInvalidaException invalidaException) {
+                            invalidaException.printStackTrace();
+                        }
+                    }
+                    else if(option.equalsIgnoreCase("n")){
+                        loop=false;
+                    }
+                    else System.out.println("Opcao invalida");
+                }
+            }
+        }
+    }
+
+    public void criaJogador(){
+        Scanner scanner=new Scanner(System.in);
+        Jogador j=null;
+        String nome;
+        int numero;
+        int velocidade;
+        int resistencia;
+        int destreza;
+        int impulsao;
+        int cabeca;
+        int remate;
+        int passe;
+        int pos;
+        int special;
+        System.out.print("Nome do Jogador:");
+        nome=scanner.nextLine();
+        System.out.print("Numero do Jogador:");
+        numero=scanner.nextInt();
+        System.out.print("Velocidade do Jogador:");
+        velocidade=scanner.nextInt();
+        System.out.print("Resistencia do Jogador:");
+        resistencia=scanner.nextInt();
+        System.out.print("Destreza do Jogador:");
+        destreza=scanner.nextInt();
+        System.out.print("Impulsao do Jogador:");
+        impulsao=scanner.nextInt();
+        System.out.print("Cabeca do Jogador:");
+        cabeca=scanner.nextInt();
+        System.out.print("Remate do Jogador:");
+        remate=scanner.nextInt();
+        System.out.print("Passe do Jogador:");
+        passe=scanner.nextInt();
+        boolean loop=true;
+        while(loop){
+            System.out.print("""
+                    Posicao do Jogador:
+                    1.Guarda-Redes 2.Defesa 3.Lateral 4.Medio 5.Avancado
+                    """);
+            pos=scanner.nextInt();
+            try{
+                switch (pos){
+                    case 1->{
+                        System.out.print("Elasticidade do Jogador:");
+                        special=scanner.nextInt();
+                        j=new GuardaRedes(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,special,new ArrayList<>());
+                        loop=false;
+                    }
+
+                    case 2->{
+                        System.out.print("Corpo do Jogador:");
+                        special=scanner.nextInt();
+                        j=new Defesas(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,special,new ArrayList<>());
+                        loop=false;
+                    }
+                    case 3->{
+                        System.out.print("Cruzamento do Jogador:");
+                        special=scanner.nextInt();
+                        j=new Laterais(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,special,new ArrayList<>());
+                        loop=false;
+                    }
+                    case 4->{
+                        System.out.print("Recuperacao do Jogador:");
+                        special=scanner.nextInt();
+                        j=new Medios(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,special,new ArrayList<>());
+                        loop=false;
+                    }
+                    case 5->{
+                        System.out.print("Desmarcacao do Jogador:");
+                        special=scanner.nextInt();
+                        j=new Avancados(nome,numero,velocidade,resistencia,destreza,impulsao,cabeca,remate,passe,special,new ArrayList<>());
+                        loop=false;
+                    }
+                    default-> throw new JogadorInvalidoException("Posicao invalida");
+                }
+            } catch (JogadorInvalidoException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        loop=true;
+        scanner.nextLine();
+        while(loop){
+            System.out.print("Equipa do Jogador:");
+            String equipa=scanner.nextLine();
+            try{
+                estado.addJogador(j,equipa);
+                loop=false;
+            } catch (EquipaInvalidaException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public void setTatica(String team){
+        Scanner scanner=new Scanner(System.in);
+        boolean loop=true;
+        int nTatica = 0;
+        while (loop){
+            System.out.println(qualTatica());
+            nTatica=scanner.nextInt();
+            if(nTatica>0&&nTatica<5)loop=false;
+            else System.out.println("Tatica invalida");
+        }
+        try{
+            Equipa e = estado.getEquipa(team);
+            e.setTatica(criaTatica(e,nTatica));
+            if(e.temTatica())estado.addEquipa(e,true);
+        } catch (EquipaInvalidaException | TaticaInvalidaException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public String helpView(){
         return """
                 COMANDOS:
@@ -121,6 +267,8 @@ public class Interpretador {
                 showAll: Imprime todos os jogos e equipas, simplificados
                 simul: Simula um jogo
                 transferencia: Inicia o processo de transferencia de um jogador
+                createJogador: Inicia o processo de criacao de um jogador
+                createEquipa: Inicia o processo de criacao de uma equipa
                 Exemplo - show(Equipa A,Equipa B,2021-04-27)""";
     }
 
@@ -229,13 +377,14 @@ public class Interpretador {
         for(int i=0;i<11;i++){
             System.out.println("-".repeat(60));
             try{
-                System.out.print("Escolha um jogador para "+tatica.nomePosicao(i)+":\n");
+                System.out.print("Escolha um jogador para "+tatica.nomePosicao(i)+":\n"+"0 para cancelar\n");
             } catch (TaticaInvalidaException e) {
                 e.printStackTrace();
             }
             tatica.printCompatible(equipa,i,adicionados);
             System.out.print(">");
             numero=scanner.nextInt();
+            if(numero==0)return null;
             try{
                 Jogador j=equipa.getJogador(numero);
                 tatica.setJogador(j,i,true);
@@ -286,6 +435,9 @@ public class Interpretador {
         String teamName=team.getNome();
         boolean looooooop=true;
         System.out.println("-".repeat(60));
+        if(!team.temTatica()){
+            team.randomTatica();
+        }
         if(team.temTatica()){
             while(looooooop){
                 System.out.println(team.plantelTatica());
@@ -313,31 +465,38 @@ public class Interpretador {
     public void substituicao(Equipa team,Jogo jogo,boolean which){
         Scanner scanner=new Scanner(System.in);
         int in,out;
+        Set<ParInteiros>subs;
         if(which&&jogo.getATeamSubs().size()<3){
+            subs=jogo.getATeamSubs();
             System.out.println("-".repeat(80));
             System.out.print(team.plantelTatica());
             System.out.println("-".repeat(80));
             System.out.print("Jogador que sai:(0 para cancelar)");
             in=scanner.nextInt();
-            if(in>0){
+            boolean resIn=subs.stream().anyMatch(j->j.getX()==in);
+            if(in>0&&!resIn){
                 System.out.print("Jogador que entra:(0 para cancelar)");
                 out=scanner.nextInt();
-                if(out>0){
+                boolean resOut=subs.stream().anyMatch(j->j.getX()==out);
+                if(out>0&&!resOut){
                     team.substituicao(in,out);
                     jogo.addSub(in,out, true);
                 }
             }
         }
         else if(!which&&jogo.getBTeamSubs().size()<3){
+            subs=jogo.getBTeamSubs();
             System.out.println("-".repeat(80));
             System.out.print(team.plantelTatica());
             System.out.println("-".repeat(80));
             System.out.print("Jogador que sai:(0 para cancelar)");
             in=scanner.nextInt();
-            if(in>0){
+            boolean resIn=subs.stream().anyMatch(j->j.getX()==in);
+            if(in>0&&!resIn){
                 System.out.print("Jogador que entra:(0 para cancelar)");
                 out=scanner.nextInt();
-                if(out>0){
+                boolean resOut=subs.stream().anyMatch(j->j.getX()==out);
+                if(out>0&&!resOut){
                     team.substituicao(in,out);
                     jogo.addSub(in,out, false);
                 }
@@ -356,9 +515,15 @@ public class Interpretador {
             Equipa bteam=estado.getEquipa(BTeam);
 
             setTatica(ateam);
+            if(!ateam.temTatica()) {
+                return;
+            }
             jogo.setAPlantel(Arrays.stream(ateam.getTatica().getTitulares()).collect(Collectors.toSet()));
 
             setTatica(bteam);
+            if(!bteam.temTatica()) {
+                return;
+            }
             jogo.setBPlantel(Arrays.stream(bteam.getTatica().getTitulares()).collect(Collectors.toSet()));
             if(apenasResultado){
                 jogo.simulador(ateam,bteam);
@@ -379,22 +544,36 @@ public class Interpretador {
                     stringBuilder.append(" ".repeat(20)).append(align(40,"Minuto:"+min)).append("\n");
                     if(equipa){
                         sucess=atk.golo(ateam,bteam);
-                        stringBuilder.append(atk.getAcontecimento())
-                                .append(" para ").append(ATeam).append("...\n");
+                        stringBuilder.append(atk.getAcontecimento()).append("...\n");
                     }
                     else {
                         sucess = atk.golo(bteam, ateam);
-                        stringBuilder.append(atk.getAcontecimento())
-                                .append(" para ").append(BTeam).append("...\n");
+                        stringBuilder.append(atk.getAcontecimento()).append("...\n");
                     }
                     if(sucess) {
-                        stringBuilder.append("E é golo!\n");
+                        stringBuilder.append(randomSuccess());
+                        TimeUnit.MILLISECONDS.sleep(500);
                         if(equipa)resultado.addX(1);
                         else resultado.addY(1);
                         equipa=!equipa;
                     }
                     else {
-                        stringBuilder.append("E falhou...\n");
+                        double comm=rand.nextDouble();
+                        if(comm<0.15){
+                            stringBuilder.append("E passou ao lado...\n");
+                        }else if(comm<0.30){
+                            stringBuilder.append("A bola vai parar a bancada!\n");
+                        }else if(comm<0.5){
+                            stringBuilder.append("A equipa adversaria recupera a bola...\n");
+                        }else if(comm<0.65){
+                            stringBuilder.append("Diretamente para as maos do guarda-redes...\n");
+                        }else if(comm<0.80){
+                            stringBuilder.append("E falhou... Para onde estava ele a olhar?\n");
+                        } else if(comm<0.90){
+                            stringBuilder.append("E a bola bate na trave...\n");
+                        }else{
+                            stringBuilder.append("Em cheioooo... no poste...\n");
+                        }
                         equipa = rand.nextBoolean();
                     }
                     stringBuilder.append(align(80,ATeam+" |"+
@@ -402,7 +581,7 @@ public class Interpretador {
                     if(!atk.getAcontecimento().equals("Tentativa de ataque"))System.out.print(stringBuilder.toString());
                     TimeUnit.MILLISECONDS.sleep(500);
 
-                    if((i+1)%15==0){
+                    if(i%15==0){
                         System.out.println(" ".repeat(20)+align(40,"Pausa:Pressione enter caso queira continuar\n")
                         +" ".repeat(20)+align(40,"Caso queria subsituir um jogador, escreva: sub\n"));
 
@@ -431,14 +610,54 @@ public class Interpretador {
                 jogo.setResultado(resultado);
                 jogo.setDone(true);
             }
-            estado.addEquipa(bteam);
-            estado.addEquipa(ateam);
+            estado.addEquipa(bteam,true);
+            estado.addEquipa(ateam,true);
             estado.addJogo(jogo);
             System.out.println("\n\n"+jogo.prettyString(ateam,bteam));
         } catch (JogoInvalidoException | InterruptedException  e) {
             e.printStackTrace();
         } catch (TaticaInvalidaException | EquipaInvalidaException | JogadorInvalidoException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public String randomSuccess(){
+        Random rand=new Random();
+        double comm=rand.nextDouble();
+        if(comm<0.25){
+            return "E é GOLO!!!\n";
+        }else if(comm<0.5){
+            return "A bola entra, na GAVETA!!\n";
+        }else if(comm<0.75){
+            return "O guarda-redes nada pode fazer!! GOLO!!!\n";
+        }else {
+            return "GOLOOO, o guarda-redes ainda tocou mas entrou de qualquer forma!\n";
+        }
+    }
+
+    public String randomFail(){
+        Random rand=new Random();
+        double comm=rand.nextDouble();
+        if(comm<0.10){
+            return "E passou ao lado...\n";
+        }else if(comm<0.25){
+            return "A bola vai parar a bancada!\n";
+        }else if(comm<0.45){
+            return "A equipa adversaria recupera a bola...\n";
+        }else if(comm<0.55){
+            return "Diretamente para as maos do guarda-redes...\n";
+        }else if(comm<0.65){
+            return "E falhou... Para onde estava ele a olhar?\n";
+        }else if(comm<0.70){
+            return "E a bola bate na trave...\n";
+        }else if(comm<0.75){
+            return "Em cheioooo... no poste...\n";
+        }else if(comm<0.85){
+            return "Grande golo... se entrasse...\n";
+        }else if(comm<0.95){
+            return "Incrivel defesa!!!\n";
+        }else{
+            return "O guarda-redes parece que voou!!";
         }
     }
 
@@ -450,5 +669,4 @@ public class Interpretador {
                 4:3-4-3
                 """;
     }
-
 }

@@ -172,6 +172,7 @@ public class QuatroTresTres extends Tatica{
         int res;
         if(evento instanceof Canto){
             res=r.nextInt()%3;
+            res=Math.abs(res);
             if(((Canto) evento).qualLado()){
                 if(res==0)return 3;
                 else if(res==1)return 6;
@@ -185,14 +186,17 @@ public class QuatroTresTres extends Tatica{
         }
         else if(evento instanceof Remate){
             res=r.nextInt()%5;
+            res=Math.abs(res);
             return res+6;
         }
         else if(evento instanceof Livre){
             res=r.nextInt()%5;
+            res=Math.abs(res);
             return res+6;
         }
         else if(evento instanceof Cruzamento){
             res=r.nextInt()%6;
+            res=Math.abs(res);
             if(res<2)return 3+res;
             else return 4+res;
         }else throw new EventoInvalidoException();

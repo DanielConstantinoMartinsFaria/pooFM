@@ -122,40 +122,60 @@ public class Estado implements Serializable{
             linhaPartida = linha.split(":", 2);
             switch (linhaPartida[0]) {
                 case "Equipa" -> {
-                    if (e != null) equipas.put(e.getNome(), e);
+                    if (e != null) this.addEquipa(e,true);
                     e = new Equipa();
                     e.setNome(linhaPartida[1]);
                 }
                 case "Guarda-Redes" -> {
                     if (e == null) throw new EquipaInvalidaException();
-                    GuardaRedes g = parseGuardaRedes(linhaPartida[1]);
-                    e.addJogador(g);
+                    try{
+                        GuardaRedes g = parseGuardaRedes(linhaPartida[1]);
+                        e.addJogador(g);
+                    } catch (JogadorInvalidoException jogadorInvalidoException) {
+                        jogadorInvalidoException.printStackTrace();
+                    }
                 }
                 case "Avancado" -> {
                     if (e == null) throw new EquipaInvalidaException();
-                    Avancados a = parseAvancado(linhaPartida[1]);
-                    e.addJogador(a);
+                    try{
+                        Avancados a = parseAvancado(linhaPartida[1]);
+                        e.addJogador(a);
+                    } catch (JogadorInvalidoException jogadorInvalidoException) {
+                        jogadorInvalidoException.printStackTrace();
+                    }
                 }
                 case "Medio" -> {
                     if (e == null) throw new EquipaInvalidaException();
-                    Medios m = parseMedio(linhaPartida[1]);
-                    e.addJogador(m);
+                    try{
+                        Medios m = parseMedio(linhaPartida[1]);
+                        e.addJogador(m);
+                    } catch (JogadorInvalidoException jogadorInvalidoException) {
+                        jogadorInvalidoException.printStackTrace();
+                    }
                 }
                 case "Defesa" -> {
                     if (e == null) throw new EquipaInvalidaException();
-                    Defesas d = parseDefesa(linhaPartida[1]);
-                    e.addJogador(d);
+                    try{
+                        Defesas d = parseDefesa(linhaPartida[1]);
+                        e.addJogador(d);
+                    } catch (JogadorInvalidoException jogadorInvalidoException) {
+                        jogadorInvalidoException.printStackTrace();
+                    }
                 }
                 case "Lateral" -> {
                     if (e == null) throw new EquipaInvalidaException();
-                    Laterais l = parseLateral(linhaPartida[1]);
-                    e.addJogador(l);
+                    try{
+                        Laterais l = parseLateral(linhaPartida[1]);
+                        e.addJogador(l);
+                    } catch (JogadorInvalidoException jogadorInvalidoException) {
+                        jogadorInvalidoException.printStackTrace();
+                    }
                 }
                 case "Jogo" -> {
-                    if (e != null) equipas.put(e.getNome(), e);
+                    if (e != null) this.addEquipa(e,true);
                     e=null;
                     Jogo j = parseJogo(linhaPartida[1]);
-                    jogos.add(j);
+                    this.addJogo(j);
                 }
                 default -> System.out.println("Linha invalida.");
 
@@ -164,29 +184,52 @@ public class Estado implements Serializable{
         if(e!=null)equipas.put(e.getNome(),e);
     }
 
-    public GuardaRedes parseGuardaRedes(String input){
+    public GuardaRedes parseGuardaRedes(String input) throws JogadorInvalidoException {
         String[] campos=input.split(",");
-        return new GuardaRedes(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        if(campos.length==10){
+            return new GuardaRedes(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        }
+        else throw new JogadorInvalidoException("Linha invalida");
     }
 
-    public Avancados parseAvancado(String input){
+    public Avancados parseAvancado(String input) throws JogadorInvalidoException {
         String[] campos=input.split(",");
-        return new Avancados(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),new ArrayList<>());
+        if(campos.length==9){
+            int desmarcacao=(int)Math.round(Integer.parseInt(campos[2])*0.6+Integer.parseInt(campos[4])*0.2+Integer.parseInt(campos[5])*0.2);
+            return new Avancados(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),desmarcacao,new ArrayList<>());
+        }
+        else if(campos.length==10){
+            return new Avancados(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        }
+        else throw new JogadorInvalidoException("Linha invalida");
     }
 
-    public Defesas parseDefesa(String input){
+    public Defesas parseDefesa(String input) throws JogadorInvalidoException {
         String[] campos=input.split(",");
-        return new Defesas(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),new ArrayList<>());
+        if(campos.length==9){
+            int corpo=(int)Math.round(Integer.parseInt(campos[3])*0.7+Integer.parseInt(campos[5])*0.3);
+            return new Defesas(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),corpo,new ArrayList<>());
+        }
+        else if(campos.length==10){
+            return new Defesas(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        }
+        else throw new JogadorInvalidoException("Linha invalida");
     }
 
-    public Medios parseMedio(String input){
+    public Medios parseMedio(String input) throws JogadorInvalidoException {
         String[] campos=input.split(",");
-        return new Medios(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        if(campos.length==10){
+            return new Medios(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        }
+        else throw new JogadorInvalidoException("Linha invalida");
     }
 
-    public Laterais parseLateral(String input){
+    public Laterais parseLateral(String input) throws JogadorInvalidoException {
         String[] campos=input.split(",");
-        return new Laterais(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        if(campos.length==10){
+            return new Laterais(campos[0],Integer.parseInt(campos[1]),Integer.parseInt(campos[2]),Integer.parseInt(campos[3]),Integer.parseInt(campos[4]),Integer.parseInt(campos[5]),Integer.parseInt(campos[6]),Integer.parseInt(campos[7]),Integer.parseInt(campos[8]),Integer.parseInt(campos[9]),new ArrayList<>());
+        }
+        else throw new JogadorInvalidoException("Linha invalida");
     }
 
     public Jogo parseJogo(String input){
@@ -259,15 +302,18 @@ public class Estado implements Serializable{
         else throw new EquipaInvalidaException("Equipa A inexistente");
     }
 
-    public void addEquipa(Equipa e){
+    public void addEquipa(Equipa e,boolean replace) throws EquipaInvalidaException {
         if(equipas.containsKey(e.getNome())){
-            equipas.replace(e.getNome(),e);
+            if(replace)equipas.replace(e.getNome(),e);
+            else throw new EquipaInvalidaException("Equipa já existente");
         }
         else equipas.put(e.getNome(),e.clone());
     }
 
-    public void addJogador(Jogador j,String equipa) {
-        equipas.get(equipa).addJogador(j.clone());
+    public void addJogador(Jogador j,String equipa) throws EquipaInvalidaException {
+        Equipa e= equipas.get(equipa);
+        if(e==null)throw new EquipaInvalidaException("Equipa Inexistente");
+        e.addJogador(j.clone());
     }
 
     public void transferencia(int nCam,String saida,String destino) throws JogadorInvalidoException, EquipaInvalidaException, ExcessoJogadoresException {

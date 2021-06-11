@@ -22,6 +22,10 @@ public class Remate extends Ataque{
         this.marcador=marcador.clone();
     }
 
+    public String marcadorNome(){
+        return marcador.getNome();
+    }
+
     public boolean golo(GuardaRedes gk){
         Random r= new Random();
         double chanceGolo=0.05+((marcador.getRemate()-gk.calculaRatingTotal())/500.0);
