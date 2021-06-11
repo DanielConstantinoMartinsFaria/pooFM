@@ -10,7 +10,6 @@ import java.util.Random;
 public class Ataque {
     private String acontecimento;
     public Ataque(){
-        super();
         acontecimento="";
     }
 
