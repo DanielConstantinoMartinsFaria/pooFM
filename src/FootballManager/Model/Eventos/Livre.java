@@ -3,9 +3,9 @@ package FootballManager.Model.Eventos;
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
-import FootballManager.Model.Players.Avancados;
-import FootballManager.Model.Players.Jogador;
-import FootballManager.Model.Players.Laterais;
+import FootballManager.Model.Jogadores.Avancados;
+import FootballManager.Model.Jogadores.Jogador;
+import FootballManager.Model.Jogadores.Laterais;
 
 import java.util.Random;
 

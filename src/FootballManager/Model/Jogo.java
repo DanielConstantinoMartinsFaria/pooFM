@@ -1,6 +1,5 @@
 package FootballManager.Model;
 
-import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Exceptions.*;
 

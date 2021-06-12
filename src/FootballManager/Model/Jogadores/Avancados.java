@@ -1,4 +1,4 @@
-package FootballManager.Model.Players;
+package FootballManager.Model.Jogadores;
 
 
 import FootballManager.Model.Exceptions.JogadorInvalidoException;

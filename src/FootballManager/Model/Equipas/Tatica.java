@@ -1,16 +1,13 @@
-package FootballManager.Model.Equipas.Taticas;
+package FootballManager.Model.Equipas;
 
 
-import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Eventos.Ataque;
-import FootballManager.Model.Exceptions.EquipaInvalidaException;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
-import FootballManager.Model.Players.*;
+import FootballManager.Model.Jogadores.*;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class Tatica implements Serializable {
     private Integer[] titulares;

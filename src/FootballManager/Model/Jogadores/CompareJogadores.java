@@ -1,4 +1,4 @@
-package FootballManager.Model.Players;
+package FootballManager.Model.Jogadores;
 
 import java.util.Comparator;
 

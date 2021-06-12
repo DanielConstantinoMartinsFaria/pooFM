@@ -1,9 +1,8 @@
 package FootballManager.Model;
 
-import FootballManager.Model.Auxiliares.ParInteiros;
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Exceptions.*;
-import FootballManager.Model.Players.*;
+import FootballManager.Model.Jogadores.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -16,26 +15,22 @@ import java.util.stream.Collectors;
 public class Estado implements Serializable{
     private Map<String, Equipa> equipas;
     private Set<Jogo> jogos;
-    private Map<Integer,Jogador>freelancers;
 
     //Construtores
 
     public Estado(){
         equipas=new TreeMap<>();
         jogos=new TreeSet<>();
-        freelancers=new TreeMap<>();
     }
 
     public Estado(Set<Equipa>equipas,Set<Jogo>jogos,Set<Jogador>freelancers){
         this.setEquipas(equipas);
         this.setJogos(jogos);
-        this.setFreelancers(freelancers);
     }
 
     public Estado(Estado estado){
         this.equipas=estado.getEquipas().stream().collect(Collectors.toMap(Equipa :: getNome,j->j));
         this.jogos=estado.getJogos();
-        this.freelancers=estado.getFreelancers().stream().collect(Collectors.toMap(Jogador::getNumero,j->j));
     }
 
     //Defaults
@@ -61,9 +56,6 @@ public class Estado implements Serializable{
         return this.jogos.stream().map(Jogo::clone).collect(Collectors.toSet());
     }
 
-    public Set<Jogador> getFreelancers(){
-        return this.freelancers.values().stream().map(Jogador::clone).collect(Collectors.toSet());
-    }
 
     public void setEquipas(Set<Equipa>equipas){
         if(equipas==null)this.equipas=new TreeMap<>();
@@ -74,11 +66,6 @@ public class Estado implements Serializable{
         if(jogos!=null) this.jogos = jogos.stream().map(Jogo::clone).collect(Collectors.toSet());
         else this.jogos=new TreeSet<>();
 
-    }
-
-    public void setFreelancers(Set<Jogador>freelancers){
-        if(freelancers==null)this.freelancers= new TreeMap<>();
-        else this.freelancers=freelancers.stream().collect(Collectors.toMap(Jogador::getNumero, Jogador::clone));
     }
 
     //Escrita
@@ -114,7 +101,7 @@ public class Estado implements Serializable{
         return Files.readAllLines(Paths.get(pathname), StandardCharsets.UTF_8);
     }
 
-    public void readText(String pathname) throws IOException, EquipaInvalidaException, ExcessoJogadoresException {
+    public void readText(String pathname) throws IOException, EquipaInvalidaException{
         List<String> linhas = lerFicheiro(pathname);
         String[] linhaPartida;
         Equipa e=null;
@@ -279,23 +266,10 @@ public class Estado implements Serializable{
 
     //Manipulação
 
-    public boolean addJogo(String A,String B,LocalDate data) throws EquipaInvalidaException {
-        if(equipas.containsKey(A)){
-            if(equipas.containsKey(B)){
-                Jogo j = new Jogo(A,B,data);
-                jogos.add(j);
-                return true;
-            }
-            else throw new EquipaInvalidaException(B);
-        }
-        else throw new EquipaInvalidaException(A);
-    }
-
-    public boolean addJogo(Jogo j) throws EquipaInvalidaException {
+    public void addJogo(Jogo j) throws EquipaInvalidaException {
         if(equipas.containsKey(j.getATeam())){
             if(equipas.containsKey(j.getBTeam())){
                 jogos.add(j);
-                return true;
             }
             else throw new EquipaInvalidaException("Equipa B inexistente");
         }
@@ -316,7 +290,7 @@ public class Estado implements Serializable{
         e.addJogador(j.clone());
     }
 
-    public void transferencia(int nCam,String saida,String destino) throws JogadorInvalidoException, EquipaInvalidaException, ExcessoJogadoresException {
+    public void transferencia(int nCam,String saida,String destino) throws JogadorInvalidoException, EquipaInvalidaException{
         if(equipas.containsKey(saida)){
             if(equipas.containsKey(destino)){
                 Equipa e1=equipas.get(saida);

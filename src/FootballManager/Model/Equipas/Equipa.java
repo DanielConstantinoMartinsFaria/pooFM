@@ -1,9 +1,8 @@
 package FootballManager.Model.Equipas;
 
-import FootballManager.Model.Equipas.Taticas.*;
 import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.*;
-import FootballManager.Model.Players.*;
+import FootballManager.Model.Jogadores.*;
 
 import java.io.Serializable;
 import java.util.*;

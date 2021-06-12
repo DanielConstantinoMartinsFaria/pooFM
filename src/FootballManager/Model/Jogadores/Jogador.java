@@ -1,4 +1,4 @@
-package FootballManager.Model.Players;
+package FootballManager.Model.Jogadores;
 
 import FootballManager.Model.Exceptions.JogadorInvalidoException;
 
@@ -83,7 +83,7 @@ public abstract class Jogador implements Serializable {
         else if(this instanceof Avancados)sb.append("AVA:");
         else if(this instanceof Laterais)sb.append("LAT:");
         else if(this instanceof GuardaRedes)sb.append("G-R:");
-        sb.append(this.getNome()).append(" ".repeat(Math.max(0,24-this.getNome().length()))).append("|");
+        sb.append(this.getNome()).append(" ".repeat(Math.max(0,40-this.getNome().length()))).append("|");
         sb.append(String.format("%02d",this.getNumero())).append("| OVR:|");
         sb.append(String.format("%02d",this.calculaRatingTotal())).append("|  VEL:|");
         sb.append(String.format("%02d",this.getVelocidade())).append("| RES:|");

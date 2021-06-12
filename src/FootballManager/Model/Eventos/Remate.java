@@ -1,8 +1,7 @@
 package FootballManager.Model.Eventos;
 
-import FootballManager.Model.Equipas.Equipa;
-import FootballManager.Model.Players.GuardaRedes;
-import FootballManager.Model.Players.Jogador;
+import FootballManager.Model.Jogadores.GuardaRedes;
+import FootballManager.Model.Jogadores.Jogador;
 
 import java.util.Random;
 

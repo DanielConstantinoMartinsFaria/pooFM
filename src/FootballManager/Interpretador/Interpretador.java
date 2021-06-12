@@ -1,13 +1,10 @@
 package FootballManager.Interpretador;
 
-import FootballManager.Model.Auxiliares.ParInteiros;
-import FootballManager.Model.Equipas.Equipa;
-import FootballManager.Model.Equipas.Taticas.*;
-import FootballManager.Model.Estado;
+import FootballManager.Model.*;
+import FootballManager.Model.Equipas.*;
 import FootballManager.Model.Eventos.Ataque;
 import FootballManager.Model.Exceptions.*;
-import FootballManager.Model.Jogo;
-import FootballManager.Model.Players.*;
+import FootballManager.Model.Jogadores.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -281,14 +278,21 @@ public class Interpretador {
                 transferencia: Inicia o processo de transferencia de um jogador
                 createJogador: Inicia o processo de criacao de um jogador
                 createEquipa: Inicia o processo de criacao de uma equipa
-                setTatica: Mudifica a tatica da equipa especificada
+                setTatica: Modifica a tatica da equipa especificada
                 plantel: Mostra o plantel e tatica da equipa especificada
                 Exemplo - show(Equipa A,Equipa B,2021-04-27)""";
     }
 
     public String helpView(String cmd){
         StringBuilder sb = new StringBuilder();
-        switch (cmd){
+        switch (cmd.toLowerCase()){
+            case "exit"->sb.append("Sai do programa\n");
+            case "showAll"->sb.append("Imprime todos os jogos e equipas, simplificados");
+            case "transferencia"->sb.append("Inicia o processo de transferencia de um jogador");
+            case "createjogador"->sb.append("Inicia o processo de criacao de um jogador");
+            case "createequipa"->sb.append("Inicia o processo de criacao de uma equipa");
+            case "settatica"->sb.append("Modifica a tatica da equipa especificada");
+            case "plantel"->sb.append("(<Nome da Equipa>) Mostra o plantel e tatica da equipa especificada\n");
             case "read" ->{
                 sb.append("(<Nome do ficheiro>,Binario) Le o estado guardado em ficheiro de formato binario\n");
                 sb.append("(<Nome do ficheiro>,Texto) Le o estado guardado em ficheiro de formato textual\n");
@@ -311,7 +315,7 @@ public class Interpretador {
         try{
             if(isBin)estado.readBinary(pathname);
             else estado.readText(pathname);
-        } catch (IOException | ClassNotFoundException | EquipaInvalidaException | ExcessoJogadoresException e) {
+        } catch (IOException | ClassNotFoundException | EquipaInvalidaException e) {
             System.out.println("Ficheiro "+e.getMessage()+" nao encontrado");
         }
     }
@@ -371,7 +375,7 @@ public class Interpretador {
 
                 estado.transferencia(nJogador,e1,e2);
                 loop=false;
-            } catch (EquipaInvalidaException | JogadorInvalidoException | ExcessoJogadoresException e) {
+            } catch (EquipaInvalidaException | JogadorInvalidoException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -399,7 +403,7 @@ public class Interpretador {
         }
     }
 
-    public Tatica criaTatica(Equipa equipa,int nTatica) throws TaticaInvalidaException {
+    public Tatica criaTatica(Equipa equipa, int nTatica) throws TaticaInvalidaException {
         Tatica tatica;
         if(nTatica==1)tatica=new QuatroQuatroDois();
         else if(nTatica==2)tatica= new QuatroTresTres();
@@ -595,22 +599,7 @@ public class Interpretador {
                         equipa=!equipa;
                     }
                     else {
-                        double comm=rand.nextDouble();
-                        if(comm<0.15){
-                            stringBuilder.append("E passou ao lado...\n");
-                        }else if(comm<0.30){
-                            stringBuilder.append("A bola vai parar a bancada!\n");
-                        }else if(comm<0.5){
-                            stringBuilder.append("A equipa adversaria recupera a bola...\n");
-                        }else if(comm<0.65){
-                            stringBuilder.append("Diretamente para as maos do guarda-redes...\n");
-                        }else if(comm<0.80){
-                            stringBuilder.append("E falhou... Para onde estava ele a olhar?\n");
-                        } else if(comm<0.90){
-                            stringBuilder.append("E a bola bate na trave...\n");
-                        }else{
-                            stringBuilder.append("Em cheioooo... no poste...\n");
-                        }
+                        stringBuilder.append(randomFail());
                         equipa = rand.nextBoolean();
                     }
                     stringBuilder.append(align(80,ATeam+" |"+
@@ -618,7 +607,7 @@ public class Interpretador {
                     if(!atk.getAcontecimento().equals("Tentativa de ataque"))System.out.print(stringBuilder.toString());
                     TimeUnit.MILLISECONDS.sleep(500);
 
-                    if(i%15==0){
+                    if(i%13==0&&i!=0){
                         System.out.println(" ".repeat(20)+align(40,"Pausa:Pressione enter caso queira continuar\n")
                         +" ".repeat(20)+align(40,"Caso queria subsituir um jogador, escreva: sub\n"));
 

@@ -1,10 +1,9 @@
-package FootballManager.Model.Equipas.Taticas;
+package FootballManager.Model.Equipas;
 
-import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Eventos.*;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
-import FootballManager.Model.Players.*;
+import FootballManager.Model.Jogadores.*;
 
 import java.util.Map;
 import java.util.Random;

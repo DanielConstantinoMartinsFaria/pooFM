@@ -2,12 +2,11 @@ package FootballManager.Model.Eventos;
 
 import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
-import FootballManager.Model.Players.Jogador;
-import FootballManager.Model.Players.Laterais;
-import FootballManager.Model.Players.Medios;
+import FootballManager.Model.Jogadores.Jogador;
+import FootballManager.Model.Jogadores.Laterais;
+import FootballManager.Model.Jogadores.Medios;
 
 import java.util.Random;
-import java.util.Set;
 
 public class Canto extends Ataque{
     private boolean lado;//False-> esquerda, True-> direita

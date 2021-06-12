@@ -1,4 +1,4 @@
-package FootballManager.Model.Auxiliares;
+package FootballManager.Model;
 
 import java.io.Serializable;
 

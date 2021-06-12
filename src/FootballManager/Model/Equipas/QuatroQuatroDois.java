@@ -1,26 +1,38 @@
-package FootballManager.Model.Equipas.Taticas;
+package FootballManager.Model.Equipas;
 
-import FootballManager.Model.Equipas.Equipa;
 import FootballManager.Model.Eventos.*;
 import FootballManager.Model.Exceptions.EventoInvalidoException;
 import FootballManager.Model.Exceptions.TaticaInvalidaException;
-import FootballManager.Model.Players.*;
+import FootballManager.Model.Jogadores.*;
 
 import java.util.Map;
 import java.util.Random;
 
-public class QuatroDoisTresUm extends Tatica{
-    public QuatroDoisTresUm(){
+public class QuatroQuatroDois extends Tatica{
+
+    /*
+
+                  |00|
+
+             |01|      |02|
+     |03|                      |04|
+             |05|      |06|
+      |07|                    |08|
+
+            |09|       |10|
+     */
+
+    public QuatroQuatroDois(){
         super();
     }
 
-    public QuatroDoisTresUm(Tatica t){
+    public QuatroQuatroDois(Tatica t){
         super(t);
     }
 
     @Override
     public Tatica clone() {
-        return new QuatroDoisTresUm(this);
+        return new QuatroQuatroDois(this);
     }
 
     @Override
@@ -30,25 +42,23 @@ public class QuatroDoisTresUm extends Tatica{
         double atk = 0;
         double fator=0;
 
-        Avancados ponta=new Avancados(jogadores.get(titulares[10]));
-        atk+=ponta.calculaRatingTotal();
+        Avancados exEsq=new Avancados(jogadores.get(titulares[10]));
+        atk+=exEsq.calculaRatingTotal();
         fator++;
 
-
-        Medios medEsq=new Medios(jogadores.get(titulares[9]));
-        if(medEsq.isLado())atk+=medEsq.calculaRatingTotal()*0.8;
-        else atk+=medEsq.calculaRatingTotal()*0.76;
-        fator+=0.8;
-
-        Medios medAtk=new Medios(jogadores.get(titulares[8]));
-        if(medEsq.isCentral())atk+=medAtk.calculaRatingTotal();
-        else atk+=medAtk.calculaRatingTotal()*0.95;
+        Avancados exDir=new Avancados(jogadores.get(titulares[9]));
+        atk+=exDir.calculaRatingTotal();
         fator++;
+
+        Medios medEsq=new Medios(jogadores.get(titulares[8]));
+        if(medEsq.isLado())atk+=medEsq.calculaRatingTotal()*0.6;
+        else atk+=medEsq.calculaRatingTotal()*0.57;
+        fator+=0.6;
 
         Medios medDir=new Medios(jogadores.get(titulares[7]));
-        if(medDir.isLado())atk+=medDir.calculaRatingTotal()*0.8;
-        else atk+=medDir.calculaRatingTotal()*0.76;
-        fator+=0.8;
+        if(medDir.isLado())atk+=medDir.calculaRatingTotal()*0.6;
+        else atk+=medDir.calculaRatingTotal()*0.57;
+        fator+=0.6;
 
         Medios medCen1=new Medios(jogadores.get(titulares[5]));
         if(medCen1.isCentral())atk+=medCen1.calculaRatingTotal()*0.4;
@@ -94,15 +104,15 @@ public class QuatroDoisTresUm extends Tatica{
         def+=guardaRedes.calculaRatingTotal();
         fator++;
 
-        Medios medEsq=new Medios(jogadores.get(titulares[9]));
+        Medios medEsq=new Medios(jogadores.get(titulares[8]));
         if(medEsq.isLado())def+=medEsq.calculaRatingTotal()*0.4;
-        else def+=medEsq.calculaRatingTotal()*0.19;
-        fator+=0.2;
+        else def+=medEsq.calculaRatingTotal()*0.38;
+        fator+=0.4;
 
         Medios medDir=new Medios(jogadores.get(titulares[7]));
-        if(medDir.isLado())def+=medDir.calculaRatingTotal()*0.2;
-        else def+=medDir.calculaRatingTotal()*0.19;
-        fator+=0.2;
+        if(medDir.isLado())def+=medDir.calculaRatingTotal()*0.4;
+        else def+=medDir.calculaRatingTotal()*0.38;
+        fator+=0.4;
 
         Medios medCen2=new Medios(jogadores.get(titulares[5]));
         if(medCen2.isCentral())def+=medCen2.calculaRatingTotal()*0.6;
@@ -144,11 +154,11 @@ public class QuatroDoisTresUm extends Tatica{
             case 5,6 ->{
                 return (j instanceof Medios)||(!(j instanceof GuardaRedes)&&j.isCentral());
             }
-            case 7,9->{
+            case 7,8->{
                 return (j instanceof Medios)||(!(j instanceof GuardaRedes)&&j.isLado());
             }
-            case 8,10->{
-                return ((j instanceof Avancados))||(!(j instanceof GuardaRedes)&&j.isCentral());
+            case 9,10->{
+                return (!(j instanceof GuardaRedes));
             }
             default ->{
                 return false;
@@ -157,11 +167,10 @@ public class QuatroDoisTresUm extends Tatica{
     }
 
     @Override
-    public double ratioCruzamento() {
-        return 0.4;
+    public double ratioCruzamento(){
+        return 0.67;
     }
 
-    @Override
     public int randomPlayer(Ataque evento) throws EventoInvalidoException {
         Random r = new Random();
         int res;
@@ -176,32 +185,25 @@ public class QuatroDoisTresUm extends Tatica{
             else {
                 if(res==0)return this.getTitulares()[4];
                 else if(res==1)return this.getTitulares()[6];
-                else return this.getTitulares()[9];
+                else return this.getTitulares()[8];
             }
         }
         else if(evento instanceof Remate){
             res=r.nextInt()%4;
-            res=Math.abs(res);
             return this.getTitulares()[res+7];
         }
         else if(evento instanceof Livre){
+            res=r.nextInt()%2;
+            res=Math.abs(res);
             if(((Livre) evento).getDistancia()<23.5){
-                boolean rand=r.nextBoolean();
-                if(rand){
-                    return this.getTitulares()[8];
-                }
-                else{
-                    return this.getTitulares()[10];
-                }
+                return this.getTitulares()[9+res];
             }
             else {
-                res=r.nextInt()%5;
-                res=Math.abs(res);
-                return this.getTitulares()[5+res];
+                return this.getTitulares()[7+res];
             }
         }
         else if(evento instanceof Cruzamento){
-            res=r.nextInt()%5;
+            res=r.nextInt()%4;
             res=Math.abs(res);
             if(res<2)return this.getTitulares()[3+res];
             else return this.getTitulares()[5+res];
@@ -217,9 +219,9 @@ public class QuatroDoisTresUm extends Tatica{
             case 4->{return "Lateral Esquerdo";}
             case 5,6->{return "Medio Centro";}
             case 7->{return "Medio Direito";}
-            case 8->{return "Medio Ofensivo";}
-            case 9->{return "Medio Esquerdo";}
-            case 10->{return "Ponta de Lanca";}
+            case 8->{return "Medio Esquerdo";}
+            case 9->{return "Extremo Direito";}
+            case 10->{return "Extremo Esquerdo";}
             default -> {throw new TaticaInvalidaException(); }
         }
     }
@@ -229,24 +231,27 @@ public class QuatroDoisTresUm extends Tatica{
         Integer[]titulares=this.getTitulares();
         Integer[]suplentes=this.getSuplentes();
         StringBuilder res= new StringBuilder(
-                "             |" + String.format("%02d",titulares[0]) + "|\n" +
+                          "             |" + String.format("%02d",titulares[0]) + "|\n" +
                 "        |" + String.format("%02d",titulares[1]) + "|      |" + String.format("%02d",titulares[2]) + "|\n" +
                 "|" + String.format("%02d",titulares[3]) + "|                      |" + String.format("%02d",titulares[4]) + "|\n" +
                 "        |" + String.format("%02d",titulares[5]) + "|      |" + String.format("%02d",titulares[6]) + "|\n" +
-                "  |" + String.format("%02d",titulares[7]) + "|       |" + String.format("%02d",titulares[8]) +
-                "|       |" + String.format("%02d",titulares[9]) + "|\n             |" + String.format("%02d",titulares[10]) + "|\n\n");
+                " |" + String.format("%02d",titulares[7]) + "|                    |" + String.format("%02d",titulares[8]) + "|\n" +
+                "       |" + String.format("%02d",titulares[9]) + "|        |" + String.format("%02d",titulares[10]) + "|\n\n");
         for(Integer i:suplentes){
-            if(i!=null)res.append("|").append(String.format("%02d",i)).append("|  ");
+            if(i!=null)res.append("|").append(i).append("|  ");
         }
         return res.toString()+"\n";
     }
 
     /*
+
                   |00|
              |01|      |02|
      |03|                      |04|
              |05|      |06|
-       |07|       |08|       |09|
-                  |10|
-    */
+      |07|                    |08|
+            |09|       |10|
+     */
 }
+
+
