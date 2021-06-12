@@ -426,8 +426,10 @@ public class Interpretador {
             if(numero==0)return null;
             try{
                 Jogador j=equipa.getJogador(numero);
-                tatica.setJogador(j,i,true);
-                adicionados.add(numero);
+                if(!adicionados.contains(numero)) {
+                    tatica.setJogador(j, i, true);
+                    adicionados.add(numero);
+                }else throw new JogadorInvalidoException("Jogador ja adicionado");
             } catch (JogadorInvalidoException e) {
                 System.out.println("Numero invalido");
                 i--;
@@ -449,7 +451,10 @@ public class Interpretador {
             else {
                 try {
                     Jogador j = equipa.getJogador(numero);
-                    tatica.setJogador(j, i, false);
+                    if(!adicionados.contains(numero)){
+                        tatica.setJogador(j, i, false);
+                        adicionados.add(numero);
+                    }else throw new JogadorInvalidoException("Jogador ja adicionado");
                 } catch (JogadorInvalidoException e) {
                     System.out.println("Numero invalido");
                     i--;
