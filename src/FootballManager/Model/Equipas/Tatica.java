@@ -104,7 +104,7 @@ public abstract class Tatica implements Serializable {
             if(n==0)throw new TaticaInvalidaException("Equipa incompativel com tatica");
             rand=lista.get(Math.abs(r.nextInt()%n));
             this.setJogador(jogadores.get(rand), i, true);
-            usados.add(n);
+            usados.add(n);//Erro, deveria ser rand
         }
     }
 
